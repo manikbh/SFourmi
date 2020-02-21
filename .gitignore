@@ -1,0 +1,10 @@
+*.o
+*.so
+*~
+*.old
+*.cache
+*.in
+*.a
+*.m4
+.deps
+

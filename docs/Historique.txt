@@ -1,0 +1,672 @@
+/*==========================================================================
+ *
+ * Fourmille ou la vie artificielle 2000  by T&T
+ *
+ *** planning *** (pour plus d'info se reporter aux TODO)
+ *
+ *	- Ecrire Faire_salle() et réfléchir sur la façon de gérer les fourmis dans les souterrains
+ *	- Création d'un éditeur avec des textures multicases.moyen/dur
+ *	- Ajouter du son (pour les combats notamment).moyen
+ *	- Logique floue vraiment activée
+ *	- Code génétique
+ *	- Optimisations
+ *	- Rendu plus 'naturel' (placements des citernes)
+ *	- Ajout d'un écran statistique
+ *
+ * 	Pour la 0.42 Zsuzsi -> mise en place des listes chaînées + sauvegarde
+ *	Bug à corriger: Apparition de fourmis dans le bord gauche.
+ *
+ *
+ *>Version .42 rev 4 (GiTs) :: 22 octobre 2002
+ *  I fixed some obvious bugs (missing sfourmi.ini) and add helps everywhere I
+ *  believe there is a need, change DisplayInfo because some displayed
+ *  informations was understandable only by programmers.
+ *  We need some colors for "distinguer" clans ! and for selection and minimap
+ *
+ *>Version .42 rev 3 (GiTs) :: 21 octobre 2002
+ *  Maintainer version. Updates for autotools (support for IMG & TTF)
+ *  SFourmi.spec adding a README with the licence. Before doing a rpm or zip
+ *  I still need to test it under windows and the release will be soon.
+ *  SFourmi is a little bit cleaner. No great changes.
+ *  Wait for the next version which should implement the multiple cases
+ *  The 'citernes' will be improved since we don't know very well their
+ *  purpose
+ *
+ *>Version .42 rev 2 (GiTs) :: 15 octobre 2002
+ *  Updates for autotools
+ *  Correct some mistakes in the Makefile.am (no more needs to have INCLUDE
+ *  field) and add sdl detection support in configure for a better behavior
+ *  Add path support for fonts loading by $prefix$
+ *  Then add SFourmi.spec to be able to generate a rpm via
+ *  'rpm -ta SFourmi-{version}.tar.gz'
+ *
+ *>Version .42 pre 1 (Kinam) :: 07 octobre 2002
+ *  Ported SFourmi to SDL. Display works well and is much faster than GTK.
+ *  However, events are not completely supported for now. Should be really soon.
+ *  Saving seems to work but is sloooooooow. Idea by GiTs : to split the pointer
+ *  table by categories of objects should be implemented. Loading is fast on the
+ *  contrary. Did not check the potential problems with saving.
+ *  Autotools files aren't clean ( -lSDL everywhere and so on), no tests under Windows.
+ *
+ *>Version .41 rev 222 (GiTs) :: 12 Juillet 2°°2
+ *  Correction of crashes under win98.
+ *  I tested some time under Win98 and gtk. The saving seems to have some
+ *  lacks. It doesn't save the 'nourri' that I placed on the grid. Moreover,
+ *  I feel that pheromons aren't keep too. Manik : action ! We need that
+ *  correction to update to 0.42
+ *
+ *>Version .41 rev 200 (Kinam+GiTs) :: 10 Juillet
+ *  Window version again !!! The save module should have been fixed now. Try
+ *  F9 to test it. I need to add a load option to see if the loading'll work.
+ *  But it should. I believe it's time to change the version number since a
+ *  lot of work have been made. I may update the web site (?)
+ *  You can also load an sfourmi.sf by configuring the sfourmi.ini
+ *  For now it's very simple and unconvivial; but we could dream that a day
+ *  it would be very very easy and fast to do that kind of trick
+ *
+ *>Version .41 rev 150 (Kinam) :: 3 Mars
+ *  Actually the save and load modules should work again. But a bad bug still
+ *  leave us crazy. Should be fix soon.
+ *
+ *>Version .41 rev 99(GiTs) :: 2002, 30 january
+ *  Changes continued. Some global have been moved into appropriated classes
+ *  I gonna rename (for classes) getXxx by Xxx pointing the private xxx. This
+ *  is actually for making well. No trouble in this version. The window
+ *  version still remains dead. I'm reconfiguring the SFourmis.h which looks
+ *  so close to a dirty way. Should just containing includes to avoid
+ *  redefinitions and because we're lazy but I want to remove all the extern
+ *  definitions from this file. I need to define a class for the CRect and at
+ *  last a class for some graphical (tools ?) to gaim in portability. MData
+ *  ZSF should at the end be passed by reference since they will always
+ *  exists. *no need of a bunch of global*. DisplayInfo is not yet completed.
+ *  GTKInterface and its brother for windows WinInterface should take a deep
+ *  shower since they have been writting a little bit to fast. We need a good
+ *  indentation and even the C++ gnu preference for the definition and the
+ *  indenting. And a lot of constants will be #define for convenience and
+ *  portabity.
+ *  
+ *>Version .41 rev 72(GiTs) :: 27 janvier 2002
+ *  A lot of changes have been made according to my wish: killing the more
+ *  global values and making the code more readable. Some parts have been left
+ *  without any change but they should sometimes be rewritten with a complete
+ *  knowledge of what we are supposed to do. Restructuration has been quite an
+ *  heavy work but this task was necessary due to the too hight number of
+ *  global values. Some effort should be made after that. I have still some
+ *  work (Deglobalizing is not yet completely done). Be careful with the name
+ *  of the variable which should be clear for everyone. Datas in classes
+ *  should be protected (private indeed) in order to avoid errors and making the
+ *  work easier for the future. "const" should be everywhere it is possible to
+ *  used it since it prevents some bad operations. For thou who desire to do
+ *  something useful and not very intersting, there still remains the
+ *  "references" arguments. (in fact, every pointer that couldnt be NULL
+ *  should be a reference instead because it simplifies a lot the way of
+ *  reading (but this is a tricky c++ tip (java uses the same way)). After
+ *  that, I could attack the debugging to found out these harmful bugs.
+ *  Manik, could you do some "cleaning" in your functions by encapsulating
+ *  them in a class and then by cuting long functions ?
+ *  Cleaning is not over.
+ *  Two basics classes have been addited: DataMap and User. (see the cc or
+ *  cpp for further informations) And the graphical functions have been cut
+ *  I didn't correct the Directx version and some corrections are needed for
+ *  the windows version. Eventually I change the format of the ini file
+ *  since the version 3 was unhandle. Text format in a clear syntax. No need
+ *  to used some other programs to configure SFourmi. Launch vi and edit
+ *  the value that you want to set. If I get some free time, I'll write a
+ *  man page which will explain every variables.
+ *  Why user is ZSF ? (Why do I speak English ?)
+ *  Don't forget to try to remove the most globals you can. I couldnt bear
+ *  them in mind. I wonder if there is some way to use template, a nice
+ *  fonctionnality of the c++. But priority is cleaning and making the code
+ *  clear. Non-sense comments must be removed and any comments in a class
+ *  description is a crime: just create another file which explain how works 
+ *  that class. Finally, I need to go and sleep.
+ *
+ *>Version .41 rev 42(GiTs) :: 25 janvier 2002
+ *  Mise en place de autoconf automake, mise à la norme ISO de qqns fonctions
+ *  et ajout de const et destructeurs virtuels.
+ *  Correction de quelques défauts de jeunesse au niveau de l'implémentation
+ *  Afin d'accélerer la compilation. Mise en place de nombreuses macro pour
+ *  La mise en ligne du code. GraphXproc a été découpé pour une meilleure 
+ *  compréhension. Aucune correction dans le code n'a été effectué. (distcheck
+ *  ne marche pas pour une erreur que je ne comprends pas).
+ *  Il faudrait remplacer parfois les pointeurs par des références, dans le
+ *  cas où les objets ne sont pas nuls. Rajouter des const et inliner au max.
+ *  d'autre part, il faut découper les grosses fonctions en petites et ajouter
+ *  des fichiers cpp. Vérifier qu'il n'y a plus d'include dans les .h, ce qui
+ *  est en soi une mauvaise idée bien qu'elle simplifie la màj. Utils.cpp est
+ *  obsolète. (je n'ai pas vérifié si cela compilait sous windows)
+ *
+  *>Version .41 rev 140(GiTs) :: 2°°2, 4 january
+ *  Some global have been replacing by classes static const and some other
+ *  global were definitly removed. SFourmi.h and global.h have been
+ *  simplified.
+ *
+ *>Version .41 rev 130(GiTs) :: 2002, 3 january
+ *  I removed carrefully some forgotten global vars and simplified some
+ *  functions calls. I relooked some graphical functions and corrected a small
+ *  bug for the mountains/obstacles creation. I will add gnu-getopt to the
+ *  package to take full advantage of the lines commands and will add some
+ *  options usable directly from the shell. (but how to use it under
+ *  windows?). I'm wondering if there is a need to create an interface for
+ *  the drawing instead of declaring global functions. In one hand, speed
+ *  improvements couldn't be made by this way, but in the other hand, global
+ *  functions are a real *bad* way of conception since we're programming in an
+ *  object language. Everything should be encapsulate to avoid trouble and
+ *  have an hight point of view of what we're doing. A great work could be
+ *  #defining all the coordinates used by the pictures. In that way, locations
+ *  of the pictures could be changed effortlessly (Hum). I hope I'll soon
+ *  programming fonctionnalities which is a main part in a project (with the
+ *  conception and finalization).
+ *  
+ *>Version .41 rev 105(GiTs) :: 2°°2, 1 january
+ *  structs CRect and SFColor becomes classes SFRect and SFColor for improving
+ *  readibility and use the basics rules of an object language. A lot of 
+ *  pointers have been replaced by references and some cpp were translate into
+ *  C++Iso but there are still some old programming syntaxes.
+ *  Compatibility with DirectX wasn't yet tested and shouldn't work at all.
+ *  I did remove the SFC global which becomes unuseless. I need to add some
+ *  features in the init file in order to configure the most part of the
+ *  program from this only config file. Some own headers have been added
+ *  but any changes from another editors but Emacs or vim won't do anything
+ *  on this header (in some ways, if your editor contains a macros language
+ *  you should be able to port the update program to your editor, of course
+ *  emacs and vim still remains the best *** no troll please ***)
+ *  Finally, my eyes' getting dark and really red. Zz.
+ *
+ALIAS GiTS T&T
+*>Version .41 rev 12(Manik)
+ *	Je commence la révision du système de sauvegarde. Rajout de tests d'erreurs
+ *	à chaque opération d'E/S.
+ *	Les fonctions Serialize passent de void à bool. Actuellement la sauvegarde 
+ *	est OK pour les fourmis (pas le chargement)
+ *
+ *>Version .41 revision 0 :: 11 septembre 2001
+ T&T
+ *	(0) Travail énorme de restructuration et de mise en place de CAnimal et CCase; 
+ *	presque tous les fichiers ont subi des modifications
+ *	(1) Plus de citernes dehors. Cela permet de simplifier pas mal de choses et 
+ *	d'éradiquer des variables équivoques.
+ *	(2) Changement important de CCase **map en CRoom *terre, ce qui simplifie 
+ *	beaucoup: plus de procédures under, juste un pointeur Room dans CAnimal
+ *	Création d'un systéme de débogage pratique par l'intermédiaire de 
+ *	SDEBUG(level, msg) cf debutil.h
+ *	Remise en place de l'affichage win et gtk et de leur interface respective, 
+ *	suite au rapprochement
+ *	Débogage intensif et correction des bugs
+ *	Correction de la gestion des tunnels (qui présentait des anomalies 
+ *	dans les versions précédentes)
+ *	Création de makefile adéquats ainsi que mkfourmi.sh pour compiler sans pb
+ *	Nettoyage à la main et par bcpp
+ *	Autour[] contient des *CAnimal
+ *	Pour plus de détails, reportez vous aux changements_.40.bz2
+ *	Mauvais: gestion des citernes et des ouvrières. A maj.
+ *
+ *>Version .40 revision 43 :: 23 août 2001
+ FL
+ *	Je me remets au travail après les discussions avec Manik et Michel
+ *	Création d'une super-classe CAnimal
+ *	Utilisation d'un tableau de CCase pour représenter le terrain + animaux + phéromones
+ *	(même chose dans Room, et plus de 'number' dans CClan non plus)
+ *	Commencé fourmi.cpp
+ *	Pour faire plaisir à certains, mis des int partout, sauf pour ce qui est répété pour chaque CCase
+ *	Autour[] contient des Fourmi*.
+ *	Supprimé la classe CNourriture : c'est un décor maintenant
+ *	Correction d'un bug (?) dans ChangeRoom : efface la fourmi à la position précédente
+ *	Remplacé 'int Clan' par 'CClan *Clan'.
+ *	Viré numero_reine, remplacé par un pointeur dans chaque clan
+ *
+ *
+ *>Version .40 revision 42 :: 26 juillet 2001 FL
+ *	Rajouté une quantité invraisemblable de pointeurs dans les définitions, les appels
+ *	et les corps de toutes les fonctions sur les fourmis.
+ *	Rajouté les fonctions se terminant par Ptr.
+ *	Le champ de vision est maintenant rond (utilise Distance).
+ *	Les fourmis partent avec un âge = 0. A la rigueur, on pourra leur donner un âge aléatoire
+ *	dans la création d'un terrain aléatoire.
+ *	SetPos regroupe pas mal d'instructions, séparation de SetPos_under.
+ *	Passage d'un pointeur de la reine pour la naissance d'une fourmi, ouvre des possibilités
+ *	d'hérédité communes à toutes les fourmis.
+ *	Dans Regarde_autour, regarde les cadavres ssi nourri==true (un cadavre lui 'bouchait' complètement
+ *	la vue).
+ *
+ *>Version .40 revision 41 :: 16 juillet 2001
+ *	FL recommence à toucher au source, ça va faire des dégâts...
+ *	Nettoyage d'à peu près tous les fichiers, renommage de pas mal de variables (majuscules pour globales...)
+ *	Pas mal de boucles remodelées, mais pas changé grand chose au fond.
+ *	Quand même rajouté un bug pour la réputation : les DANGER ne disparaissent plus toujours (faux bug en fait).
+ *
+ *>Version .40 revision 5 :: 29 juin 2001
+ T&T
+ *	Ajout du slider vitesse
+ *
+ *>Version .40 revision 0 :: 28 juin 2001
+ T&T
+ *	Fusion de gtk/directX (fichier proc unique: GraphXproc), à tester encore et encore bien que cela semble bien fonctionner
+ *	Création de fonctions partagées: SFDisplay, SFDrawSurface, SFDrawOpaque, SFTextColor.
+ *	OK sous win et gtk (pbs d'affichage sous gtk. pas aux bonnes coordonnées. Pourquoi ? je verrai ça plus tard)
+ *	Au fait j'ai fait des tests sous sdl peu concluants.
+ *	Attention: pour l'avenir ne plus mettre #ifndef GTK_Linux pour windows mais #ifdef WIN32
+ *
+ *>Version .39 revision  492 beta:: 25 mai 2001 Manik
+ *	Après pas mal de tatonnement, la transparence passe avec gdk-pixbuf
+ *	mais c'est TRES lent. Il faudrait trouver une autre lib ou améliorer (à la
+ *	main...) la gestion du channel alpha. SDL ? OpenGL2D ? evas ? qt ?...
+ *
+ *>Version .39 revision  436 beta:: 23 mai 2001 Manik
+ * 	Le système de sauvegarde semble fonctionner, mais
+ * 	il n'a pas été encore été suffisamment testé pour en être sûr.
+ *	gdk-pixbuf semble convenir pour obtenir les effets de transparence
+ *	nécessaires... De nombreux plantages dûs aux erreurs des fonctions
+ *	de sauvegarde (merci gdb qui m'a permis de repérer les erreurs).
+ *	Il faudrait remplacer tous les cout, Log<<, et autres moyens d'information
+ *	par une macro affichant les lignes, fonction, et fichier du lieu de l'erreur,
+ *	ou rien en cas de version distribuée.
+ *
+ *>Version .39 revision 123  alpha:: 5 mai 2001
+ Manik
+ *	Gestion des touches totalement fonctionnelle sous linux, *BSD
+ *	et autres Unix avec GTK. La grande carte fonctionne ! avec GTK,
+ *	sans la transparence... Faudra-t-il changer de lib graphique ?
+ *	Le système de sauvegarde ne fonctionne plus depuis la modification
+ *	de structure des fourmillières.
+ *
+ *>Version .38 revision 2014 beta:: 15 avril 2001
+ T&T
+ *	Nettoyage du code avec quelques aides pour les programmeurs en
+ *	commentaire
+ *	Correction de petits bugs pour l'extensivité
+ *
+ *>Version .38 revision 2011 beta:: 1 avril 2001
+ T&T
+ *	Correction des nouveaux bugs(fourmis collées à la reine)
+ *	Dans: ChangeRoom, Action() etc...
+ *	Les citernes ne sortent pas (je n'ai pas testé si ça marchait)
+ *
+ *>Version .38 revision 2010 :: 31 mars 2001
+ T&T
+ *	Remplacement de CEtage par CRoom
+ *	Création de CTunnel
+ *	Bcp de modifications non inversibles
+ *	Maj de Fourmi.cpp:
+ *		rm: MonteNiveau, Descendniveau
+ *		add: EnterTunnel,ChangeRoom
+ *	La gestion des étages devient "transparent"
+ *
+ *>Version .37 revision 110 :: 6 mars 2001
+ T&T
+ *	J'ai continué mon travail de restructuration
+ *	J'espère que les Makefile sont compatibles
+ *	J'en ai marre parce que c'est pas marrant
+ *	C'est tout pour ce soir
+ *
+ *>Version .37 revision 98 :: 05 mars 2001
+ Manik
+ *	Affichage de la mini carte sous gtk
+ *	Restructuration et mise place
+ *
+ *
+ *>Version .37 revision 70 :: 27 fevrier 2001
+ T&T
+ *	Arrangement et reorganisation
+ *
+ *>Version .37 revision 60 :: 22 février 2001 T&T
+ *	Finitions de ménages  
+ *	Fonction Pheromone::Action() désormais utile  
+ *	  
+ *>Version .37 (alpha) 50 :: 22 février 2001 Manik
+ *	Portage de sf pour *nix réussi (Merci à Kinam) (GTKFourmi)  
+ *	Ménage, réorganisation et maj (création de rep win et gtk)
+ *	(plein d'erreurs de linking néanmoins corrigées  *(ce sont les erreurs que j'aime le moins)  
+ *	L'interface graphique est encore absente mais elle viendra !!  
+ *	Maj du TODO  
+ *   
+ *>Version .36 (gamma) 214 :: 28 janvier 2001 T&T
+ *	Ajout de l'interface (c'est pas terrible mais bon)  
+ *>Version .36 (bêta) 211 :: 22 janvier 2001 T&T
+ *	Ajout d'une interface mère qui devra être complétée et améliorée  
+ *  
+ *>Version .36 (bêta) 150 :: 21 janvier 2001 T&T
+ *	Corrections de plusieurs bugs invisibles et apparaissant très tards (1journée et 1 nuit de débogage!!)  
+ *	-nb étage incohérent,_under,9999,DEAD,...  néanmoins je suis persuadé qu'il en reste qquns(hélàs)  
+ *	Nous allons repartir sur des bases saines!  
+ *	Version anniversaire+surprise  
+ *	Futur: optimisations, nettoyage, rangement et débogage...  
+ *	  
+ *>Version .36 alpha 27 :: 19 janvier 2001 (Eh Oui!!!!) T&T
+ *	Correction du bug précédent  
+ *	possibilité de 'murs' dans la fourmillière->salles, chambres!!  
+ *  
+ *>Version .36 alpha 21 :: 12 novembre 2000 T&T
+ *	Nature underground devient CNourriture (possibilité de nourriture aux ss)  
+ *	Correction de petits bugs pas méchants  
+ *	Nouveau bug: +20000 -20000 (facilement corrigeable)  
+ *	GoNearCiterne, _under maj  
+ *	Sens de la collecte (les citernes amoncellent leur gain)  
+ *	Mort et naissance des citernes (remaniement de qq trucs dans Citernes::Action() toujours pas terrible  
+ *  
+ *>Version .35 bêta 99 :: 11 novembre 2000 T&T
+ *	Déstructuration des headers (vraiment trés long avec les erreurs de LINK pour une plus grande facilité de mise en place future  
+ *	Donc création de fichiers cpp indépendants (ouahhh)  
+ *	Correction d'un bug dans FindEnnemi de cafard (il passait inaperçu mais faisait planter le prg  
+ *  
+ *>Version .35 alpha 95 :: 1 septembre première version officiellement mise sur le web  
+ *	Cadavres actifs  
+ *	Changements dans Action() sentinelles:elles ne sont plus insensibles aux phéromones danger et tournent autour  
+ *  
+ *>Version .35 alpha revision 90 :: 31 aout 2000 
+Manik
+ *	Remise en place de la sauvegarde.  
+ *  
+ *>Version .35 alpha revision 61 :: 30 aout 2000 T&T 
+ *	Ajout de s_ini pour le démarrage  
+ *	Correction du bug "Sent>100" et d'un autre (je suis trés PRECIS: bug dans phéro_autour)(80/400)	  
+ *	Les fourmis se nourrissent (reste à environ 250) avant d'apporter les réserves::les citernes sont moins sollicitées  
+ *  
+ *>Version .35 alpha revision 57 :: 29 aout 2000  
+T&T
+ *	Correction de 2 bugs moches comme tout que j'ai vus en lançant SuperFourmi(mais que vous avez pas vus;  
+ *	bugs qui existaient depuis la nuit des temps depuis la version .16 alpha ( si si j'ai regardé)))  
+ *	J'ai aussi vu le fameux 80/400 qui reste encore inexpliqué (je remercie Tristan qui n'a pas assez insisté...)  
+ *	J'ai pas vu le bug de tatmf et de Kinam au lancement.	  
+ *  
+ *>Version .35 alpha revision 52 :: 28 aout 2000  
+T&T
+ *	les sentinelles de chaque clan se battent et défendent un territoire précis qui augmente en fonction de la population  
+ *	Effets graphiques sup  
+ *	Mort des sentinelles et des ouvrières par vieillesse	  
+ *  
+ *>Version .35 alpha-bêta revision 44-50 :: 27 aout 2000 T&T 
+ *	Mise à jour de DirectXproc.h pour l'affichage  
+ *	Correction de 2 bugs (vraiment morts ? (et pas !))  
+ *	Ajout secret d'un mode de jeu stimulant touche V comme violence (les sentinelles tuent tous le monde)  
+ *	-Réécrire Citerne::Action() car complètement nul  
+ *  
+ *>Version .35 alpha revision 30 :: 26 aout 2000  
+T&T
+ *	Interface TATMF  
+ *	Correction de qq bugs  
+ *  
+ *>Version .35 alpha revision 25 :: 25 aout  
+T&T
+ *	- création de la CEtage  
+ *	Mise à jour des procédures under (que c'est long et pénible)  
+ *	Nettoyage de quelques bidules (pas EFFACEMENTS)  
+ *  
+ *>Version .35 alpha revision 4  :: 25 aout  
+T&T
+ *	- création de CClan  
+ *	Correction de bogues et mises à jour des effets des touches et effets graphiques  
+ *	Touche 'S' pour les statistiques  
+ *  
+ *>Version .34 alpha revision 2 :: 24 aout  
+T&T
+ *	Ajout des touches F7 et 'T'  
+ *	- mettre une option pour ne laisser que la mini-carte (pour accelérer).facile FAIT ('T')  
+ *	- une meilleure façon de gérer le commencement d'une partie : une reine   
+ *	  avec des larves seulement et pas de fourmis réparties dans tous les sens.facile  
+ *  
+ *>Version .33 alpha revision 47 :: 16 juillet T&T
+ *	Mise à jour de Disp_info() pour les ennemis (ultra alpha), suppression de number_enn.  
+ *  
+ *>Version .33 alpha revision 43 :: 14 juillet  
+Manik
+ *	Correction d'un bug de Cafard::Balade(),touche F5 pour le centrage sur la fourmi sélectionnée.  
+ *	Création de la réaction des Sentinelles qui naissent sous Terre.  
+ *  
+ *>Version .33 alpha revision 39 :: 13 juillet  
+Manik
+ *	Correction de graves bugs dans Charg_terrain() version 2. Ajout des ennemis sur la mini carte.  
+ *  
+ *>Version .33 alpha revision 34 :: 12 juillet  
+Manik
+ *	Premiers combats avec les sentinelles, apparition et affichage des phéromones de danger.  
+ *	Mise à jour du système de sauvegarde (version 2). Futur : creation des cadavres et décomposition.  
+ *	Remarque sur la gestion des ennemis morts : utilisation du pointeur NULL : mieux pour les fourmis ?  
+ *
+ *>Version .33 alpha revision 27 :: 11 juillet  
+Manik
+ *	Apparition des ennemis après long debugage(27 build) pour l'affichage. Réfléchir si on utilise number_enn  
+ *	ou si number suffit. Aucune interaction fourmi-ennemi pour l'instant.Accélération par else   
+ *	dans DirectXproc. La fonction Balade a tendance à faire partir les cafards en bas de la carte...  
+ *	Mettre à jour la sauvegarde et le chargement !  
+ *  
+ *>Version .32 alpha revision 32 :: 9 juillet  
+Manik
+ *	Correction d'un bug dans Charg_terrain(): les larves chargées se comportaient comme des   
+ *	ouvriers, et correction de Larve::Larve() pour la création avec nreine inconnu.  
+ *	Bug mineur de la mini carte fixé : on ne pouvait attendre la bas de la carte (à 2 cases près)  
+ *  
+ *>Version .32 alpha revision 25 :: 6 juillet  
+T&T
+ *	Correction d'un bug dans fourmis::Phero_autour()  
+ *	Nbreux changements dans le comportement des citernes et de la reine (ça n'est pas parfait)  
+ *	  
+ *>Version .32 alpha revision 20 :: 5 juillet  
+T&T
+ *	Réécriture du comportement des citernes à l'intérieur (pour l'extérieur ?)  
+ *	Correction de bogues, etc ...  
+ *	Ecriture de Reine::Action avec création de larve(ajout de LastPonte dans Fourmi)  
+ *	Nouvelle classe : LArve avec naissance !  
+ *	Nouvelle fonction Fourmi::Evolve() qui transforme une larve ... en véritable fourmi !  
+ *	Modifications conséquentes de DirectxProc pour l'affichage  
+ *	  
+ *>Version .32 alpha revision 1 :: 3 juillet  
+T&T et Manik
+ *	Léger changement dans le comportement des citernes mais surtout ...(ajout de bstop);  
+ *	Possibilités de sauvegarde et de chargement - fiable à ce que j'en sais - (Merci à KINAM)  
+ *	  
+ *>Version .31 alpha revision 23 :: 1er juillet  
+T&T et Manik
+ *	Dernières nouvelles: accélération de l'affichage la mini carte !  
+ *	Déplacements possibles dans la mini carte  
+ *	Ajout d'une mini carte qui quoique trés confortable diminue fortement la vitesse de la simulation(bouton F4)  
+ *	Ajout d'un bouton saut vers l'entrée de la fourmillière (F3)  
+ *	  
+ *>Version .31 alpha revision 15 :: 18 juin  
+T&T
+ *	correction d'un bug sur les montagnes(plus de phéromones dessus)  
+ *	  
+ *>Version .31 alpha revision 5 :: 4 juin la version fantôme ou comment devenir fou !  
+ *	Ajout des montagnes de Trisatn et correction de bugs d'affichage  
+ *	Futur: Classes CFourmilliere et CClan (Oulalala)  
+ *  
+ *>Version .31 alpha revision 1 :: 28 mai 2000  
+T&T et Manik
+ *	Optimisation de la gestion des phéromones la vitesse est fantastique même en 400*400  
+ *	Ajout de montagnes (moches d' ailleurs)  
+ *>Version .30 bêta revision 25 :: 20 mai 2000  
+T&T
+ * 	Quelques changements qui améliorent la vie des fourmis (pas la nôtre)  
+ *>Version .30 bêta revision 22 :: 2 mai 2000  
+ *	Ajout d'une barre de vie  
+ *  
+ *>Version .30 vraie bêta revision 19 :: 1 er mai 2000  
+T&T
+ *	Correction d'un bug de déplacement  
+ *	Ajout d'une sélection des fourmis par "rectangle"  
+ *  
+ *>Version .30 bêta revision 2 :: 29 avril 2000  
+T&T
+ *	Ajout d'un menu Setup externe trés confortable.  
+ *	Programmation de procédures pour initialiser les variables  
+ *  
+ *>Version .29 bêta revision 15 :: 27 avril 2000  
+T&T
+ *	Tableaux à taille variable !!  
+ *  
+ *>Version .29 bêta revision 6 :: 15 avril 2000  
+T&T
+ *	Bogues(des citernes) corrigés  
+ *	Plus de Fourmis sautantes il me semble. (oubli de DDFLIP_WAIT de DDBLFAST_WAIT)  
+ *  
+ *>Version .29 alpha revision 1 :: 14 avril 2000   
+Manik
+ *	Erreurs de linking résolues (Ouaiiis)  
+ *	Ajout d'un fichier fourmi.ini ( à mettre dans le rep c:\) par Manik  
+ *  
+ *>Version .28 bêta revision 25 :: 13 avril 2000  
+T&T
+ *	Lissage des déplacements des fourmis  
+ *  
+ *>Version .28 bêta revision 20 :: 12 avril 2000  
+T&T
+ *	Bogue de Plus_Proche() éliminé  
+ *	Recherche d'une plus grande stabilité au niveau des mortalités  
+ *  
+ *>Version .28 bêta revision 11 :: 12 avril 2000  
+T&T
+ *	Bugs d'affichage corrigés  
+ *	Correction de petits trucs pas très gentils  
+ *	Délocalisation de toutes les procédures  
+ *  
+ *>Version .28 alpha revision 6 :: 12 avril 2000  
+T&T
+ *	Action() remodelée  
+ *	La fourmilière remarche  
+ *	Super Ajout : l'utilisateur peut rajouter de la nourriture( Manik en est si friand -> il va être content)  
+ *	Variables désuettes mais à ne pas enlever : CiterneExt <- je dis ça pour FL  
+ *  
+ *>Version .26 alpha revision ? :: 11 avril 2000  
+T&T
+ *	Action() en partie refait (j'ai enlevé les Plus_Proche() qui n'existaient pas dans la réalité  
+ *	Correction de bugs dans la foulée  
+ *	Ajout d'un nouveau type de phéromone : PCITERNE qui sont lachés pour indiquer la position d'une citerne  
+ *	Pb des "cycles" et autres jeux de cirques  
+ *	La fourmillière est très mal gérée ( il faudra plus tard la considérer comme une citerne et tester si elle   
+ *	s'apparente à une citerne (ou bien faire intervenir Plus_Proche (car les fourmis peuvent dans un certain    
+ *	périmètre retrouver leurs terriers  
+ *  
+ *>Version .25 bêta revision 8 :: 9 avril 2000  
+T&T
+ *	Amélioration de Action() et correction de petits bugs vicieux  
+ *	Pas de bogues répertoriés (I hope so...)  
+ *	Extra : un nouvel About (F1)  
+ *  
+ *>Version .25 alpha revision 4 :: 9 avril 2000  
+T&T
+ *	Gestion de Action() un poil meilleur  
+ *	Correction de bugs  
+ *	Futur : Faire_Salle() et Creuser() à l'initiative...  
+ *  
+ *>Version .23 alpha revision 9 :: 8 avril 2000  
+T&T
+ *	Corrections de bugs plus ou moins génants ( 4 au total )  
+ *	Ajout de la fourmilière dans toute sa gloire (mais j'aime pas trop les préfabriqués)  
+
+ *	Reprogrammation d'une partie de Ouvrière :: Action () qui devenait laborieux à lire  
+ *	Délocalisation des procédures graphiques  
+ *	Gestion des fourmis plus stables grâce à FL dont les efforts n'ont pas du tout été vains  
+ *	Ajout de qq informations sur la barre pour une interface sans égal  
+ *  
+ *>Version .22 alpha révision ? :: 7 avril 2000  
+FL
+ *	refonte de toutes les procédures, sauf graphiques  
+ *	Plus de problèmes de mémoire majeur   
+ *	Rajout des Citernes et changement des comportements en conséquence  
+ *  
+ *>Version .21 alpha révision 6 :: 5 avril 2000  
+ *	François reprend les affaires en main, ça va faire du grabuge...  
+ *	Essai raté pour gérer la fourmillière  
+ *	Quand même fait qqs procédures de base  
+ *	Nettoyage complet de tout le source  
+ *  
+ *>Version .21 alpha revision 5 :: 3 avril 2000 T&T  
+ *	L'utilisateur peut cliquer sur les fourmis!!!  
+ *  
+ *>Version .20 alpha revision 20 :: 3 avril 2000  
+T&T
+ *	Correction d'un bug furtif dans Avancer_hasard()  
+
+ *	Correction de bugs un peu partout  
+ *	Nouveaux bitmaps de TATMF  
+ *	Futur: Gestion de la souris  
+ *			Réactions  
+ *  
+ *>Version .20 alpha revision 6 :: 26 mars 2000  
+T&T
+ *	Optimisation de la vitesse au détriment de la taille des données(!)  
+ *	Tableaux 300*300 potables (ce n'est plus aussi lent qu'avant)  
+ *  
+ *>Version .20 alpha revision 3 :: 23 mars 2000  
+T&T
+ *  
+	Ajout des bitmaps de Tristan(terrain et sentinelles)  
+ *	Première apparition de Sentinelles (+ Sensation !?)  
+ *	Optimisation de UpdateFrame()  
+ *	Fin du second trimestre (avec des hauts et des bas)  
+ *	Futur: Gestion des Sentinelles plus poussée.  
+ *			Pourquoi pas CNourrice ? 	  
+ *  
+ *>Version .17 alpha revision 15 :: 18 mars 2000 T&T  
+ *	Ajout des bitmaps de Tristan  
+ *	Ajout de Sentinelle (mais y'a rien)  
+ *	Correction de bugs (Ca a été dur de les localiser!!) dus à CNourriture  
+ *	Correction de bugs (qui existaient depuis belle lurette.  
+ *	Il reste des bugs (???)  
+ *	Petites améliorations de UpdateFrame()  
+ *	  
+ *  
+ *>Version .16 alpha revision 3 :: 15 mars 2000  
+T&T et Manik
+ *	Ajout de CNourriture ( et correction des bugs qui sont apparus)  
+ *	Ca ne m'a pas demandé beaucoup d'effort (n'est-ce pas Manik?)  
+ *	Ajout d'un Splash et indépendance de Flips()  
+ *	Ajout de stdafx.h et des affichages textes sous DirectX  
+ *	Bogues ?  
+ *  
+ *>Version .15 alpha revision 15 :: 28 février 2000  
+ *	Ajout des bitmaps de Tristan  
+ *	Petite amélioration de Do_Phero();  
+ *  
+ *>Version .15 alpha revision 11 :: 27 février 2000  
+T&T
+ *	Remplacement de Statut(int) par Statut(type) , plus performant et plus facile à gérer  
+ *	Réécriture et correction de bugs : Do_Phero(), Phero_autour()  
+ *		, Avancer_hasard(), Avancer_vers(), UpdateFrame()  
+ *	Changement de la gestion de la reine incorprée dans les_fourmis  
+ *	Les fonctions virtuelles ont toutes disparues.(Optimisation++)  
+ *	Subsiste une virtuelle pure Prend_Nourriture();  
+ *	Les fourmis se communiquent mais ça n'est pas encore extraordinaire!  
+ *	Extra : les fourmis meurent !  
+ *	Futur : Implémentation de CNourriture;  
+ *  
+ *  
+ *>Version .1 alpha revision 6 :: 26 février 2000  
+T&T
+ *	Petite modification de regarde_autour(),prendre_nourriture(), Action()  
+ *	Nouvelles fonctions : Do_Phero(), Phero_autour()  
+ *	Fonctions désuettes : rencontre_copain(), Cacher_Phéro()  
+ *	Fonction remplacée : Avancer() par Avancer_hasard() (Correction du bug du BYTE Deplacement!!!)  
+ *	La communication n'est plus enclenchée à cause de nourriture = mort;  
+ *  
+ *>Version .1 alpha revision 1 :: 25 février 2000 T&T  
+ *	Nouveau mode de gestion des tours  
+ *	Implémentation de Action()  
+ *	Révision de regarder_autour() (accessibles par toutes les fourmis désormais  
+ *	Révision de prendre_nourriture()  
+ *	Ajout de logique floue et de nouvelles variables pour la gestion  
+ *	Sensible à faim, utile et autres...(mais il reste bcp à faire)  
+ *	Communication améliorée mais nourriture atteint zéros trop rapidement  
+ *	Rencontre_copain ne fonctionne plus.  
+ *	Amélioration de CPhéromone: la disparition est plus "normale"  
+ *	  
+ *>Version .02 alpha revision 3 :: 24 février 2000  
+T&T
+ *	Implémentation de CPheromone,  
+ *	Mise à jour de traces[][] en **,  
+ *	Ajout de Avancer_hasard()  
+ *  
+ *>Version .02 alpha revision 1 :: 23 février 2000 devient superfourmi !  
+ *	Mise en place de DirectX, terrain[][] PRG Visual C++5.0  
+ *  
+ *>Version .01 alpha revision 4 correction 3 :: 17 février 2000 nom de code fourmi  
+ *	Beaucoup de bugs en moins(j'en ai corrigé six ou sept  
+ *	le bug suivant semble avoir disparu (Mais une fois n'est pas coutume)  
+ *	télétransportation inopinée d'une fourmi . Pb ? Cf avancer module phéromone  
+ *	Semble marcher désormais le module suivre phéromone  
+ *  
+ *   
+ * SFourmi Group Copyrights 2000.  
+ *  
+ ***************************************************************************/  
+

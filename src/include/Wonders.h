@@ -61,11 +61,12 @@ struct CDecor
 
 struct CCase
 {
-	char terrain;					// Image de fond
-	char offsetX, offsetY;			// Dans le cas où il prend plusieurs cases, coordonnées de l'image à afficher
+  	int	z;				// Hauteur, altitude
 	class CAnimal *firstAnimal;		// Liste chaînée des animaux
 	class CPheromone *phero[3];		// Faire liste chaînée pour mettre plus de phéromones
 	CDecor *decor;					// Décor déplaçable ou bouffable, peut prendre plusieurs cases
+	char terrain;					// Image de fond
+	char offsetX, offsetY;			// Dans le cas où il prend plusieurs cases, coordonnées de l'image à afficher
 };
 
 #endif

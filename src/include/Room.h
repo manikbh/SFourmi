@@ -26,12 +26,14 @@ class CRoom
 {
 
 public:
-	CRoom(int largeur, int hauteur, enum typeRoom tR);
+	CRoom(int largeur, int hauteur, enum typeRoom tR, unsigned char altitudes[256][256]);
+	CRoom(int largeur, int hauteur, typeRoom tR);
 	CRoom();
 	~CRoom();
 
 	inline void	SetNiveau(int niv) { niveau = niv; };
-	void		Init(int largeur, int hauteur, enum typeRoom tR);
+	void		Init(int largeur, int hauteur, enum typeRoom tR) {Init(largeur, hauteur, tR, 0);}
+	void		Init(int largeur, int hauteur, enum typeRoom tR, unsigned char altitudes[256][256]);
 	void		SetEntrees(int x, int y, int num);
 	class CTunnel*	GetTunnel(int x, int y) const;
 	bool		Serialize(FILE *sauveg, bool sauv, IOTablePointeur &table);

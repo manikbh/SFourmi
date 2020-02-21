@@ -5,18 +5,18 @@
 // Login   <dodeskaden@Z>
 // 
 // Started on  Mon Feb  4 00:27:12 2002 Ghost in the Shell
-// Last update Sat Oct 19 00:12:40 2002 Ghost in the Shell
+// Last update Wed Nov 26 19:19:10 2003 Ghost in the Shell
 //
 
 #include "SFourmis.h"
-
 CRoom::CRoom(int largeur, int hauteur, typeRoom tR)
 {
-  Gate[0].resize(1);
-  Gate[1].resize(1);
-  Gate[0].pop_back();
-  Gate[1].pop_back();
-  Init(largeur, hauteur, tR);
+  Init(largeur, hauteur, tR, 0);
+}
+
+CRoom::CRoom(int largeur, int hauteur, typeRoom tR, unsigned char altitudes[256][256])
+{
+  Init(largeur, hauteur, tR, altitudes);
 }
 
 CRoom::CRoom(){}
@@ -32,7 +32,7 @@ CRoom::~CRoom()
 }
 
 void
-CRoom::Init(int largeur, int hauteur, typeRoom tR)
+CRoom::Init(int largeur, int hauteur, typeRoom tR, unsigned char altitudes[256][256])
   // Paramètres
   // Largeur	:largeur de la Room
   // Longeur	:longueur
@@ -42,6 +42,10 @@ CRoom::Init(int largeur, int hauteur, typeRoom tR)
   size.largeur = largeur;
   size.hauteur = hauteur;
 
+  Gate[0].resize(1);
+  Gate[1].resize(1);
+  Gate[0].pop_back();
+  Gate[1].pop_back();
   map = new CCase*[largeur];
   for (i = 0; i < largeur; i++)
   {
@@ -52,6 +56,12 @@ CRoom::Init(int largeur, int hauteur, typeRoom tR)
       map[i][j].terrain = 0;
       map[i][j].decor->genre = ERIEN;
       map[i][j].firstAnimal = NULL;
+
+      // Altitude nulle par défaut
+      if (altitudes)
+	map[i][j].z = (altitudes[i][j]);
+      else
+	map[i][j].z = 1;
 
       for( k = 0; k<  PHERO_SIZE ; k++)
 	map[i][j].phero[k] = new CPheromone( NUL , 0, 0, 0);
@@ -65,7 +75,7 @@ CRoom::Init(int largeur, int hauteur, typeRoom tR)
 	{
 	  map[i][j].terrain = rand()%6;
 	}
-      for(k=0; k< largeur / 10;k++)
+      for(k=0; k< largeur / 10; ++k)
       {
 	i= rand()%largeur;
 	j= rand()%hauteur;
@@ -204,7 +214,7 @@ CRoom::Serialize(FILE *sauveg,bool sauv, IOTablePointeur &table)
 			fwrite(&ca.firstAnimal, sizeof(int),1,sauveg);
 			fwrite(&ca.decor, sizeof(int),1,sauveg);
 			fwrite(&PHERO_SIZE, sizeof(PHERO_SIZE),1,sauveg);
-			SDEBUG(W2," ca : "<<(int)ca.terrain<<", "<<(int)ca.offsetX<<", "<<(int)ca.offsetY<<", "<<ca.firstAnimal<<", "<<ca.decor<<" PheroSize = "<<(int)PHERO_SIZE);
+			SDEBUG(W2," ca : "<<(int)ca.terrain<<", "<<(int)ca.offsetX<<", "<<(int)ca.offsetY<<", "<<(int)ca.firstAnimal<<", "<<(int)ca.decor<<" PheroSize = "<<(int)PHERO_SIZE);
 			//Sauvegarde des phéromones
 			for(i=0; i<PHERO_SIZE; i++)
 				ca.phero[i]->Serialize(sauveg, sauv, table);
@@ -273,7 +283,7 @@ CRoom::Serialize(FILE *sauveg,bool sauv, IOTablePointeur &table)
 			}else{
 				SDEBUG(W2, "Erreur de chargement de décor !");
 			}
-			fread(&map[k][k2].terrain, sizeof(char),1,sauveg); 
+			fread(&map[k][k2].terrain, sizeof(char),1,sauveg);
 			fread(&map[k][k2].offsetX, sizeof(char),1,sauveg);
 			fread(&map[k][k2].offsetY, sizeof(char),1,sauveg);
 			fread(&map[k][k2].firstAnimal, sizeof(int),1,sauveg);//TODO 2020: reading just 32 bits will give random values in a 64bits pointer type

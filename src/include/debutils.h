@@ -7,7 +7,7 @@
 #define _DEBUTIL_
 
 #ifdef RELEASE
-# define LEVEL W0
+# define LEVEL W1
 #else
 # define LEVEL WALL
 #endif
@@ -32,6 +32,7 @@ enum WLEVEL {W0,W1,W2,W3,W4,W5,W6,W7,W8,W9,WALL};
 if(lev < LEVEL) \
     { \
     Log << lev <<" #"<< __FILE__ << " @ " << __LINE__ << " : " << msg << endl; Log.flush(); \
+    std::cerr << lev <<" #"<< __FILE__ << " @ " << __LINE__ << " : " << msg << endl;\
     } \
 };
 

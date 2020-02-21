@@ -18,11 +18,12 @@
 #include <math.h>
 #include <fstream>
 #include <iostream>
+#include <assert.h>
 
 #ifdef WIN32		// WIN //
 
 #include "StdAfx.h"
-#include <assert.h>
+//#include <assert.h>
 #include <ddraw.h>
 //#include <dmusicc.h>
 //#include <dmusici.h>

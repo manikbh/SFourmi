@@ -1,6 +1,8 @@
-#include <string>
 #ifndef USER_H
 # define USER_H
+#include <string>
+#include "SDLInterface.h"
+
 
 class IOTablePointeur;
 class	CRoom;
@@ -16,16 +18,10 @@ class	User
 	void Serialize(FILE * fichier, bool sauv, IOTablePointeur &table);
 	void		Initialize(class DataMap &MData);
 	void    	ConstructEnvironment(class DataMap &MData);
-	inline void MoveRoom(){
-		if(this->bGoDown)
-  		this->line = min(this->line+1, this->This_room()->size.hauteur-9*2);
-		else if(this->bGoUp)
-			this->line = max(this->line-1, 0);
-		else if(this->bGoRight)
-			this->column = min(this->column+1,this->This_room()->size.largeur-10*2);
-		else if(this->bGoLeft)
-			this->column = max(this->column-1,0);
-	}
+
+
+	// !!!!!!!!!! ACCELERER AVEC TABLE SIN ET COS !!!!!!!!!!!!!!
+	void MoveRoom();
 	inline void	setThis_clan(CClan *c) {this_clan = c;}
 	inline CClan *This_clan() const {return this_clan;}
 	inline void	setThis_room(class CRoom *r) {this_room = r;}

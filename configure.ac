@@ -6,19 +6,18 @@
 
 # We want Autoconf 2.52 at least.
 AC_PREREQ(2.52)
-AC_INIT(SFourmi, 0.42.4)
+AC_INIT(SFourmi, 0.43.2)
 # Auxiliary files.
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_FILES(config/Makefile)
-
-test "$prefix" = NONE && prefix=/usr/local
 
 # Automake.
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
 
 # We want no optimization (too slow), and a lot of debugging, for both
 # C and C++.
-CFLAGS="-O3 -Wall"
+#CFLAGS="-O3  -march=i686 -Wall -ggdb"
+CFLAGS="-fpermissive -g -march=x86-64 -Wall -ggdb"
 CXXFLAGS=$CFLAGS
 
 # Look for a C++ compiler.
@@ -31,13 +30,18 @@ AC_PROG_CC
 dnl Check for sdl
 SDL_VERSION=1.2.0
 AM_PATH_SDL($SDL_VERSION, :,AC_MSG_ERROR([*** SDL $SDL_VERSION not found ***]))
+GDK_PIXBUF_VERSION=0.9.0
+#AM_PATH_GDK_PIXBUF($GDK_PIXBUF_VERSION, 
+#	:,
+#	AC_MSG_ERROR([*** GTKPIXBUF not found ***]))
 AC_CHECK_LIB(SDL_image, IMG_Load, [AC_DEFINE(HAVE_LIBIMG, 1,
 				 [Define if you have the SDL_image library or equivalent. ]) LIBADD_SDL_IMAGE="-lSDL_image"])
 AC_CHECK_LIB(SDL_ttf, TTF_Init, [AC_DEFINE(HAVE_LIBTTF, 1,
 				 [Define if you have the SDL_ttf library or equivalent. ]) LIBADD_SDL_TTF="-lSDL_ttf"])
+#CFLAGS="-I\${top_srcdir}/src/include -I${srcdir} $CFLAGS $GDK_PIXBUF_CFLAGS $SDL_CFLAGS"
 CFLAGS="-I\${top_srcdir}/src/include -I${srcdir} $CFLAGS $SDL_CFLAGS"
 CPPFLAGS="$CFLAGS"
-LIBS="$LIBS $SDL_LIBS $LIBADD_SDL_TTF $LIBADD_SDL_IMAGE"
+LIBS="$LIBS $SDL_LIBS $LIBADD_SDL_TTF $LIBADD_SDL_IMAGE -lGL -lX11 -lXmu -lXi -lm -lglut -lGL -lGLU -ljpeg -L/usr/X11/lib"
 LDFLAGS="$LIBS"
 # Look for auxiliary programs.
 #AM_PROG_LEX
@@ -48,10 +52,10 @@ AM_CONFIG_HEADER(config.h)
 # Ask for the Makefile creations.
 AC_DEFINE_UNQUOTED(SFOURMI_DATADIR, "$prefix/share/$PACKAGE/", [Directory of SF datas])
 AC_CONFIG_FILES(docs/Makefile  src/include/Makefile
-		Makefile lib/Makefile lib/Os/Makefile 
+		Makefile lib/Makefile lib/Os/Makefile lib/Os/gtk/Makefile
 		images/Makefile 
 		lib/Os/sdl/Makefile
-		lib/Os/gtk/Makefile
+		lib/Os/opengl/Makefile
 		src/Makefile src/animaux/Makefile
 		src/animaux/autres/Makefile src/animaux/fourmis/Makefile
 		src/common/Makefile src/terrain/Makefile)

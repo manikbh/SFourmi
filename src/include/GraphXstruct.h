@@ -5,7 +5,7 @@
 ** Login   <dodeskaden@epita.fr>
 ** 
 ** Started on  Sat Jan 26 15:16:08 2002 Ghost in the Shell
-** Last update Sat Feb  2 10:10:34 2002 Ghost in the Shell
+** Last update Thu Nov 27 12:29:16 2003 Ghost in the Shell
 */
 
 #ifndef GRAPHXSTRUCT_H
@@ -17,22 +17,15 @@ class SFRect
     SFRect () {left = top = right = bottom = 0;}
     SFRect (int l, int t, int r, int b)
     {left = l; top = t; right = r; bottom = b;}
-#ifdef WIN32
-	CRect toCRect ()
-	{
-		CRect r (left, top, right, bottom);
-		return r;
-	}
-#endif
 #ifdef SF_SDL
 	SDL_Rect *toSDL_Rect()
 	{
-		SDL_Rect *r= new SDL_Rect;
-		r->x = Left();
-		r->y = Top();
-		r->w = Right()-r->x;
-		r->h = Bottom()-r->y;
-		return r;
+		static SDL_Rect r;
+		r.x = Left();
+		r.y = Top();
+		r.w = Right()-r.x;
+		r.h = Bottom()-r.y;
+		return &r;
 	}
 #endif
     ~SFRect () {};
@@ -46,26 +39,6 @@ class SFRect
   private:
     int	left, top, right, bottom;
 };
-
-# ifdef WIN32
-struct SFFont
-{
-  HFONT genre;
-};
-# endif
-
-# ifdef GTK_Linux
-
-# define DDBLTFAST_NOCOLORKEY	0
-# define DDBLTFAST_SRCCOLORKEY	1
-# define DDBLTFAST_WAIT		2
-
-
-struct SFFont
-{
-  GdkFont genre;
-};
-# endif
 
 # ifdef SF_SDL
 struct SFFont

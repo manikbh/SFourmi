@@ -17,6 +17,14 @@
  *	Bug à corriger: Apparition de fourmis dans le bord gauche.
  *
  *
+ *>Version .43 rev 1 (GiTs) :: 26 novembre 2003
+ *  One year later ... two days and now a opengl version which replaces all
+ *   others
+ *  Speed is not yet optimal and program lacks some features but with the help
+ *  of Manik, I'm pretty sure this situation will change soon. I'd like to
+ *  improve the visual render : for now I compute everything visible or not.
+ *  That's an easy solution but I accuse it to slow the performancea.
+ *
  *>Version .42 rev 4 (GiTs) :: 22 octobre 2002
  *  I fixed some obvious bugs (missing sfourmi.ini) and add helps everywhere I
  *  believe there is a need, change DisplayInfo because some displayed
@@ -42,7 +50,7 @@
  *
  *>Version .42 pre 1 (Kinam) :: 07 octobre 2002
  *  Ported SFourmi to SDL. Display works well and is much faster than GTK.
- *  However, events are not completely supported for now. Should be really soon.
+ *  However, events and keys are completely supported for now. 
  *  Saving seems to work but is sloooooooow. Idea by GiTs : to split the pointer
  *  table by categories of objects should be implemented. Loading is fast on the
  *  contrary. Did not check the potential problems with saving.

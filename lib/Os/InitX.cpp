@@ -5,7 +5,7 @@
 // Login   <dodeskaden@Z>
 // 
 // Started on  Mon Feb  4 13:40:49 2002 Ghost in the Shell
-// Last update Tue Oct 22 21:11:29 2002 Ghost in the Shell
+// Last update Thu Nov 27 12:46:09 2003 Ghost in the Shell
 //
 
 #include "SFourmis.h"
@@ -14,209 +14,57 @@
 # include "WinInterface.h"
 #endif
 
-#ifdef GTK_Linux
-# include <gdk/gdk.h>
-# include <gdk-pixbuf/gdk-pixbuf.h>
-# include "GTKInterface.h"
-#endif
-
 #include "GraphXstruct.h"
 #include "GraphXproc.h"
 #include "GraphXtools.h"
 #include "../../images/All.xpm"
 #include "../../images/Icon1.xpm"
 
-#ifdef WIN32
- bool
-GraphX_Init(HWND hwnd)
-#endif
-#ifdef GTK_Linux
-  GdkGC			*jauneGC = 0,
-  *rougeGC = 0,
-  *vertGC = 0,
-  *violetGC = 0;
-extern GdkWindow	*BigFenetre;
- bool
-GraphX_Init(void)
-#endif
-#ifdef SF_SDL
-  /*
-     SDL_Color fontColor;
-     SDL_Surface *image, *screen;*/
-  bool
-GraphX_Init(void)
-#endif
+float Cos[360], Sin[360], Tan[360];
+int repere = 0,
+  terrain = 0,
+  normales = 0,
+  circle = 0,
+  pheromon = 0,
+  cactus = 0,
+  lampes=0; /* Identifiants des listes d'affichage */
+
+static void calcCosSinTable()
 {
-#ifdef WIN32
-  DDSURFACEDESC       ddsd;
-  DDSCAPS             ddscaps;
-  HRESULT             ddrval;
-
-  /*
-   * create the main DirectDraw object
-   */
-  ddrval = DirectDrawCreate(NULL, &lpDD, NULL);
-  if (ddrval != DD_OK)
-    return initFail(hwnd);
-
-  // Get exclusive mode
-  ddrval = lpDD->SetCooperativeLevel(hwnd, DDSCL_EXCLUSIVE | DDSCL_FULLSCREEN);
-
-  if (ddrval != DD_OK)
-    return initFail(hwnd);
-  //!!!!! !!!! MODE IMPOSE !!!! !!!!!
-  ddrval = lpDD->SetDisplayMode(DF_X, DF_Y, 24);
-  if (ddrval != DD_OK)
-    return initFail(hwnd);
-
-  // Create the primary surface with 1 back buffer
-  ddsd.dwSize = sizeof(ddsd);
-  ddsd.dwFlags = DDSD_CAPS | DDSD_BACKBUFFERCOUNT;
-  ddsd.ddsCaps.dwCaps = DDSCAPS_PRIMARYSURFACE |
-    DDSCAPS_FLIP |
-    DDSCAPS_COMPLEX;
-  ddsd.dwBackBufferCount = 2;
-  ddrval = lpDD->CreateSurface(&ddsd, &lpDDSPrimary, NULL);
-  if(ddrval != DD_OK)
-  {
-    return initFail(hwnd);
+  int i;
+  for (i=0;i<360;i++){
+    Sin[i]=sinf(i/360.0*6.283185);
+    Cos[i]=cosf(i/360.0*6.283185);
+    if ((i%90))
+      Tan[i]=tanf(i/360.0*6.283185);
   }
+}
 
-  ddscaps.dwCaps = DDSCAPS_BACKBUFFER;
-  ddrval = lpDDSPrimary->GetAttachedSurface(&ddscaps, &lpDDSBack);
-  if(ddrval != DD_OK)
-  {
-    return initFail(hwnd);
-  }
 
-  // create and set the palette
-  //lpDDPal = DDLoadPalette(lpDD, szBitmap);
-
-  if (lpDDPal)
-    lpDDSPrimary->SetPalette(lpDDPal);
-
-  // Create the offscreen surface, by loading our bitmap.
-  lpDDSOne = DDLoadBitmap(lpDD, szBitmap, 0, 0);
-  lpDDSTwo = DDLoadBitmap(lpDD, szBit,0,0);
-  if(lpDDSOne == NULL)
-  {
-    return initFail(hwnd);
-  }
-
-  // Set the color key for this bitmap (black)
-  // NOTE this bitmap has black as entry 255 in the color table.
-  //    ddck.dwColorSpaceLowValue = 0xff;
-  //    ddck.dwColorSpaceHighValue = 0xff;
-  //    lpDDSOne->SetColorKey(DDCKEY_SRCBLT, &ddck);
-
-  // if we did not want to hard code the palette index (0xff)
-  // we can also set the color key like so...
-  DDSetColorKey(lpDDSOne, RGB(4,4,4));
-  DDSetColorKey(lpDDSTwo, RGB(4,4,4));
-  return(true);
-#endif //FIN WIN32
-#ifdef GTK_Linux	// GTK
-
-  GdkWindowAttr		attributs;
-  GdkBitmap		*IcoMasq;
-  GdkColor		IcoTransp;
-  GdkColor		jaune,vert,rouge,violet;
-  GdkPixmap		*IcoPixmap;
-  /*******************************Déclarations****************************/
-
-  //GdkCursor *Target = gdk_cursor_new_from_pixmap;
-  /*if (argc>0){ //les args sont utilisés par GTK...
-    if (strncmp(argv[0],"sfelkheg",8)==0)
-    info_plus();
-    }
-    else
-    splash(); */
-
-  /*******************************Initialisation de la fenêtre****************************/
-  //Pour les conversions des GdkPixbuf
-  gdk_rgb_init();
-
-  //voir p129 bouquin GTK+
-  attributs.event_mask = GDK_BUTTON_MOTION_MASK | GDK_KEY_PRESS_MASK;
-  attributs.width = DF_X;
-  attributs.height = DF_Y;
-  attributs.wclass = GDK_INPUT_OUTPUT;
-  attributs.window_type = GDK_WINDOW_TOPLEVEL;
-  //gdk_set_show_events(true);
-  BigFenetre= gdk_window_new(NULL, &attributs, 0);
-  //sprintf(PATH,"%s/GTKFourmi/gtk/All.xpm",HOME);
-  //printf("%s\n",PATH);
-  char titreFenetre[80];
-  sprintf(titreFenetre,"SuperFourmis - version %s par T&T et Kinam",VERSION);
-  gdk_window_set_title(BigFenetre,titreFenetre);
-  gdk_window_set_hints (BigFenetre,0,0,DF_X, DF_Y, DF_X, DF_Y,GDK_HINT_MIN_SIZE | GDK_HINT_MAX_SIZE);
-  //gdk_pixmap_new(BigFenetre,800,600,gdk_window_get_visual(BigFenetre)->depth);
-  MainPixbuf = gdk_pixbuf_new_from_xpm_data((const char **)&All_xpm);
-  cout<<"Transparence :"<<gdk_pixbuf_get_has_alpha (MainPixbuf);
-  //GDK_COLORSPACE_RGB
-  //gdk_pixbuf_new(GDK_COLORSPACE_RGB,true,gdk_pixbuf_get_bits_per_sample (MainPixbuf),800,600);
-  FlipPM = gdk_pixmap_new(BigFenetre,800,600,gdk_window_get_visual(BigFenetre)->depth);
-  //gdk_beep();
-  //sprintf(PATH,"%s/GTKFourmi/gtk/Icon1/xpm",HOME);
-  //printf("%s\n",PATH);
-  IcoPixmap = gdk_pixmap_create_from_xpm_d(BigFenetre,&IcoMasq,&IcoTransp,Icon1_xpm);
-  BigGC = gdk_gc_new (BigFenetre);
-  gdk_gc_set_line_attributes(BigGC,1,GDK_LINE_SOLID,GDK_CAP_BUTT,GDK_JOIN_MITER);
-  police1=gdk_font_load("-*-courier-*-*-*-*-10-*-*-*-*-*");
-  //gdk_window_set_back_pixmap(BigFenetre,MainPixmap,false);
-  //gdk_draw_pixmap((GdkDrawable*)BigFenetre,BigGC,MainPixmap,0,600,100,140,32,32);
-  gdk_window_set_icon(BigFenetre,NULL,IcoPixmap,IcoMasq);
-  //Small Map
-  jaune.red=65535;jaune.green=65535;jaune.blue=0;
-  vert.red=0;vert.green=65535;vert.blue=0;
-
-  rouge.red=65535;rouge.green=0;rouge.blue=0;
-  violet.red=45535;violet.green=0;violet.blue=45535;
-  //gdk_colormap_alloc_color(gdk_colormap_get_system(),&MainTransp,false,true);//PAS SUR ! ! !
-  gdk_colormap_alloc_color(gdk_colormap_get_system(),&jaune,false,true);
-  gdk_colormap_alloc_color(gdk_colormap_get_system(),&rouge,false,true);
-  gdk_colormap_alloc_color(gdk_colormap_get_system(),&vert,false,true);
-  gdk_colormap_alloc_color(gdk_colormap_get_system(),&violet,false,true);
-  gdk_colormap_alloc_color(gdk_colormap_get_system(),&GDKColor1,false,true);
-
-  jauneGC=gdk_gc_new(BigFenetre);
-  vertGC=gdk_gc_new(BigFenetre);
-  rougeGC=gdk_gc_new(BigFenetre);
-  violetGC=gdk_gc_new(BigFenetre);
-  GDKGC1 = gdk_gc_new(BigFenetre);
-
-  gdk_gc_set_line_attributes(jauneGC,1,GDK_LINE_SOLID,GDK_CAP_BUTT,GDK_JOIN_MITER);
-
-  gdk_gc_copy(vertGC, jauneGC);				  //Pour conserver les attributs de ligne de jaune...
-  gdk_gc_copy(rougeGC, jauneGC);
-  gdk_gc_copy(violetGC, jauneGC);
-  gdk_gc_copy(GDKGC1, jauneGC);
-
-  gdk_gc_set_foreground(jauneGC,&jaune); gdk_gc_set_foreground(vertGC,&vert);
-  gdk_gc_set_foreground(rougeGC,&rouge); gdk_gc_set_foreground(violetGC,&violet);
-  gdk_gc_set_foreground(GDKGC1,&GDKColor1);
-  //Fin Small Map
-  if((!FlipPM)||(!MainPixbuf)||(!IcoPixmap))
-  {
-    cout << "ERROR: Cannot load Pixmap\n";
-    exit(0);
-  }
-
-  gdk_window_show(BigFenetre);
-  return(true);
-#endif //Fin GTK_Linux
 #ifdef SF_SDL
-  if (SDL_Init(/*SDL_INIT_AUDIO|*/SDL_INIT_VIDEO)<0){
+bool GraphX_Init(void)
+{
+  const SDL_VideoInfo* info = 0;
+  
+  if (SDL_Init(/*SDL_INIT_AUDIO|*/SDL_INIT_VIDEO)<0)
+  {
     SDEBUG(W0, "Echec de l'initialisation de SDL !");
+    SDEBUG(W0, SDL_GetError());
     exit(0);
   }
   //Nettoyer SDL a la fin de l'execution
   atexit(SDL_Quit);
-  //S'attacher a l'ecran en 800,600, le bpp du systeme (0), acceleration hardware et double buffer
-  if (!(screen = SDL_SetVideoMode(800,600,0,SDL_HWSURFACE|SDL_DOUBLEBUF))){ //TODO 2020 resolution should be a variable (but Map Image must be updated to reflect this)
-    SDEBUG(W0, "Echec de l'initialisation du mode video !");
-    exit(1);
+  
+  // Let's get some video information.
+  info = SDL_GetVideoInfo( );
+
+  if( !info ) {
+    // This should probably never happen.
+    fprintf( stderr, "Video query failed: %s\n",
+	SDL_GetError( ) );
+    SDL_Quit();
   }
+
   //idem pour la librairie des polices
   if (TTF_Init()<0){
     SDEBUG(W0, "Echec de l'initialisation de TTF !");
@@ -224,106 +72,349 @@ GraphX_Init(void)
   }	
   atexit(TTF_Quit);
 
-  //  image = IMG_Load("/home/dodeskaden/Test/SFourmi/lib/Os/win/All.bmp");
+
+  SDL_GL_SetAttribute( SDL_GL_RED_SIZE, 5 );
+  SDL_GL_SetAttribute( SDL_GL_GREEN_SIZE, 5 );
+  SDL_GL_SetAttribute( SDL_GL_BLUE_SIZE, 5 );
+  SDL_GL_SetAttribute( SDL_GL_DEPTH_SIZE, 16 );
+  SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
+  
+  //S'attacher a l'ecran en 800,600, le bpp du systeme (0), acceleration hardware et double buffer
+  if (!(screen = SDL_SetVideoMode(800,600,0,SDL_HWSURFACE|SDL_DOUBLEBUF|SDL_OPENGL))){
+  /* if (!(screen = SDL_SetVideoMode(800,600,0,SDL_HWSURFACE|SDL_DOUBLEBUF))){ */
+    SDEBUG(W0, "Echec de l'initialisation du mode video !");
+    SDL_Quit();
+  }
+
+  SDEBUG(W0, "Opengl opening ...");
+  setup_opengl(800, 600);
+  SDEBUG(W0, "Opengl set !");
+  SDEBUG(W0, "Lanscape, Lights  generator ...");
+  //TODO 2020 Adding glutInit
+  
+  creeRepere();
+  creeLampes();
+  creeTerrain();
+  calcCosSinTable();
+  SDEBUG(W0, "PASSED" << std::endl);
+  std::cerr << "PASSED" << std::endl;
+
+  //  image = IMG_Load("/usr/local/share/SFourmi/images/All.bmp");
   image = IMG_ReadXPMFromArray (All_xpm);
   if(image == NULL){
     SDEBUG(W0, "Impossible de charger l'image !");
-    if(!fopen("/home/dodeskaden/Test/SFourmi/lib/Os/win/All.bmp","r"))
+    if(!fopen("/usr/local/share/SFourmi/images/All.bmp","r"))
     {SDEBUG(W0, "Image inaccessible !");}
     else
     {SDEBUG(W0, "Image accessible !");}
     exit(1);
   }
   SDL_SetColorKey(image, SDL_SRCCOLORKEY|SDL_RLEACCEL, SDL_MapRGB(image->format, 4, 4, 4));
-  if((image = SDL_DisplayFormat(image)) == NULL){
-     SDEBUG(W0, "Impossible de convertir l'image au format d'affichage !");
-     exit(1);
-  }
   SFRect sfr(0,0,800,600);
-  SFDrawSurface(0,0,sfr);
+  /* SFDrawSurface(0,0,sfr); */
+  std::cerr << "PASSED2" << std::endl;
 
-  if(! (SFfont=TTF_OpenFont(SFOURMI_DATADIR "/images/font.ttf", 10))){//On charge la police taille 10pt
+  if(! (SFfont=TTF_OpenFont("/usr/local/share/SFourmi/images/font.ttf", 10))){//On charge la police taille 10pt
     SDEBUG(W0, "Impossible de charger la police !");
     SDEBUG(W0, SFOURMI_DATADIR "/images/font.ttf");
     exit(1);
   }
+  std::cerr << "PASSED" << std::endl;
+
   TTF_SetFontStyle(SFfont, TTF_STYLE_NORMAL);
   evenement = new SDL_Event;		
   return true;
 #endif
 }
 
+#ifdef SF_SDL
 
-///////////////////////////////////////////////////////////////////////////////
-//						EXCLUSIVE WIN32 MODE
-///////////////////////////////////////////////////////////////////////////////
-
-#ifdef WIN32
-/*
- * retrouve les objets perdus
- *
- */
-HRESULT restoreAll(void)
+void setup_opengl( int width, int height )
 {
-  HRESULT     ddrval;
+  float ratio = (float) width / (float) height;
+  glShadeModel( GL_SMOOTH );
+  gluPerspective( 45.0, ratio, 0.1, 20.0 );
+  glClearColor(0.5, 0.5, 0.5, 1.0);
 
-  ddrval = lpDDSPrimary->Restore();
-  if(ddrval == DD_OK)
-  {
-    ddrval = lpDDSOne->Restore();
-    if(ddrval == DD_OK)
-    {
-      DDReLoadBitmap(lpDDSOne, szBitmap);
-    }
-    ddrval = lpDDSTwo->Restore();
-    if(ddrval == DD_OK)
-    {
-      DDReLoadBitmap(lpDDSTwo, szBit);
-    }
-  }
-  return ddrval;
-}												  /* restoreAll */
+  glFogi(GL_FOG_MODE, fogMode[fogfilter]); // Fog Mode
+  glFogfv(GL_FOG_COLOR, fogColor); // Set Fog Color
+  glFogf(GL_FOG_DENSITY, 0.05f); // How Dense Will The Fog Be
+  glHint(GL_FOG_HINT, GL_DONT_CARE); // Fog Hint Value
+  glFogf(GL_FOG_START, 1.0f); // Fog Start Depth
+  glFogf(GL_FOG_END, 0.0f); // Fog End Depth
+  glEnable(GL_FOG); // Enables GL_FOG
+  
+  glClearDepth(6.0f); // Depth Buffer Setup
+  /* glDisable(GL_DEPTH_TEST); // Disables Depth Testing */
+  /* glEnable(GL_BLEND); // Enable Blending */
+  /* glBlendFunc(GL_SRC_ALPHA,GL_ONE); // Type Of Blending To Perform */
+  /* glHint(GL_PERSPECTIVE_CORRECTION_HINT,GL_NICEST); // Really Nice Perspective Calculations */
+  /* glHint(GL_POINT_SMOOTH_HINT,GL_NICEST); // Really Nice Point Smoothing */
+  
 
-///////////////////////////////////////////////////////////////////////////////
-void finiObjects(void)
+  glEnable(GL_DEPTH_TEST);
+  modePlein = 1;
+  if (modePlein)
+    glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
+  else
+    glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
+  glCullFace(GL_BACK);
+  if (faceArriere)
+    glDisable(GL_CULL_FACE);
+  else
+    glEnable(GL_CULL_FACE);
+
+  /* Mise en place de la perspective */
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();  
+  gluPerspective(45.0,1.0,0.1,20.0);
+  glMatrixMode(GL_MODELVIEW); 
+
+  /* Parametrage de l'éclairage */
+  glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER,GL_TRUE);
+  glEnable(GL_LIGHTING);
+  glEnable(GL_LIGHT0);
+  glEnable(GL_LIGHT1);
+  glLightfv(GL_LIGHT0,GL_DIFFUSE,L0dif);
+  glLightfv(GL_LIGHT0,GL_SPECULAR,L0dif);
+  glLightfv(GL_LIGHT1,GL_DIFFUSE,L1dif);
+  glLightfv(GL_LIGHT1,GL_SPECULAR,L1dif); 
+
+}
+
+/* Creation de la liste d'affichage pour le repere */
+void creeRepere()
 {
-  if(lpDD != NULL)
-  {
-    if(lpDDSPrimary != NULL)
-    {
-      lpDDSPrimary->Release();
-      lpDDSPrimary = NULL;
-    }
-    if(lpDDSOne != NULL)
-    {
-      lpDDSOne->Release();
-      lpDDSOne = NULL;
-    }
+   repere=glGenLists(1);
+  glNewList(repere,GL_COMPILE);
+  glDisable(GL_LIGHTING);
+  glLineWidth(2.0);
+    glBegin(GL_LINES);
+      glColor3f(1.0,0.0,0.0);
+      glVertex3f(0.0,0.0,0.0);
+      glVertex3f(0.3,0.0,0.0);
+      glColor3f(0.0,1.0,0.0);
+      glVertex3f(0.0,0.0,0.0);
+      glVertex3f(0.0,0.3,0.0);
+      glColor3f(0.0,0.0,1.0);
+      glVertex3f(0.0,0.0,0.0);
+      glVertex3f(0.0,0.0,0.3);
+    glEnd();
+    glEnable(GL_LIGHTING);
+  glEndList();
+} 
 
-    if(lpDDSTwo != NULL)
-    {
-      lpDDSTwo->Release();
-      lpDDSTwo = NULL;
-    }
-    if(lpDDPal != NULL)
-    {
-      lpDDPal->Release();
-      lpDDPal = NULL;
-    }
-    lpDD->Release();
-    lpDD = NULL;
-  }
-}												  /* finiObjects */
-
-
-/*
- * Cette fonction est appelée si l'initialisation rate
- */
-bool initFail(HWND hwnd)
+/* Creation de la liste d'afffichage pour le terrain */
+void creeTerrain()
 {
-  finiObjects();
-  MessageBox(hwnd, "DirectDraw Init FAILED", "SFOURMIS", MB_OK);
-  DestroyWindow(hwnd);
-  return false;
+  int i,j;
+  float pas=20.0/nbSubdiv;
+  vertex *T;
+  vertex *P1,*P2,*P3,*P4;
+  vertex V1,V2,V3;
+  float incx,incy,incz,norme;
+  T=(vertex *)malloc((nbSubdiv+1)*(nbSubdiv+1)*sizeof(vertex));
+
+  /* Initialisation des normales */
+  for (i=0;i<=nbSubdiv;i++)
+    for (j=0;j<=nbSubdiv;j++) {
+      T[i*(nbSubdiv+1)+j].nx=0.0;
+      T[i*(nbSubdiv+1)+j].ny=0.0;
+      T[i*(nbSubdiv+1)+j].nz=0.0;
+    }
+  /* remplissage du tableau Tvertex */
+  for (i=0;i<=nbSubdiv;i++)
+    for (j=0;j<=nbSubdiv;j++) {
+      T[i*(nbSubdiv+1)+j].x=-10.0+i*pas;
+      T[i*(nbSubdiv+1)+j].y=-10.0+j*pas;
+      T[i*(nbSubdiv+1)+j].z=elevation(i,j);
+    }
+  for (i=0;i<nbSubdiv;i++)
+    for (j=0;j<nbSubdiv;j++) {
+      P1=&T[i*(nbSubdiv+1)+j];
+      P2=&T[(i+1)*(nbSubdiv+1)+j];
+      P3=&T[(i+1)*(nbSubdiv+1)+j+1];
+      P4=&T[i*(nbSubdiv+1)+j+1];
+      
+      V1.x=P2->x-P1->x; V1.y=P2->y-P1->y; V1.z=P2->z-P1->z;
+      V2.x=P3->x-P1->x; V2.y=P3->y-P1->y; V2.z=P3->z-P1->z;
+      V3.x=P4->x-P1->x; V3.y=P4->y-P1->y; V3.z=P4->z-P1->z;
+
+      incx=V2.y*V1.z-V1.y*V2.z;
+      incy=V2.z*V1.x-V1.z*V2.x;
+      incz=V2.x*V1.y-V1.x*V2.y;
+      norme=sqrt(incx*incx+incy*incy+incz*incz);
+      incx/=norme; incy/=norme; incz/=norme;
+      P1->nx-=incx; P1->ny-=incy; P1->nz-=incz;
+      P2->nx-=incx; P2->ny-=incy; P2->nz-=incz;
+      P3->nx-=incx; P3->ny-=incy; P3->nz-=incz;
+      
+
+      incx=V3.y*V2.z-V2.y*V3.z;
+      incy=V3.z*V2.x-V2.z*V3.x;
+      incz=V3.x-V2.y-V2.x*V3.y;
+      P1->nx-=incx; P1->ny-=incy; P1->nz-=incz;
+      P3->nx-=incx; P3->ny-=incy; P3->nz-=incz;
+      P4->nx-=incx; P4->ny-=incy; P4->nz-=incz;
+    }
+  
+  /* normalisation des normales */
+  for (i=0;i<=nbSubdiv;i++)
+    for (j=0;j<=nbSubdiv;j++) {
+      P1=&T[i*(nbSubdiv+1)+j];
+      norme=sqrt(P1->nx*P1->nx+P1->ny*P1->ny+P1->nz*P1->nz);
+      P1->nx/=norme;
+      P1->ny/=norme;
+      P1->nz/=norme;
+    }
+  
+  /* Liste pour l'objet terrain */
+  if (glIsList(terrain))
+    glDeleteLists(terrain,1);
+  terrain=glGenLists(1);
+  glNewList(terrain,GL_COMPILE);
+  /* Paramétrage du matériau */
+  /* glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR,Mspec); */
+  /* glMaterialf(GL_FRONT_AND_BACK,GL_SHININESS,Mshiny); */
+
+  glColor3f(0.1,1.0,0.0);
+  glLineWidth(1.0);
+  for (i=0;i<nbSubdiv;i++)
+    for (j=0;j<nbSubdiv;j++) {
+      if (T[i*(nbSubdiv+1)+j].z > PROF + 0.2)
+	glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT,Mspec_grass);
+      else
+	glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT,Mspec_sand);
+	
+      glBegin(GL_TRIANGLES);
+      /* triangle 1 */
+      glEdgeFlag(TRUE);
+      drawVertex(i,j,T);
+      drawVertex(i+1,j,T);
+      if (!areteTransv)
+	glEdgeFlag(FALSE);
+      drawVertex(i+1,j+1,T);
+
+      /*triangle 2 */
+      drawVertex(i,j,T);
+      if (!areteTransv)
+	glEdgeFlag(TRUE);
+      drawVertex(i+1,j+1,T);
+      drawVertex(i,j+1,T);
+      glEnd();
+    }
+  glEndList();
+
+  /* Generation de la liste d'affichage des normales*/
+  creeNormales(T);
+  
+  /* Liberation de Tvertex */
+  free(T);
+  
+  if (glIsList(circle))
+    glDeleteLists(circle,1);
+  circle=glGenLists(1);
+  glNewList(circle,GL_COMPILE);
+  glutSolidSphere(0.1f, 5, 5);
+  glPushMatrix();
+  glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT,Mspec_phero_rouge);
+  glTranslatef(-0.05f, 0.03, 0.08);
+  glutSolidSphere(0.02f, 5, 5);
+  glTranslatef(0.1f, 0.0f, 0.0f);
+  glutSolidSphere(0.02f, 5, 5);
+  glPopMatrix();
+  glEndList();
+  
+  if (glIsList(cactus))
+    glDeleteLists(cactus,1);
+  cactus=glGenLists(1);
+  glNewList(cactus,GL_COMPILE);
+  glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT,Mspec_grass);
+  glutSolidSphere(0.1f, 5, 5);
+  glPushMatrix();
+  glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT,Mspec_sand);
+  glTranslatef(-0.05f, 0.03, 0.08);
+  glutSolidSphere(0.02f, 5, 5);
+  glTranslatef(0.1f, 0.0f, 0.0f);
+  glutSolidSphere(0.02f, 5, 5);
+  glTranslatef(-0.05f, -0.08, -0.02);
+  glutSolidSphere(0.02f, 5, 5);
+  glPopMatrix();
+  glEndList();
+ 
+  if (glIsList(pheromon))
+    glDeleteLists(pheromon,1);
+  pheromon=glGenLists(1);
+  glNewList(pheromon,GL_COMPILE);
+  glutSolidSphere(0.01f, 5, 5);
+  glEndList();
+}
+
+
+/* Cree la liste d'affichage pour les normales */
+void creeNormales(vertex *T)
+{
+  int i,j;
+  vertex *P;
+  if (glIsList(normales))
+    glDeleteLists(normales,1);
+  normales=glGenLists(1);
+  glNewList(normales,GL_COMPILE);
+  glDisable(GL_LIGHTING);
+  glLineWidth(1.0);
+  glColor3f(1.0,1.0,1.0);
+  glBegin(GL_LINES);
+  for (i=0;i<=nbSubdiv;i++)
+    for (j=0;j<=nbSubdiv;j++) {
+      P=&T[i*(nbSubdiv+1)+j];
+      glVertex3fv(&P->x);
+      glVertex3f(P->x+ECHELLE_NORMALES*P->nx,
+		 P->y+ECHELLE_NORMALES*P->ny,
+		 P->z+ECHELLE_NORMALES*P->nz);
+    }
+  glEnd();
+  glEnable(GL_LIGHTING);
+  glEndList();
+  
+}
+
+/* Creation de la Liste d'affichage pour les lampes */
+void creeLampes()
+{
+  lampes=glGenLists(1);
+  glNewList(lampes,GL_COMPILE);
+  glDisable(GL_LIGHTING);
+  glColor3f(1.0,1.0,1.0);
+  glPointSize(6.0);
+  glBegin(GL_POINTS);
+  glVertex3fv(L0pos);
+  glVertex3fv(L1pos);
+  glEnd();
+  glLineWidth(1.0);
+  glBegin(GL_LINES);
+  glVertex3fv(L0pos);
+  glVertex3f(0.0,0.0,0.0);
+  glVertex3fv(L1pos);
+  glVertex3f(0.0,0.0,0.0);
+  glEnd();
+  glEnable(GL_LIGHTING);
+  glEndList();
+}
+
+/* Affiche le sommet (i,j) du maillage */
+void drawVertex(int i,int j,vertex *T)
+{
+  glNormal3fv(&(T[i*(nbSubdiv+1)+j].nx));
+  glVertex3fv(&(T[i*(nbSubdiv+1)+j].x));
+}
+
+/* Calcul de la hauteur d'un point */
+float elevation(int i,int j)
+{
+  /* int valeur=jpgimage[(int)((float)i/nbSubdiv*255)][(int)((float)j/nbSubdiv*255)]; */
+  //int valeur=ZSF.This_room()->map[(int)(float(i)/float(nbSubdiv)*255.0)][(int)(float(j)/float(nbSubdiv)*255.0)].z;
+  int valeur=ZSF.This_room()->map[i][j].z; // MANIK 2009 (car au-dessus avec i et j entre 0 et nbSubdiv, on arrive à 255 à chaque fois alors que c'est pas forcément aussi grand que la carte -> segfault
+  return ((float)valeur/128.0-1.0)*echelleVert;
 }
 #endif
+

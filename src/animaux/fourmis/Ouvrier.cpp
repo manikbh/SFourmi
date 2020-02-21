@@ -5,7 +5,7 @@
 // Login   <dodeskaden@Z>
 // 
 // Started on  Sun Feb  3 23:54:36 2002 Ghost in the Shell
-// Last update Sun Feb  3 23:55:56 2002 Ghost in the Shell
+// Last update Mon Nov 24 17:06:26 2003 Ghost in the Shell
 //
 
 #include "SFourmis.h"
@@ -193,9 +193,9 @@ enum ordre Ouvrier::Action()
 	  mone = Phero_autour(NOURRITURE);
 	  if (mone == ON)
 	    mone = DoPhero(NOURRITURE);
-	  else if (mone == NOURRITURE)
-	    Avancer_vers(Dest[0], Dest[1], 0);
-	  if (mone == NUL)
+//	  else if (mone == NOURRITURE)
+//	    Avancer_vers(Dest[0], Dest[1], 0);
+//	  if (mone == NUL)
 	    Avancer_hasard();
 	}
 	break;

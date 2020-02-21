@@ -1,7 +1,7 @@
 pkgdatadir = $(datadir)/@PACKAGE@/images
 FONTS_DIR=$(pkgdatadir)
 INSTALL=@INSTALL@
-pkgdata_DATA = All.xpm  Icon1.xpm font.ttf
+pkgdata_DATA = All.xpm  Icon1.xpm font.ttf terrain.jpg
 EXTRA_DIST = $(pkgdata_DATA)
 
 # Targets

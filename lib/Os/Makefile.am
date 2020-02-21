@@ -1,4 +1,4 @@
-SUBDIRS = gtk sdl 
+SUBDIRS = opengl
 EXTRA_DIST = 
 INCLUDES = -I./../../src/include 
 

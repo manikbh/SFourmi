@@ -19,7 +19,6 @@
 #include <fstream>
 #include <string>
 #include <cctype>
-#include  <assert.h>
 #include "Wonders.h"
 #include "SFourmis.h"
 #include "DataMap.h"
@@ -125,7 +124,7 @@ DataMap::LoadData(char *file)
 #ifdef SF_SDL
     char          *HOME;
     assert((HOME = getenv("HOME")) != 0);
-    inifile = new char[strlen(file) + strlen(HOME) + 2];
+    inifile = new char[strlen(file) + strlen(HOME) + 20];//TODO 2020 : memory problem, increasing buffer size +20 instead of +2 but HOME has a few strange chars at the end (UTF8 ?)
     strncpy(inifile, HOME, strlen(HOME));
 #endif
 #ifdef WIN32
@@ -134,6 +133,7 @@ DataMap::LoadData(char *file)
 #endif
   strncat(inifile, "/", 1);
   strncat(inifile, file, strlen(file));
+  std::cout << "INI File path : "<< inifile<<"\n";
   sf_ini.open (inifile);
   SDEBUG (W0, inifile);
   delete[] inifile;

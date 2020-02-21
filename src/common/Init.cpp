@@ -22,6 +22,7 @@
 void
 Process_va()
 {
+  
   Fourmi*		fourmi;
   CClan*		clan = 0;
   
@@ -100,7 +101,7 @@ Process_va()
       }
 
   //Ajoute de la nourriture;
-  if (rand() % 100 <= 4)
+  if (rand() % 100 <= 1)
   {
     int i = 1 + rand() % (MData.length - 2);
     int j = 1 + rand() % (MData.height - 2);
@@ -110,6 +111,7 @@ Process_va()
       terre->map[i][j].decor->etat = MData.max_meat;
     }
   }
+  
 }
 
 

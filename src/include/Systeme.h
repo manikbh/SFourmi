@@ -8,7 +8,7 @@
 # define SYSTEM_H
 
 // Release define
-//# define RELEASE
+# define RELEASE
 
 //#define WIN32 "WIN32"
 #define	SF_SDL "SDL"

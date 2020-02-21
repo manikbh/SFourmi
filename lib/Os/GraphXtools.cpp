@@ -5,7 +5,7 @@
 ** Login   <dodeskaden@Z>
 ** 
 ** Started on  Fri Jul 12 23:51:07 2002 Ghost in the Shell
-** Last update Fri Jul 12 23:51:17 2002 Ghost in the Shell
+** Last update Mon Nov 24 15:46:08 2003 Ghost in the Shell
 */
 
 #include "SFourmis.h"
@@ -56,20 +56,20 @@ SFDisplay(int X, int Y, char* chaine)
   gdk_draw_string(FlipPM,police1,jauneGC,X,Y,chaine);
 #endif
 #ifdef SF_SDL
-	SDL_Rect r;
+	static SDL_Rect r;
 	r.x=X;
 	r.y=Y;
-	SDL_Surface *texte=TTF_RenderText_Solid(SFfont, chaine, fontColor);
-	if(texte==NULL){
-		SDEBUG(W2,"Erreur creation du texte\n");
+	SDL_Surface *texte=TTF_RenderText_Solid(SFfont, "toto", fontColor);
+	if(texte == NULL){
+		SDEBUG(W2,"Erreur creation du texte"<<SDL_GetError());
 		return;
 	}
 	  /* Set the text colorkey and convert to display format */
   if ( SDL_SetColorKey(texte, SDL_SRCCOLORKEY|SDL_RLEACCEL, 0) < 0 )
-  	SDEBUG(W2,"Erreur: Couldn't set text colorkey: "<<SDL_GetError()<<"\n");
+  	SDEBUG(W2,"Erreur: Couldn't set text colorkey: "<<SDL_GetError());
 	SDL_BlitSurface(texte, NULL, screen, &r);
 	SDL_FreeSurface(texte);
-	SDEBUG(W8,"Texte affiche\n");
+	SDEBUG(W8,"Texte affiche");
 #endif
 }
 
@@ -91,6 +91,9 @@ SFTextColor(int r, int g, int b)
 	fontColor.r=r;
 	fontColor.g=g;
 	fontColor.b=b;
+	fontColor.r=123*256;
+	fontColor.g=123*256;
+	fontColor.b=123;
 #endif
 }
 
@@ -115,16 +118,7 @@ SFDrawSingleRectangle(SFRect& rcRect, SFColor& color)
 #endif
 #ifdef SF_SDL
    //Tracer les lignes point par point ou utiliser une lib comme SDL_gfx, non portable ?
-   static SDL_Surface *tracage = SDL_CreateRGBSurface(SDL_HWSURFACE|SDL_SRCCOLORKEY,800,600,24,0,0,0,0);
-   static SDL_Rect *tout = (new SFRect(0,0,800,600))->toSDL_Rect();
-   SDL_SetColorKey(tracage, SDL_SRCCOLORKEY|SDL_RLEACCEL,SDL_MapRGB(tracage->format,4,4,4));
-   SDL_FillRect(tracage, tout , SDL_MapRGB(tracage->format,4,4,4));
-   SDL_FillRect(tracage, rcRect.toSDL_Rect() , SDL_MapRGB(tracage->format,255,255,0));
-   SFRect *rcRectPetit = new SFRect(rcRect.Left()+1,rcRect.Top()+1, rcRect.Right()-1, rcRect.Bottom()-1);
-   SDL_FillRect(tracage, rcRectPetit->toSDL_Rect() , SDL_MapRGB(tracage->format,4,4,4));
-	SDL_BlitSurface(tracage, rcRect.toSDL_Rect(), screen, rcRect.toSDL_Rect());
-
-#endif
+#endif	
 }
 
 
@@ -139,9 +133,6 @@ SFDrawDCRectangle(SFRect& rcRect, SFColor& color)
 #endif
 #ifdef GTK_Linux
   // Me dire comment procéder !
-#endif
-#ifdef SF_SDL
-
 #endif
 }
 
@@ -215,9 +206,9 @@ void SFDrawSurface(int x0, int y0, SFRect& rcRect)  // Ecriture différée
       1,GDK_RGB_DITHER_NORMAL, 0,0);
 #endif
 #ifdef SF_SDL
-	SDL_Rect r;
+	static SDL_Rect r;
 	r.x=x0, r.y=y0;
-	SDL_BlitSurface(image, rcRect.toSDL_Rect(), screen, &r);
+	SDL_BlitSurface(image, rcRect.toSDL_Rect(), screen, &r); 
 #endif
 }
 
@@ -253,7 +244,7 @@ void SFFastDrawSurface(unsigned long x0,unsigned long y0, SFRect& rcRect)
       1,GDK_RGB_DITHER_NORMAL, 0,0);
 #endif
 #ifdef SF_SDL
-	SDL_Rect r;
+	static SDL_Rect r;
 	r.x=x0, r.y=y0;
 	SDL_BlitSurface(image, rcRect.toSDL_Rect(), screen, &r); 
 #endif

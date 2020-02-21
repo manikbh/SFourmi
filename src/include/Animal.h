@@ -5,7 +5,7 @@
 // Login   <dodeskaden@Z>
 // 
 // Started on  Mon Feb  4 13:46:12 2002 Ghost in the Shell
-// Last update Mon Oct 21 23:47:56 2002 Ghost in the Shell
+// Last update Thu Nov 27 00:56:47 2003 Ghost in the Shell
 //
 
 #ifndef ANIMAL_H
@@ -40,36 +40,7 @@ virtual void Paf(int choc) = 0;
 		{ Dest[0] = x; Dest[1] = y;}
 	inline void	SetDestPtr(const CAnimal* ani)
 		{ Dest[0] = ani->Xc; Dest[1] = ani->Yc;}
-	inline int	GetPositionIndex() const
-	{
-	  int 	X = this->Xc - this->Oldpos[0][0];
-	  int 	Y = this->Yc - this->Oldpos[0][1];
-
-	  if (((X == 0) && (Y == 0)) || (X == 0) && (Y == -1))
-	    return 0;
-	  //vers HAUT DROITE
-	  else if ((X == 1) && (Y == -1))
-	    return 32;
-	  //vers DROITE
-	  else if ((X == 1) && (Y == 0))
-	    return 64;
-	  //vers BAS DROITE
-	  else if ((X == 1) && (Y == 1))
-	    return 96;
-	  //vers BAS
-	  else if ((X == 0) && (Y == 1))
-	    return 128;
-	  //vers BAS GAUCHE
-	  else if ((X == -1) && (Y == 1))
-	    return 160;
-	  //vers GAUCHE
-	  else if ((X == -1) && (Y == 0))
-	    return 192;
-	  //vers HAUT GAUCHE
-	  else if ((X == -1) && (Y == -1))
-	    return 224;
-	  return 0;
-	}
+	int	GetPositionIndex() const;
 	static signed char const     Deplacements[16];
 // Propriétés réelles
 

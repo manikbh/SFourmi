@@ -20,6 +20,7 @@
 #include "User.h"
 
 #define INITIAL_QUEENS_MEAT	30000
+extern unsigned char jpgimage[256][256];
 
 User::User()
 {
@@ -60,8 +61,8 @@ User::ConstructEnvironment(class DataMap &MData)
   /// TERRE ///
   s_ini(1,"->terre<-");
   SDEBUG(W0,"terre");
-  terre = new CRoom(MData.length, MData.height, NORMAL_R);
-  CheckWall(MData);
+  terre = new CRoom(MData.length, MData.height, NORMAL_R, jpgimage);
+  /* CheckWall(MData); */
 
   /// CLANS ///
   s_ini(2,"->Clans<-");
@@ -271,76 +272,74 @@ User::Init_Tanks(class DataMap &MData)
 
 void
 User::Serialize(FILE * fichier, bool sauv, class IOTablePointeur &table){
-	//static int i, j, k; //static pour conserver le numéro du pointeur à charger
-	int i;
-	unsigned short c=0;
-	if(sauv){//sauvegarde
-		if(fichier==NULL) //Dans ce cas, remplir la table de pointeurs
-			return; //rien à faire ici : pas d'objet spécifique à User
-		else{
-			c =bInfo;
-			c |=bInfo_enn<<1;
-			c |=bPause<<2;
-			c |=ButtonMeat<<3;
-			c |=bDown<<4;
-			c |=bMove<<5;
-			c |=bSmall_map<<6;
-			c |=bStats<<7;
-			c |=bViolent<<8;
-			c|=bScreen<<9;
-			fwrite(&c,sizeof(unsigned short),1,fichier);
-			fwrite(&column,sizeof(int),1,fichier);
-			fwrite(&line,sizeof(int),1,fichier);
-			fwrite(&counter,sizeof(int),1,fichier);
-			/*Pointeurs*/
-			if(this_animal==NULL)
-				SDEBUG(W2,"Sauv : le pointeur sur l'animal courant est NULL !");
-			i=table.FindOrAdd((void *) this_animal);
-			SDEBUG(W2,"Animal courant : "<<i<<" adresse "<<this_animal);
-			fwrite(&i,sizeof(int),1,fichier);
-			i=table.FindOrAdd((void *)this_room);
-			SDEBUG(W2,"Room courante : "<<i<<" adresse "<<this_room);
-			fwrite(&i,sizeof(int),1,fichier);
-			i=table.FindOrAdd((void *) this_clan);
-			SDEBUG(W2,"Clan courant : "<<i<<" adresse "<<this_clan);
-			fwrite(&i,sizeof(int),1,fichier);
-		}
-	}
-	else{	//Chargement
-		if(fichier==NULL){ //Dans ce cas, lire la table de pointeurs
-/* 2020: 64 bits pointers now... Cannot cast to int TODO 2020
-			if((this_animal=(CAnimal *)table.get((int)this_animal))==NULL)
-				SDEBUG(W2,"Chargement : le pointeur sur l'animal courant est NULL !");
-			if((this_room=(CRoom *)table.get((int)this_room))==NULL)
-				SDEBUG(W2,"Chargement : le pointeur sur la Room courante est NULL !");
-			if((this_clan =(CClan *)table.get((int)this_clan))==NULL)
-				SDEBUG(W2,"Chargement : le pointeur sur le Clan courant est NULL !");*/
-			
-		}
-		else{//Chargement première étape : les pointeurs restent vides.
-			fread(&c,sizeof(unsigned short),1,fichier);
-			bInfo=(c&1);
-			bInfo_enn=((c&2) >> 1);
-			bPause=((c&4) >> 2);
-			ButtonMeat=((c&8) >> 3);
-			bDown=((c&16) >> 4);
-			bMove=((c&32) >> 5);
-			bSmall_map=((c&64) >> 6);
-			bStats=((c&128) >> 7);
-			bViolent=((c&256) >> 8);
-			bScreen=((c&512) >> 9);
-			fread(&column,sizeof(int),1,fichier);
-			fread(&line,sizeof(int),1,fichier);
-			fread(&counter,sizeof(int),1,fichier);
-			//Numéros des pointeurs dans la table !!! -> TODO 2020 : pointers are 64 bits now, cannot just read 32 bits...
-			fread(&this_animal,sizeof(int),1,fichier);
-			fread(&this_room,sizeof(int),1,fichier);
-			fread(&this_clan,sizeof(int),1,fichier);
-		}
-	}
+  //static int i, j, k; //static pour conserver le numéro du pointeur à charger
+  int i;
+  unsigned short c=0;
+  if(sauv){//sauvegarde
+    if(fichier==NULL) //Dans ce cas, remplir la table de pointeurs
+      return; //rien à faire ici : pas d'objet spécifique à User
+    else{
+      c =bInfo;
+      c |=bInfo_enn<<1;
+      c |=bPause<<2;
+      c |=ButtonMeat<<3;
+      c |=bDown<<4;
+      c |=bMove<<5;
+      c |=bSmall_map<<6;
+      c |=bStats<<7;
+      c |=bViolent<<8;
+      c|=bScreen<<9;
+      fwrite(&c,sizeof(unsigned short),1,fichier);
+      fwrite(&column,sizeof(int),1,fichier);
+      fwrite(&line,sizeof(int),1,fichier);
+      fwrite(&counter,sizeof(int),1,fichier);
+      /*Pointeurs*/
+      if(this_animal==NULL)
+	SDEBUG(W2,"Sauv : le pointeur sur l'animal courant est NULL !");
+      i=table.FindOrAdd((void *) this_animal);
+      SDEBUG(W2,"Animal courant : "<<i<<" adresse "<<this_animal);
+      fwrite(&i,sizeof(int),1,fichier);
+      i=table.FindOrAdd((void *)this_room);
+      SDEBUG(W2,"Room courante : "<<i<<" adresse "<<this_room);
+      fwrite(&i,sizeof(int),1,fichier);
+      i=table.FindOrAdd((void *) this_clan);
+      SDEBUG(W2,"Clan courant : "<<i<<" adresse "<<this_clan);
+      fwrite(&i,sizeof(int),1,fichier);
+    }
+  }
+  else{	//Chargement
+    if(fichier==NULL){ //Dans ce cas, lire la table de pointeurs
+      if((this_animal=(CAnimal *)table.get((int)this_animal))==NULL)
+	SDEBUG(W2,"Chargement : le pointeur sur l'animal courant est NULL !");
+      if((this_room=(CRoom *)table.get((int)this_room))==NULL)
+	SDEBUG(W2,"Chargement : le pointeur sur la Room courante est NULL !");
+      if((this_clan =(CClan *)table.get((int)this_clan))==NULL)
+	SDEBUG(W2,"Chargement : le pointeur sur le Clan courant est NULL !");
+    }
+    else{//Chargement première étape : les pointeurs restent vides.
+      fread(&c,sizeof(unsigned short),1,fichier);
+      bInfo=(c&1);
+      bInfo_enn=((c&2) >> 1);
+      bPause=((c&4) >> 2);
+      ButtonMeat=((c&8) >> 3);
+      bDown=((c&16) >> 4);
+      bMove=((c&32) >> 5);
+      bSmall_map=((c&64) >> 6);
+      bStats=((c&128) >> 7);
+      bViolent=((c&256) >> 8);
+      bScreen=((c&512) >> 9);
+      fread(&column,sizeof(int),1,fichier);
+      fread(&line,sizeof(int),1,fichier);
+      fread(&counter,sizeof(int),1,fichier);
+      //Numéros des pointeurs dans la table !!!
+      fread(&this_animal,sizeof(int),1,fichier);
+      fread(&this_room,sizeof(int),1,fichier);
+      fread(&this_clan,sizeof(int),1,fichier);
+    }
+  }
 }
 
-void
+  void
 User::Init_Ants(class DataMap &MData)
 {
   /// Reine ///
@@ -387,10 +386,7 @@ User::Init_Ennemies(class DataMap &MData)
   les_ennemis = new CAnimal*[MData.max_ennemies];
   Init_Bugs(MData);
 }
-void
-User::Init_Landscape(class DataMap &MData)
-
-
+void User::Init_Landscape(class DataMap &MData)
 {
   int	i, j;
   
@@ -409,9 +405,28 @@ User::Init_Landscape(class DataMap &MData)
     }
     else k--;
   }
+  std::cerr << MData.meat_density * MData.length * MData.height / 100 << std::endl;
 }
 
+void User::MoveRoom()
+{
+  if(this->bGoDown)
+  {
+    ycam -= 0.2 * Sin[phi-270];
+    zview += 0.2 * Cos[phi-270];
+    /* this->line = min(this->line+1, this->This_room()->size.hauteur-9*2); */
+  }
+  else if(this->bGoUp)
+  {
+    ycam += 0.2 * Sin[phi-270];
+    zview -= 0.2 * Cos[phi-270];
+    /* this->line = max(this->line-1, 0); */
+  }
+  else if(this->bGoRight)
+    xcam += 0.15;
+  /* this->column = min(this->column+1,this->This_room()->size.largeur-10*2); */
+  else if(this->bGoLeft)
+    xcam -= 0.15;
+  /* this->column = max(this->column-1,0); */
+}
 
-
-//Ok
-		

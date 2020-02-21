@@ -88,10 +88,10 @@ int
 CAnimal::Avancer_hasard()
 {
   int x, y, i, newdir, dir;
-  int vx = Oldpos[0][0]-Xc, vy = Oldpos[0][1]-Yc;
+  int vx = Xc-Oldpos[0][0], vy = Yc-Oldpos[0][1];
 
   if (vx == 0 && vy == 0)
-    dir = 2 * rand() % 8;
+    dir = 2 * (rand() % 8);
   else
     for (dir = 0; dir < 16; dir += 2)
       if (Deplacements[dir] == vx && Deplacements[dir + 1] == vy)
@@ -99,8 +99,9 @@ CAnimal::Avancer_hasard()
 
   for (i = 0; i < 20; i++)
   {
-    newdir = dir + 2 * ((rand() % 5) + 2);
-    if (rand() % 100 < 80) newdir = dir + 8;
+//    newdir = dir + 2 * ((rand() % 5) + 2);
+    newdir = dir + 2 * (rand() % 4 - 1);
+    if (rand() % 100 < 85) newdir = dir;
     x = Xc + Deplacements[newdir % 16]; y = Yc + Deplacements[newdir % 16 + 1];
     if (CASE_VIDE(x, y, this->Room)) 
       break;
@@ -143,3 +144,35 @@ CAnimal::Meurt()
   Room->map[Xc][Yc].decor->genre = CADAVRE;
   Room->map[Xc][Yc].decor->etat = Nourriture + 100; // Un petit bonus de nourriture.
 }
+
+int	CAnimal::GetPositionIndex() const
+{
+  int 	X = this->Xc - this->Oldpos[0][0];
+  int 	Y = this->Yc - this->Oldpos[0][1];
+
+  if (((X == 0) && (Y == 0)) || (X == 0) && (Y == -1))
+    return 180;
+  //vers HAUT DROITE
+  else if ((X == 1) && (Y == -1))
+    return -135;
+  //vers DROITE
+  else if ((X == 1) && (Y == 0))
+    return -90;
+  //vers BAS DROITE
+  else if ((X == 1) && (Y == 1))
+    return -45;
+  //vers BAS
+  else if ((X == 0) && (Y == 1))
+    return 0;
+  //vers BAS GAUCHE
+  else if ((X == -1) && (Y == 1))
+    return 45;
+  //vers GAUCHE
+  else if ((X == -1) && (Y == 0))
+    return 90;
+  //vers HAUT GAUCHE
+  else if ((X == -1) && (Y == -1))
+    return 135;
+  return 0;
+}
+

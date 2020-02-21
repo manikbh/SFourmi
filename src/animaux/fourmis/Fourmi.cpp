@@ -5,7 +5,7 @@
 // Login   <dodeskaden@Z>
 // 
 // Started on  Sun Feb  3 23:50:29 2002 Ghost in the Shell
-// Last update Sun Feb  3 23:53:35 2002 Ghost in the Shell
+// Last update Mon Nov 24 17:15:02 2003 Ghost in the Shell
 //
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -14,7 +14,6 @@
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
-#include  <assert.h> 
 #include "SFourmis.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -203,10 +202,13 @@ Fourmi::DoPhero(enum categorie categ)
   if (Room->map[x][y].decor != NULL || (x == Oldpos[0][0] && y == Oldpos[0][1]))
     return NUL;
 
-  if ((Xc == Oldpos[1][0] && Yc == Oldpos[1][1]) || (Xc == Oldpos[2][0] && Yc == Oldpos[2][1]))
+  if (((Xc == Oldpos[1][0]) && (Yc == Oldpos[1][1]))
+      || ((Xc == Oldpos[2][0]) && (Yc == Oldpos[2][1])))
   {
-    Room->map[Xc][Yc].phero[categ]->Vex *= -1;
-    Room->map[Xc][Yc].phero[categ]->Vey *= -1;
+//    Room->map[Xc][Yc].phero[categ]->Vex *= -1;
+//    Room->map[Xc][Yc].phero[categ]->Vey *= -1;
+    std::cout << "bcp" << std::endl;
+    return NUL;
   }
 
   Aller_sur(x, y);
@@ -281,7 +283,7 @@ Fourmi::Lacher_Pheromone(categorie cat)
 	case NOURRITURE:
 	  if (Oldpos[0][0] == Xc && Oldpos[0][0] == Yc) break;
 	  Room->map[x][y].phero[cat]->Genre = NOURRITURE;
-	  Room->map[x][y].phero[cat]->Intensite = intensit+rand()%600;
+	  Room->map[x][y].phero[cat]->Intensite = intensit+rand()%300;
 	  Room->map[x][y].phero[cat]->Vex = Oldpos[0][0]-Xc;
 	  Room->map[x][y].phero[cat]->Vey = Oldpos[0][1]-Yc;
 	  break;

@@ -21,17 +21,14 @@
 
 void
 Process_va()
-{
-  Fourmi*		fourmi;
-  CClan*		clan = 0;
-  
+{  
   // Gestion du tour des fourmis
   for (int ceclan = 0; ceclan < MData.nb_clan; ceclan++)
   {
+    CClan *clan = les_clans[ceclan];
     for (int k = 0; k < MData.max_ants; k++)
     {
-      clan = les_clans[ceclan];
-      fourmi = les_clans[ceclan]->les_fourmis[k];
+      Fourmi *fourmi = clan->les_fourmis[k];
       switch (fourmi->Statut())
       {
 	case NIHIL:

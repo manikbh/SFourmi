@@ -1,10 +1,7 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include "SFourmis.h"
-
 #ifndef _DEBUTIL_
 #define _DEBUTIL_
+
+#include "SFourmis.h"
 
 #ifdef RELEASE
 # define LEVEL W0
@@ -31,7 +28,7 @@ enum WLEVEL {W0,W1,W2,W3,W4,W5,W6,W7,W8,W9,WALL};
 { \
 if(lev < LEVEL) \
     { \
-    Log << lev <<" #"<< __FILE__ << " @ " << __LINE__ << " : " << msg << endl; Log.flush(); \
+    Log << lev <<" #"<< __FILE__ << " @ " << __LINE__ << " : " << msg << std::endl; Log.flush(); \
     } \
 };
 

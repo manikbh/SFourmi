@@ -57,10 +57,6 @@ extern bool		bActive;        // Est-ce que l'application est active ?
 extern void		updateFrame(BYTE Frame);
 extern void		DisplayInfo(class DataMap &MData, class User &ZSF);
 extern void		info_plus(void);
-extern void		splash(void);
-extern void		Init_screen(void);
-extern void		s_ini(BYTE phase, char what[]);
-extern void		s_sauver(BYTE phase);
 extern void		Flips(void);
 extern void		SmallMap(void);
 extern void		SelectMultiple(void);

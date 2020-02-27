@@ -1,5 +1,6 @@
 #ifndef MACROS_H
 # define MACROS_H
+#include <cstdint>
 # define CASE_VALIDE(X, Y, ROOM) \
 	(X >= 0 && X < ROOM->size.largeur && Y >= 0 && Y < ROOM->size.hauteur)
 # define CASE_VIDE(X, Y, ROOM) \
@@ -13,19 +14,10 @@
 # define GETSIGN_I(A)\
   	(A == 0 ? 0 : (A >= 0 ? 1 : -1))
 
-# ifdef GTK_Linux
-#  define SINT	int
-#  define UINT	unsigned int
-#  define SBYTE	char
-#  define BYTE	unsigned char
-# endif
 
-#ifdef SF_SDL
-#  define SINT  int
-#  define UINT  unsigned int
-#  define SBYTE char
-#  define BYTE  unsigned char
-#endif
+#  define SBYTE	int8_t
+#  define BYTE	uint8_t
+
 
 # define 		DF_X	800
 # define		DF_Y	600

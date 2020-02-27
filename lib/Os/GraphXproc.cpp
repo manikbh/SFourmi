@@ -16,18 +16,6 @@
 
 #include "SFourmis.h"
 
-#ifdef WIN32
-# include "WinInterface.h"
-#endif
-
-#ifdef GTK_Linux
-
-# include <gtk/gtk.h>
-# include <gdk/gdk.h>
-# include <gdk-pixbuf/gdk-pixbuf.h>
-# include "GTKInterface.h"
-#endif
-
 #include "GraphXstruct.h"
 #include "gGraphX.hh"
 #include "GraphXproc.h"
@@ -59,7 +47,7 @@ void SelectMultiple()							  //dessine un rectangle de sélection
 
 
 ///////////////////////////////////////////////////////////////////////////////
-void SmallMap()
+void SmallMap()//TODO 2020 remove globals and pass a SFourmiWorld by reference
 {
   class SFRect 		rc(15,440,115,540);
   class SFColor		colors;
@@ -118,201 +106,12 @@ void SmallMap()
     }
 }
 
+/**
+ * Flip screen buffer
+ */
 void Flips(void)
 {
-#ifdef WIN32
-  HRESULT             ddrval;
-
-  while(1)
-  {
-    ddrval = lpDDSPrimary->Flip(NULL, DDFLIP_WAIT);
-    if(ddrval == DD_OK)
-    {
-      break;
-    }
-    if(ddrval == DDERR_SURFACELOST)
-    {
-      ddrval = restoreAll();
-      if(ddrval != DD_OK)
-      {
-	break;
-      }
-    }
-    if(ddrval != DDERR_WASSTILLDRAWING)
-    {
-      break;
-    }
-  }
-#endif
-#ifdef GTK_Linux
-  gdk_draw_pixmap((GdkDrawable *)BigFenetre,BigGC,FlipPM,0,0,0,0,800,600);
-#endif
-#ifdef SF_SDL     //FIXME : attention aux locks de surface
-	SDL_Flip(screen); //Affiche reellement en echangeant les buffers hardware
-#endif
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-void s_sauver(BYTE phase)
-{
-#ifdef WIN32
-  CRect	rc(320, 0, 640, 240);
-  HRESULT             ddrval;
-  BYTE NUMPHASE=6;
-
-  while(1)
-  {
-    ddrval = lpDDSPrimary->BltFast(200, 120, lpDDSTwo,
-	&rc, DDBLTFAST_NOCOLORKEY|DDBLTFAST_WAIT);
-    if(ddrval == DD_OK)
-    {
-      break;
-    }
-    if(ddrval == DDERR_SURFACELOST)
-    {
-      ddrval = restoreAll();
-      if(ddrval != DD_OK)
-      {
-	return;
-      }
-    }
-    if(ddrval != DDERR_WASSTILLDRAWING)
-    {
-      return;
-    }
-  }
-  if(ddrval != DD_OK)
-  {
-    return;
-  }
-
-  CRect rect(200+60,120+175,200+60+phase*200/NUMPHASE,120+190);
-  HDC hdc;
-
-  lpDDSPrimary->GetDC(&hdc);
-
-  CBrush BB1(0x00F0021C);
-  SelectObject(hdc,BB1);
-
-  FillRect(hdc,rect,(HBRUSH) BB1);
-  lpDDSPrimary->ReleaseDC(hdc);
-#endif
-
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-void s_ini(BYTE phase,char what[])
-{
-#ifdef WIN32
-  HRESULT             ddrval;
-  BYTE NUMPHASE=9;
-  const short int X=200,Y=120;
-  if(phase==1)
-  {
-    RECT rcRect;
-    rcRect.left = 0;
-    rcRect.top = 240;
-    rcRect.right = 320;
-    rcRect.bottom = 480;
-    while(1)
-    {
-      ddrval = lpDDSPrimary->BltFast(X,Y, lpDDSTwo,
-	  &rcRect, DDBLTFAST_NOCOLORKEY|DDBLTFAST_WAIT);
-      if(ddrval == DD_OK)
-	break;
-      if(ddrval == DDERR_SURFACELOST)
-      {
-	ddrval = restoreAll();
-	if(ddrval != DD_OK)
-	  return;
-      }
-      if(ddrval != DDERR_WASSTILLDRAWING)
-	return;
-    }
-    if(ddrval != DD_OK)
-      return;
-  }
-  CRect rect(X+60,Y+175,X+60+phase*200/NUMPHASE,Y+190);
-  HDC hdc;
-
-  lpDDSPrimary->GetDC(&hdc);
-  SetBkMode(hdc, TRANSPARENT);
-  SelectObject(hdc, hFont4);
-  SetTextColor(hdc, RGB(255,255,255));
-
-  //	SFDisplay(hdc,X+96,Y+60,"Initialisation en cours...");
-
-  SelectObject(hdc, hFont2);
-  SetTextColor(hdc, RGB(250,250,150));
-  //	SFDisplay(hdc,X+140,Y+80+(phase-1)*12,what);
-
-  CBrush BB1(0x00F0021C);
-  SelectObject(hdc,BB1);
-
-  FillRect(hdc,rect,(HBRUSH) BB1);
-  lpDDSPrimary->ReleaseDC(hdc);
-#endif
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-void Init_screen(void)
-{
-#ifdef WIN32
-  CRect rcRect;
-  HRESULT             ddrval;
-
-  rcRect.left = 0;
-  rcRect.top = 0;
-  rcRect.right = 800;
-  rcRect.bottom = 600;
-
-  while (1)
-  {
-    ddrval = lpDDSPrimary->BltFast(0, 0, lpDDSTwo,
-	&rcRect, DDBLTFAST_NOCOLORKEY|DDBLTFAST_WAIT);
-    if (ddrval == DD_OK)
-      break;
-    if(ddrval == DDERR_SURFACELOST)
-    {
-      ddrval = restoreAll();
-      if (ddrval != DD_OK)
-	return;
-    }
-    if(ddrval != DDERR_WASSTILLDRAWING)
-      return;
-  }
-  if(ddrval != DD_OK)
-  {
-    return;
-  }
-
-//  if (tb!=0)
-//  {
-//    rcRect.left = 401;
-//    rcRect.top = 899;
-//    rcRect.right = 686;
-//    rcRect.bottom = 949;
-//    while(1)
-//    {
-//      ddrval = lpDDSPrimary->BltFast(165, 71+(tb-1)*64, lpDDSTwo,
-//	  &rcRect, DDBLTFAST_SRCCOLORKEY|DDBLTFAST_WAIT);
-//      if(ddrval == DD_OK)
-//	break;
-//      if(ddrval == DDERR_SURFACELOST)
-//      {
-//	ddrval = restoreAll();
-//	if(ddrval != DD_OK)
-//	  return;
-//     }
-//     if(ddrval != DDERR_WASSTILLDRAWING)
-//return;
-//   }
-//  }
-  Flips();
-#endif
+  SDL_Flip(screen); //Affiche reellement en echangeant les buffers hardware
 }
 
 

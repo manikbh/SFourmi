@@ -15,38 +15,17 @@
 #include "macros.h"
 
 #include "debutils.h"
-#include <math.h>
+#include <cmath>
 #include <fstream>
 #include <iostream>
 
-#ifdef WIN32		// WIN //
-
-#include "StdAfx.h"
-#include <assert.h>
-#include <ddraw.h>
-//#include <dmusicc.h>
-//#include <dmusici.h>
-#include "resrc1.h"
-#include "resource.h"
-#include "ddutil.h"
-#include "WinInterface.h"
-
-#endif
-
-#ifdef GTK_Linux	// GTK //
-# include <gdk/gdk.h>
-# include <time.h>
-# include <stdlib.h>
-# include <string.h>
-#endif
-
-#ifdef SF_SDL      // SDL //
+//SDL
 #include <SDL/SDL.h>
 #include <SDL/SDL_ttf.h>
 #include <SDL/SDL_image.h>
 #include <stdlib.h>
 #include "SDLInterface.h"
-#endif
+
 
 #include "IOsf.h"
 #include "Utils.h"
@@ -68,7 +47,7 @@
 #include "DataMap.h"
 #include "User.h"
 
-extern class DataMap	MData;
+extern class DataMap	MData; // TODO 2020 cleanup "extern" and global variables from Global.h
 extern class User	ZSF;
 
 

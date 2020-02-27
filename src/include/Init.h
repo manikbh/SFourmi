@@ -7,8 +7,6 @@
 #ifndef INIT_H
 # define INIT_H
 
-extern void	Fourmis_Start();
-extern int	LoadIni();
-extern void	Process_va();
+void	Process_va();
 
 #endif

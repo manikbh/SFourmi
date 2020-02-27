@@ -30,7 +30,7 @@ class	User
 	inline CClan *This_clan() const {return this_clan;}
 	inline void	setThis_room(class CRoom *r) {this_room = r;}
 	inline CRoom	*This_room() const {return this_room;}
-	inline int	Counter() const {return counter;}
+	inline uint64_t	Counter() const {return counter;}
 	inline void	IncCounter() {counter++;}
 	inline CAnimal	*This_animal() const {return this_animal;}
 	inline void	setThis_animal(CAnimal *canibal) {this_animal = canibal;}
@@ -65,7 +65,7 @@ class	User
 	void		Init_Bugs(class DataMap &MData);
 	void   		Init_Ennemies(class DataMap &MData);
 	void 		Init_Landscape(class DataMap &MData);
-	int		counter;
+	uint64_t	counter;
     	class CClan * this_clan;
 	class CRoom	*this_room;
 };

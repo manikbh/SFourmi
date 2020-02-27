@@ -18,7 +18,7 @@ AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
 
 # We want no optimization (too slow), and a lot of debugging, for both
 # C and C++.
-CFLAGS="-O3 -Wall"
+CFLAGS="-O3 -Wall -std=c++17"
 CXXFLAGS=$CFLAGS
 
 # Look for a C++ compiler.

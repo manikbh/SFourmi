@@ -58,13 +58,11 @@ User::ConstructEnvironment(class DataMap &MData)
   srand(time(NULL));
 
   /// TERRE ///
-  s_ini(1,"->terre<-");
   SDEBUG(W0,"terre");
   terre = new CRoom(MData.length, MData.height, NORMAL_R);
   CheckWall(MData);
 
   /// CLANS ///
-  s_ini(2,"->Clans<-");
   SDEBUG(W0,"->clans<-");
   les_clans = new CClan*[MData.nb_clan];
   Init_Clan(MData);
@@ -291,7 +289,7 @@ User::Serialize(FILE * fichier, bool sauv, class IOTablePointeur &table){
 			fwrite(&c,sizeof(unsigned short),1,fichier);
 			fwrite(&column,sizeof(int),1,fichier);
 			fwrite(&line,sizeof(int),1,fichier);
-			fwrite(&counter,sizeof(int),1,fichier);
+			fwrite(&counter,sizeof(counter),1,fichier);
 			/*Pointeurs*/
 			if(this_animal==NULL)
 				SDEBUG(W2,"Sauv : le pointeur sur l'animal courant est NULL !");
@@ -308,7 +306,7 @@ User::Serialize(FILE * fichier, bool sauv, class IOTablePointeur &table){
 	}
 	else{	//Chargement
 		if(fichier==NULL){ //Dans ce cas, lire la table de pointeurs
-/* 2020: 64 bits pointers now... Cannot cast to int TODO 2020
+/* 2020: 64 bits pointers now... Cannot cast to int TODO 2020 FIXME loading should not be split between this function reading the index and another one replacing it with the pointer of the newly created object
 			if((this_animal=(CAnimal *)table.get((int)this_animal))==NULL)
 				SDEBUG(W2,"Chargement : le pointeur sur l'animal courant est NULL !");
 			if((this_room=(CRoom *)table.get((int)this_room))==NULL)
@@ -331,11 +329,11 @@ User::Serialize(FILE * fichier, bool sauv, class IOTablePointeur &table){
 			bScreen=((c&512) >> 9);
 			fread(&column,sizeof(int),1,fichier);
 			fread(&line,sizeof(int),1,fichier);
-			fread(&counter,sizeof(int),1,fichier);
+			fread(&counter,sizeof(counter),1,fichier);
 			//Numéros des pointeurs dans la table !!! -> TODO 2020 : pointers are 64 bits now, cannot just read 32 bits...
-			fread(&this_animal,sizeof(int),1,fichier);
-			fread(&this_room,sizeof(int),1,fichier);
-			fread(&this_clan,sizeof(int),1,fichier);
+			fread(&this_animal,sizeof(this_animal),1,fichier);
+			fread(&this_room,sizeof(this_room),1,fichier);
+			fread(&this_clan,sizeof(this_clan),1,fichier);
 		}
 	}
 }
@@ -344,22 +342,18 @@ void
 User::Init_Ants(class DataMap &MData)
 {
   /// Reine ///
-  s_ini(6,"->Reines<-");
   SDEBUG(W0,"->Reines<-");
   Init_Queens(MData);
 
   /// Ouvriers ///
-  s_ini(4,"->Ouvriers<-");
   SDEBUG(W0,"->Ouvriers<-");
   Init_Workers(MData);
   
   /// Sentinelles ///
   SDEBUG(W0,"->Sentinelles<-");
-  s_ini(5,"->Sentinelles<-");
   Init_Guards(MData);
 
   /// Citernes ///
-  s_ini(7,"->Citernes<-");
   SDEBUG(W0,"->Citernes<-");
   Init_Tanks(MData);
 }
@@ -394,7 +388,6 @@ User::Init_Landscape(class DataMap &MData)
 {
   int	i, j;
   
-  s_ini(9,"->Nourriture<-");
   SDEBUG(W0,"->Nourriture<-");
   for (int k = 0;
       k < MData.meat_density * MData.length * MData.height / 100;

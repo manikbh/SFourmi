@@ -17,7 +17,7 @@ class	DataMap
 	void		LoadData(char *inifile);
 	inline void	setScreen(enum e_screen s) {screen = s;}
 	inline e_screen	Screen() const {return screen;}
-	int		length;
+	int		length;//TODO 2020 : provide default values and call the class SFourmiConfig or something
 	int		height;
 	int		nb_workers;
 	int		nb_guards;
@@ -31,7 +31,7 @@ class	DataMap
 	int		max_ennemies;
 	int		nb_ennemies;
 	int		ennemies_reborn;
-	char		*loadfile;
+	char		*loadfile;//TODO 2020 std::string
 	bool		charger;
 
 	void Serialize(FILE *f, bool sauv);

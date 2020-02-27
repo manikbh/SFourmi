@@ -17,31 +17,21 @@
 
 #include "CommonEnd.h"
 
-#ifdef WIN32
-# include "WinInterface.h"
-#endif
-
-#ifdef GTK_Linux
-# include <gdk/gdk.h>
-# include <gdk-pixbuf/gdk-pixbuf.h>
-# include "GTKInterface.h"
-#endif
-
-//Les includes de SDL sont deja inclus dans SFourmis.h
-
 #include "GraphXstruct.h"
 #include "GraphXproc.h"
 #include "GraphXtools.h"
 #include "IOsf.h"
 
-#ifdef WIN32
-#define TMPPATH "c:\\FourmiLog.txt"
-#else
 #define TMPPATH "/tmp/FourmiLog.txt"
-#endif
-class DataMap	MData;
-class User	ZSF;
 
+// Global variables
+DataMap MData;
+User ZSF;
+
+
+/**
+ * Empty the log if the counter reaches tr
+ */
 int GarbageLog(int tr)
 {
   if ((ZSF.Counter() % tr) == 0)
@@ -52,6 +42,9 @@ int GarbageLog(int tr)
   return 0;
 }
 
+/**
+ * Return index of the max value in a 4-bytes array
+ */
 BYTE Max(BYTE c[4])
 {
   int res = 0;
@@ -61,8 +54,11 @@ BYTE Max(BYTE c[4])
   if (c[3] > c[res]) res = 3;
   return res;
 }
-void
-NewMap ()
+
+/**
+ * Create a new map
+ */
+void NewMap ()
 {
   std::cerr << "New Map created ..." << std::endl;
   SDEBUG(W2, "Initialisation normale");
@@ -70,17 +66,16 @@ NewMap ()
   ZSF.bPause = false;
   ZSF.setThis_room(terre);
 }
-#ifdef WIN32
-int PASCAL WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
-#else
+
+
 int main (int argc, char *argv[])
-#endif
 {
   Log.open (TMPPATH);
   Log << "Version :" << VERSION << endl;
   Log << "Date de compilation:" << __DATE__<<endl;
   Log << "Heure de compilation:" << __TIME__<<endl;
-  cerr << PACKAGE << " (" << VERSION << ") " << "by SF team" << endl;  
+  cerr << PACKAGE << " (" << VERSION << ") " << "by SF team" << endl;
+  // Load config file
   MData.LoadData("sfourmi.ini");
   if (argc <= 1)
     std::cerr << "use: SFourmi [map]" << std::endl;
@@ -91,17 +86,12 @@ int main (int argc, char *argv[])
   }
 
   ZSF.path = SFOURMI_DATADIR;
-#ifdef WIN32
-  MSG msg;
-  hPrevInstance = hPrevInstance;
-  if (!doInit(hInstance, nCmdShow)) return FALSE;
-  FontFactory();
-#endif
-//  gdk_init(&argc,&argv);
+
   SDEBUG(W0,"Initialisation " GRAPH);
   GraphX_Init();
-  s_ini(1,"-> " GRAPH " Initialisé<-");
+  SDEBUG(W0,"SDL initialisé");
 
+  // Load map or create a new one
   if (MData.charger)
   {
     if (!Charg_terrain(MData.loadfile))
@@ -115,44 +105,21 @@ int main (int argc, char *argv[])
   else
     NewMap ();
 
-#ifndef WIN32
   bActive = true;
-#endif
+  
   SFDrawMode (DDBLTFAST_NOCOLORKEY|DDBLTFAST_WAIT);
-  while (ZSF.Counter() < 2^32)
+  
+  while (ZSF.Counter() < 2^32)//TODO 2020: 64 bits should be enough to never reach the maximum of the counter -> uint64_t
   {
-#ifdef WIN32
-    if( PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE))
-    {
-      if(!GetMessage(&msg, NULL, 0, 0))
-	return msg.wParam;
 
-      TranslateMessage(&msg);
-      DispatchMessage(&msg);
-    }
-#endif
-#ifdef GTK_Linux
-    if (gdk_events_pending())
-    {
-      evenement = gdk_event_get();
-      if (evenement)
-      {
-	AnalyseEvent(evenement);
-	gdk_event_free(evenement);
-      }
-    }
-#endif
-#ifdef SF_SDL
     if (SDL_PollEvent(evenement))
       AnalyseEvent(evenement);
-#endif
     else if((bActive) && (!ZSF.bPause))
     {
       switch (MData.Screen())
       {
 	case SFINTERFACE:
 	  StartInterface();
-	  //ZSF.bPause=true;
 	  break;
 	case SFGAME:
 	  Process_va();
@@ -163,11 +130,6 @@ int main (int argc, char *argv[])
 	  break;
       }
     }
-#ifdef WIN32
-    else
-      WaitMessage();
-#endif
-#ifdef SF_SDL
     else
     {
       SDL_WaitEvent(evenement); //Patiente 100 ms
@@ -175,10 +137,7 @@ int main (int argc, char *argv[])
       ZSF.MoveRoom();
       updateFrame(1);
     }
-#endif
   }
-#ifdef GTK_Linux
-  GDKDestroy();
-#endif
+
   return(0);
 }

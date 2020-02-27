@@ -11,6 +11,7 @@
 #ifndef GLOBAL_H
 # define GLOBAL_H
 
+//TODO 2020 : clean up this mess - terre is allocated in User but used externally...
 //CCase **map;
 CRoom*		terre;
 CClan**		les_clans;

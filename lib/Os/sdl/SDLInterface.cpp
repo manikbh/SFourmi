@@ -237,7 +237,6 @@ void LButtonUp(int X ,int Y)
 {
   /*	HDC hdc;
 	RECT rc1;*/
-  unsigned	rc1Y, rc1X;
   char BufX[5], BufY[5];
   int PosX, PosY, PosXD, PosYD;
 
@@ -265,8 +264,6 @@ void LButtonUp(int X ,int Y)
       }
       else
       {
-	rc1Y = 180;
-	rc1X= 40;
 	{
 	  PosX = (X - 160)/32+ZSF.column;
 	  PosY = (Y )/32+ZSF.line;
@@ -294,21 +291,7 @@ void LButtonUp(int X ,int Y)
 	  }
 	  sprintf(BufX,"%d",PosX);
 	  sprintf(BufY,"%d",PosY);
-	  /*lpDDSPrimary->GetDC(&hdc);
-	    SelectObject(hdc, hFont2);
-	    SetTextColor(hdc, RGB(255,255,255));
-	    SetBkMode(hdc, TRANSPARENT);*/
-	  /*if(ZSF.This_room()->map[PosX][PosY].decor->genre==VIANDE)
-	  {
-	    ZSF.bInfo =FALSE;
-	    char buffer[8];
-	    sprintf(buffer,"%d",ZSF.This_room()->map[PosX][PosY].decor->etat);
-	    Display(FlipPM, jauneGC, rc1X, rc1Y, BufX);
-	    rc1X+=38;
-	    Display(FlipPM,jauneGC, rc1X, rc1Y, BufY);
-	    rc1Y+=18;rc1X-=38;
-	    Display(FlipPM,jauneGC, rc1X, rc1Y, buffer);
-	  }*/
+
 	  ZSF.bInfo = false;ZSF.bInfo_enn=false;
 	  for (int i=min(PosX,PosXD);i<=max(PosX,PosXD);i++)
 	  {

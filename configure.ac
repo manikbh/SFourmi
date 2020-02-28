@@ -51,7 +51,6 @@ AC_CONFIG_FILES(docs/Makefile  src/include/Makefile
 		Makefile lib/Makefile lib/Os/Makefile 
 		images/Makefile 
 		lib/Os/sdl/Makefile
-		lib/Os/gtk/Makefile
 		src/Makefile src/animaux/Makefile
 		src/animaux/autres/Makefile src/animaux/fourmis/Makefile
 		src/common/Makefile src/terrain/Makefile)

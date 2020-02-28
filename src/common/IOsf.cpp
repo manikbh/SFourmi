@@ -198,7 +198,7 @@ table.resize(size_t taille, (void *) NULL);
     }
 
   //Ennemis:
-   les_ennemis = (CAnimal **)new Cafard*[MData.max_ennemies];
+  les_ennemis = (CAnimal **)new Cafard*[MData.max_ennemies];
 	fread(buffer,5,1,fichier);
 	if(strncmp("Ennem",buffer,5)!=0){
 		SDEBUG(W2,"ERREUR");
@@ -210,23 +210,20 @@ table.resize(size_t taille, (void *) NULL);
 	}
 	for(kh=MData.nb_ennemies; kh<MData.max_ennemies; kh++)
 		les_ennemis[kh]=NULL;
-   fclose(fichier);
-
+  fclose(fichier);
+  delete[] buffer;
    /*******************DEUXIEME PARTIE : MISE A JOUR DES POINTEURS************/
-   	SDEBUG(W2,"Lecture ok");
-	//global
-	ZSF.Serialize(NULL, false, table);
-	//terrain
-	terre->Serialize(NULL, false, table);
-	//Clans
-	for(kh=0;kh<MData.nb_clan;kh++)
-		les_clans[kh]->Serialize(NULL,false,table);
-	//Ennemis
-	for(kh=0; kh<MData.nb_ennemies; kh++)
-		((Cafard *)les_ennemis[kh])->Serialize(NULL,false, table);
-#ifdef WIN32
-	FontFactory();//Ca fait quoi ici ? //dosdeskaden: ça sert à initialiser les fontes
-#endif
+  SDEBUG(W2,"Lecture ok");
+  //global
+  ZSF.Serialize(NULL, false, table);
+  //terrain
+  terre->Serialize(NULL, false, table);
+  //Clans
+  for(kh=0;kh<MData.nb_clan;kh++)
+	  les_clans[kh]->Serialize(NULL,false,table);
+  //Ennemis
+  for(kh=0; kh<MData.nb_ennemies; kh++)
+	  ((Cafard *)les_ennemis[kh])->Serialize(NULL,false, table);
   return(true);
 
 }

@@ -17,14 +17,7 @@ class SFRect
     SFRect () {left = top = right = bottom = 0;}
     SFRect (int l, int t, int r, int b)
     {left = l; top = t; right = r; bottom = b;}
-#ifdef WIN32
-	CRect toCRect ()
-	{
-		CRect r (left, top, right, bottom);
-		return r;
-	}
-#endif
-#ifdef SF_SDL
+
 	SDL_Rect *toSDL_Rect()
 	{
 		SDL_Rect *r= new SDL_Rect;
@@ -34,7 +27,7 @@ class SFRect
 		r->h = Bottom()-r->y;
 		return r;
 	}
-#endif
+
     ~SFRect () {};
     inline void	setSFRect(int l, int t, int r, int b)
     		{left = l; top = t; right = r; bottom = b;}
@@ -47,32 +40,10 @@ class SFRect
     int	left, top, right, bottom;
 };
 
-# ifdef WIN32
-struct SFFont
-{
-  HFONT genre;
-};
-# endif
-
-# ifdef GTK_Linux
-
-# define DDBLTFAST_NOCOLORKEY	0
-# define DDBLTFAST_SRCCOLORKEY	1
-# define DDBLTFAST_WAIT		2
-
-
-struct SFFont
-{
-  GdkFont genre;
-};
-# endif
-
-# ifdef SF_SDL
 struct SFFont
 {
   TTF_Font *genre;
 };
-# endif
 
 class SFColor
 {

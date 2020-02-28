@@ -45,7 +45,7 @@ virtual void Paf(int choc) = 0;
 	  int 	X = this->Xc - this->Oldpos[0][0];
 	  int 	Y = this->Yc - this->Oldpos[0][1];
 
-	  if (((X == 0) && (Y == 0)) || (X == 0) && (Y == -1))
+	  if (((X == 0) && (Y == 0)) || ((X == 0) && (Y == -1)))
 	    return 0;
 	  //vers HAUT DROITE
 	  else if ((X == 1) && (Y == -1))

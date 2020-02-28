@@ -8,28 +8,13 @@
 // Last update Sat Oct 19 00:10:08 2002 Ghost in the Shell
 //
 
-
 #include "SFourmis.h"
-
-#ifdef WIN32
-# include "WinInterface.h"
-#endif
-
-#ifdef GTK_Linux
-# include <gdk/gdk.h>
-# include <gdk-pixbuf/gdk-pixbuf.h>
-# include "GTKInterface.h"
-#endif
-
 
 #include "GraphXstruct.h"
 #include "GraphXproc.h"
 #include "GraphXtools.h"
 
-#ifdef SF_SDL
-//SDL : les includes sont deja dans SFourmis.h
-SFRect rectangleTotal(0,0,800,600);//TODO 2020 resolution should be a variable
-#endif
+SFRect rectangleTotal(0,0,800,600);//TODO 2020 resolution should be a variable but bitmap image is fixed
 
 static void	DrawPheromon(int k, int j)
 {
@@ -38,7 +23,6 @@ static void	DrawPheromon(int k, int j)
   SFRect	rc;
   
 
-  SFDrawMode(DDBLTFAST_WAIT | DDBLTFAST_SRCCOLORKEY);
   for(int m = 0; m < PHERO_SIZE; ++m)
   {
     CCase		*tmpc;
@@ -154,18 +138,6 @@ static void	DrawAnimal(int k, int j, int F)
 	  * (MData.fps-F-1)/MData.fps;
 	GraphPos[F][1] = -(ani->Yc - ani->Oldpos[0][1] * 32)
 	  * (MData.fps-F-1)/MData.fps;
-#ifdef WIN3 // Compile erreur
-	int cll;
-	for( cll=0; cll< MData.nb_clan ;cll++)
-	  if (ani->Clan==les_clans[cll]) break;
-	HDC hdc;
-	lpDDSBack->GetDC(&hdc);
-	CBrush BB1(0x00FF0000*(cll%2)*32+0x0000FF00*(cll%3)*32+0x000000FF*(cll%4)*32);
-	//	CBrush BB1(0x00F0021C);
-	SelectObject(hdc,BB1);
-	Ellipse(hdc,160+k*32+GraphPos[F][0],j*32+GraphPos[F][1],160+k*32+GraphPos[F][0]+32,j*32+32+GraphPos[F][1]);
-	lpDDSBack->ReleaseDC(hdc);
-#endif
 	SFDrawSurface(160+32*k+GraphPos[F][0]
 	    ,32*j+GraphPos[F][1], rc);
 
@@ -229,18 +201,9 @@ static void	DrawOutset(int k, int j)
 void updateFrame(BYTE Frame)
 {
   class SFRect		rc;
+  SDL_FillRect(screen,0,0);
+  SFDrawSurface(0,0,rectangleTotal);
 
-#ifdef GTK_Linux
-  if (ZSF.bScreen)
-    gdk_pixbuf_render_to_drawable(MainPixbuf,(GdkDrawable *)FlipPM,BigGC,0,0,0,0,800, 600,GDK_RGB_DITHER_NORMAL, 0,0);//TODO 2020 resolution should be a variable
-#endif
-
-#ifdef SF_SDL
-	/*if(SDL_MUSTLOCK(screen))
-		SDL_LockSurface(screen);*/
-		SDL_FillRect(screen,0,0);
-		SFDrawSurface(0,0,rectangleTotal);
-#endif
 
   if (ZSF.bScreen)
   {
@@ -259,14 +222,9 @@ void updateFrame(BYTE Frame)
 	  //Décors, nourriture etc ...
 	  DrawOutset(k, j);
 	}
-#ifdef WIN32
-      Flips();
-      DisplayInfo(MData, ZSF);
-#endif
 
       rc.setSFRect(0,600+32,32,600+64);
-      SFDrawMode(DDBLTFAST_WAIT|DDBLTFAST_SRCCOLORKEY);
-      SFFastDrawSurface((150-10)*(MData.fps-1)/8+10,346, rc);
+      SFDrawSurface((150-10)*(MData.fps-1)/8+10,346, rc);
       if ((ZSF.bDown) && (ZSF.bMove))
 		SelectMultiple();
       if (ZSF.bSmall_map)
@@ -274,18 +232,7 @@ void updateFrame(BYTE Frame)
 	
     }
   }
-#ifdef GTK_Linux
-  if (ZSF.bScreen){
-    DisplayInfo(MData, ZSF);
-    Flips();
-  }
-#endif
-
-#ifdef SF_SDL
-	/*if(SDL_MUSTLOCK(screen))
-		SDL_UnlockSurface(screen);*/
-    DisplayInfo(MData, ZSF);
-		Flips();
-#endif
+  DisplayInfo(MData, ZSF);
+  Flips();
 
 }

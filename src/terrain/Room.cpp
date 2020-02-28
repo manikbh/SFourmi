@@ -189,7 +189,7 @@ CRoom::Serialize(FILE *sauveg,bool sauv, IOTablePointeur &table)
 			//SDEBUG(W2,"en "<<k<<","<<k2<<" ca, map "<<&ca<<", "<<&map[k][k2]);
 			fflush(sauveg);
 			if((i=table.Find((void *)(cd = ca.decor)))==-1){ //Si le décor n'est pas encore sauvé
-				ca.decor = (CDecor *) table.Add((void *)ca.decor);
+				ca.decor = (CDecor *) table.Add((void *)ca.decor);//TODO 2020 : int32 to pointer64 bug
 				fwrite("i",sizeof(char),1,sauveg);//A sauver "I"ci
 				fwrite(cd, sizeof(CDecor),1, sauveg);//On sauve le décor
 			}else{
@@ -286,9 +286,8 @@ CRoom::Serialize(FILE *sauveg,bool sauv, IOTablePointeur &table)
 			SDEBUG(W2, "Taille de phéro (3 en principe) lue :" << j);
 			for(i=0; i<j; i++)//Chargement des phéromones
 				map[k][k2].phero[i]->Serialize(sauveg, sauv, table);
-
-
 		}
+		delete[] buff;
 	}else{//Mise à jour des pointeurs
 		for (k = 0; k < size.largeur; k++)
 		for (k2 = 0; k2 <size.hauteur; k2++){

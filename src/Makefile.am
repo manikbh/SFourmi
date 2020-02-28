@@ -10,7 +10,6 @@ SFourmi_LDADD = \
 common/libcommon.a\
 animaux/fourmis/libfourmis.a\
 ../lib/Os/libGraphX.a	\
-../lib/Os/gtk/libgtk.a	\
 ../lib/Os/sdl/libsdl.a	\
 terrain/libterrain.a	\
 animaux/libanimaux.a	\

@@ -106,10 +106,8 @@ int main (int argc, char *argv[])
     NewMap ();
 
   bActive = true;
-  
-  SFDrawMode (DDBLTFAST_NOCOLORKEY|DDBLTFAST_WAIT);
-  
-  while (ZSF.Counter() < 2^32)//TODO 2020: 64 bits should be enough to never reach the maximum of the counter -> uint64_t
+    
+  while (true)
   {
 
     if (SDL_PollEvent(evenement))

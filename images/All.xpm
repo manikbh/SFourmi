@@ -1,5 +1,5 @@
 /* XPM */
-static char * All_xpm[] = {
+static const char * All_xpm[] = {
 "800 920 257 2",
 "       c #000000",
 ".      c #1C040C",

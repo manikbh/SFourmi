@@ -36,13 +36,6 @@ void SelectMultiple()							  //dessine un rectangle de sélection
 
   SFDrawSingleRectangle(rc, colors);
 
-#ifdef GTK_Linux
-  gdk_draw_rectangle((GdkDrawable *)BigFenetre,jauneGC,false,
-      min(MouseXY[0],MouseXYD[0]),min(MouseXY[1],MouseXYD[1]),
-      max(MouseXYD[0],MouseXY[0])-min(MouseXY[0],MouseXYD[0]),
-      max(MouseXYD[1],MouseXY[1])-min(MouseXY[1],MouseXYD[1]));
-#endif
-
 }
 
 
@@ -62,7 +55,6 @@ void SmallMap()//TODO 2020 remove globals and pass a SFourmiWorld by reference
   rc.setSFRect(LSMAP*ZSF.column/ZSF.This_room()->size.largeur+XSMAP,HSMAP*ZSF.line/ZSF.This_room()->size.hauteur+YSMAP
       ,LSMAP*(ZSF.column+20)/ZSF.This_room()->size.largeur+XSMAP,HSMAP*(ZSF.line+18)/ZSF.This_room()->size.hauteur+YSMAP);
   SFDrawSingleRectangle(rc, colors);
-  SFDrawMode(DDBLTFAST_WAIT | DDBLTFAST_NOCOLORKEY);
 
   for (int ceclan = 0; ceclan < MData.nb_clan; ceclan++)
     for (int i = 0; i < MData.max_ants; i++)
@@ -76,13 +68,13 @@ void SmallMap()//TODO 2020 remove globals and pass a SFourmiWorld by reference
 	switch (les_clans[ceclan]->les_fourmis[i]->Statut())
 	{
 	  case OUVRIER:
-	    SFFastDrawSurface(PosX, PosY, Yellow);
+	    SFDrawSurface(PosX, PosY, Yellow);
 	    break;
 	  case CITERNE:
-	    SFFastDrawSurface(PosX, PosY, Red);
+	    SFDrawSurface(PosX, PosY, Red);
 	    break;
 	  case SENTINELLE:
-	    SFFastDrawSurface(PosX, PosY, Violet);
+	    SFDrawSurface(PosX, PosY, Violet);
 	    break;
 	  default:
 	    break;
@@ -97,10 +89,10 @@ void SmallMap()//TODO 2020 remove globals and pass a SFourmiWorld by reference
       switch (les_ennemis[i]->Esp)
       {
 	case CAFARD:
-	  SFFastDrawSurface(PosX, PosY, Vert);
+	  SFDrawSurface(PosX, PosY, Vert);
 	  break;
 	default:
-	  SFFastDrawSurface(PosX, PosY, Vert);
+	  SFDrawSurface(PosX, PosY, Vert);
 	  break;
       }
     }
@@ -113,71 +105,4 @@ void Flips(void)
 {
   SDL_Flip(screen); //Affiche reellement en echangeant les buffers hardware
 }
-
-
-///////////////////////////////////////////////////////////////////////////////
-void splash(void)
-{
-#ifdef WIN32
-  CRect rcRect;
-  HRESULT             ddrval;
-
-  rcRect.left = 400;
-  rcRect.top = 600;
-  rcRect.right = 800;
-  rcRect.bottom = 600+300;
-
-  while(1)
-  {
-    ddrval = lpDDSPrimary->BltFast(160, 120, lpDDSTwo,
-	&rcRect, DDBLTFAST_NOCOLORKEY|DDBLTFAST_WAIT);
-    if(ddrval == DD_OK)
-      break;
-    if(ddrval == DDERR_SURFACELOST)
-    {
-      ddrval = restoreAll();
-      if(ddrval != DD_OK)
-	return;
-    }
-    if(ddrval != DDERR_WASSTILLDRAWING)
-      return;
-  }
-  if(ddrval != DD_OK)
-    return;
-#endif
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-void info_plus(void)
-{
-#ifdef WIN32
-  CRect rcRect;
-  HRESULT             ddrval;
-
-  rcRect.left = 0;
-  rcRect.top = 320+600;
-  rcRect.right = 400;
-  rcRect.bottom = 620+600;
-
-  while(1)
-  {
-    ddrval = lpDDSPrimary->BltFast(160, 120, lpDDSTwo,
-	&rcRect, DDBLTFAST_NOCOLORKEY|DDBLTFAST_WAIT);
-    if(ddrval == DD_OK)
-      break;
-    if(ddrval == DDERR_SURFACELOST)
-    {
-      ddrval = restoreAll();
-      if(ddrval != DD_OK)
-	return;
-    }
-    if(ddrval != DDERR_WASSTILLDRAWING)
-      return;
-  }
-  if(ddrval != DD_OK)
-    return;
-#endif
-}
-
 

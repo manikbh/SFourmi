@@ -11,22 +11,12 @@
 
 #include "SFourmis.h"
 
-#ifdef WIN32
-# include "WinInterface.h"
-#endif
-
-#ifdef GTK_Linux
-# include <gtk/gtk.h>
-# include <gdk/gdk.h>
-# include <gdk-pixbuf/gdk-pixbuf.h>
-# include "GTKInterface.h"
-#endif
-
 #include "GraphXstruct.h"
 #include "GraphXproc.h"
 #include "GraphXtools.h"
 
-#include <stdint.h>
+#include <cstdint>
+#include <string>
 
 extern CRoom*		terre;
 extern CClan**		les_clans;
@@ -63,7 +53,7 @@ DisplayIcon(class DataMap& MData, class User& ZSF)
       default:
 	break;
     }
-    SFFastDrawSurface(22, 180, rc);
+    SFDrawSurface(22, 180, rc);
   }
   else
     if (ZSF.bInfo_enn)
@@ -77,7 +67,7 @@ DisplayIcon(class DataMap& MData, class User& ZSF)
 	  rc.setSFRect(0,0,0,0);
 	  break;
       }
-      SFFastDrawSurface(22, 180, rc);
+      SFDrawSurface(22, 180, rc);
     }
 }
 
@@ -88,10 +78,9 @@ DisplayGeneralInfo(class DataMap& MData, class User& ZSF)
   char		buffer[5];
   class SFColor	colors;
 
-  SFSelectFont(3);
   SFTextColor(255, 255, 255);
 
-  sprintf(buffer,"%d", ZSF.Counter());
+  sprintf(buffer,"%" PRIu64, ZSF.Counter());
   SFDisplay(24, 128, "Tours:");
   SFDisplay(80, 128,buffer);
 
@@ -105,7 +94,7 @@ DisplayGeneralInfo(class DataMap& MData, class User& ZSF)
   SFDisplay(0, 576, buffer);
 #endif
   
-  /*SFSelectFont(2);	//FIXME : numéro du clan ?
+  /* FIXME : numéro du clan ?
   sprintf(buffer,"%d", ZSF.This_clan()+1);			  //Clan
   SFDisplay(510, 580, "Clan");
   SFDisplay(545, 580, buffer);*/
@@ -120,7 +109,7 @@ DisplayGeneralInfo(class DataMap& MData, class User& ZSF)
 static void
 DisplayEnnemiesInfo(class DataMap& MData, class User& ZSF)
 {
-  static char *szStatut = "";
+  std::string szStatut = "";
   class SFRect	rc;
   class SFColor	colors;
   char		buffer[9];
@@ -130,7 +119,6 @@ DisplayEnnemiesInfo(class DataMap& MData, class User& ZSF)
 	       22+32,
 	       180+30);
   colors.setSFColor(0, 204, 0);
-  SFSelectFont(2);
   if (ZSF.This_animal()->Vie > 50)
     SFTextColor(250,250,250);			  //blanc
   else
@@ -163,7 +151,6 @@ DisplayEnnemiesInfo(class DataMap& MData, class User& ZSF)
     default:
       szStatut = "Inconnu";break;
   }
-  SFSelectFont(1);
   SFTextColor(248, 236, 24);
   SFDisplay(56, 184, szStatut);
 }
@@ -174,7 +161,7 @@ DisplayAntsInfo(class DataMap& MData, class User& ZSF)
   class SFRect	rc;
   int		nourri;
   class SFColor	colors;
-  static char*	szStatut;
+  std::string	szStatut;
   char		buffer[9];
 
   colors.setSFColor(0, 204, 0);
@@ -183,7 +170,6 @@ DisplayAntsInfo(class DataMap& MData, class User& ZSF)
   SFDrawDCRectangle(rc, colors);
   nourri = ZSF.This_animal()->Nourriture;
   sprintf(buffer,"%d",nourri);
-  SFSelectFont(2);
   if(nourri > 100)
     SFTextColor(250,250,250);			  //blanc
   else
@@ -252,7 +238,6 @@ DisplayAntsInfo(class DataMap& MData, class User& ZSF)
     default:
       break;
   }
-  SFSelectFont(1);
   SFTextColor(248,236,24);
   SFDisplay(56, 184,szStatut);
 }
@@ -274,18 +259,15 @@ DisplayInfo(class DataMap &MData, class User &ZSF)
   char		buffer[5];
 
   rc.setSFRect(0, 0, 160, 600);
-  SFDrawMode(DDBLTFAST_WAIT | DDBLTFAST_NOCOLORKEY);
-  SFFastDrawSurface(0,0, rc);
+  SFDrawSurface(0,0, rc);
   rc.setSFRect(160, 576, 800, 600);
-  SFFastDrawSurface(160, 600-24, rc);
+  SFDrawSurface(160, 600-24, rc);
 
   DisplayIcon(MData, ZSF);
-  SFGetDC();
   DisplayGeneralInfo(MData, ZSF);
   DisplayIndividualInfo(MData, ZSF);
   if(ZSF.bStats)
   {
-    SFSelectFont(1);
     SFTextColor(0,236,254);
     SFDisplay(710,500, "Ouvrières");
     SFDisplay(710,514, "Sentinelles");
@@ -302,5 +284,4 @@ DisplayInfo(class DataMap &MData, class User &ZSF)
     //	SFDisplay 780, 542, buffer2);
 
   }
-  SFReleaseDC();
 }

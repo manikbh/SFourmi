@@ -24,7 +24,7 @@ public:
 			  int 	X = this->Vex;
 			  int 	Y = this->Vey;
 
-			  if (((X == 0) && (Y == 0)) || (X == 0) && (Y == -1))
+			  if (((X == 0) && (Y == 0)) || ((X == 0) && (Y == -1)))
 			    return 0;
 			    //vers HAUT DROITE
 			  else if ((X == 1) && (Y == -1))

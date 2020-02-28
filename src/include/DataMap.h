@@ -6,7 +6,7 @@
 # define HSMAP	92
 # define LSMAP	95
 
-using namespace std;
+//using namespace std;
 
 class	DataMap
 {
@@ -14,7 +14,7 @@ class	DataMap
     	DataMap();
 	~DataMap();
 
-	void		LoadData(char *inifile);
+	void		LoadData(std::string inifile);
 	inline void	setScreen(enum e_screen s) {screen = s;}
 	inline e_screen	Screen() const {return screen;}
 	int		length;//TODO 2020 : provide default values and call the class SFourmiConfig or something

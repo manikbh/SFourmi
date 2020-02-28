@@ -19,13 +19,14 @@
 #include <fstream>
 #include <string>
 #include <cctype>
-#include  <assert.h>
+#include <cassert>
+#include <filesystem>
 #include "Wonders.h"
 #include "SFourmis.h"
 #include "DataMap.h"
 #define MAX_DATA	13
 
-char	*data[MAX_DATA] = {"Length", "Height", "nWorkers", "nGuards", "nTanks",
+char	*mydata[MAX_DATA] = {"Length", "Height", "nWorkers", "nGuards", "nTanks",
     "Meat_density", "Fps", "Max_meat", "nClan", "Max_ennemies", "Ants_reborn",
     "Ennemies_reborn","LoadFile"};
 
@@ -110,33 +111,25 @@ DataMap::CheckMapParameters(int var, char *cmdline)
 }
 
 void
-DataMap::LoadData(char *file)
+DataMap::LoadData(std::string file)
 {
-  char		*inifile;
+  std::filesystem::path inifile;
   ifstream	sf_ini;
   char		cmdline[80];
 
-#ifdef GTK_Linux
-  char		*HOME;
+  char          *HOME;
   assert((HOME = getenv("HOME")) != 0);
-  inifile = new char[strlen(file) + strlen(HOME) + 2];
-  strncpy(inifile, HOME, strlen(HOME));
-#endif
-#ifdef SF_SDL
-    char          *HOME;
-    assert((HOME = getenv("HOME")) != 0);
-    inifile = new char[strlen(file) + strlen(HOME) + 2];
-    strncpy(inifile, HOME, strlen(HOME));
-#endif
-#ifdef WIN32
-  inifile = new char[strlen(file)+3];
-  strncpy(inifile, "c:\0", 4);
-#endif
-  strncat(inifile, "/", 1);
-  strncat(inifile, file, strlen(file));
-  sf_ini.open (inifile);
-  SDEBUG (W0, inifile);
-  delete[] inifile;
+  if(!HOME){
+    std::cerr << "Could not get HOME environment variable -> cannot find config file !\n";
+  }
+  else
+  {
+    inifile = HOME;
+    inifile /= file;
+    sf_ini.open (inifile);
+    SDEBUG (W0, inifile);
+  }
+
   if (sf_ini.is_open() == 0)
   {
     SDEBUG (W0, "Could not open the file sfourmi.ini");
@@ -153,10 +146,10 @@ DataMap::LoadData(char *file)
 	bool	found = false;
 
 	for (int j = 0; j < MAX_DATA; ++j)
-	  if (strncmp(data[j], cmdline, strlen(data[j])) == 0)
+	  if (strncmp(mydata[j], cmdline, strlen(mydata[j])) == 0)
 	  {
 	    found = true;
-	    CheckMapParameters(j, cmdline + strlen(data[j]));
+	    CheckMapParameters(j, cmdline + strlen(mydata[j]));
 	  }
 	  SDEBUG (W0, cmdline);
 	if (found == false)

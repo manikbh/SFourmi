@@ -76,10 +76,6 @@ void CTunnel::Serialize(FILE * fichier, bool sauv, IOTablePointeur &table)
 	else{
 
 		if(fichier !=NULL){
-			//char *buf=new char[7];
-			//fread(buf,6,1,fichier);
-			//if(strncmp(buf, "Tunnel",6)!=0)
-			//	cout << "ALERTE ! "<<buf[0]<<buf[1]<<buf[2];
 			fread(&in,sizeof(int),1,fichier);
 			SDEBUG(W2, "Tunnel : je suis "<<this<<" en "<<(int)in);
 			table.set(in, (void *)this);

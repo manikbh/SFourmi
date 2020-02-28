@@ -10,16 +10,12 @@
 
 #ifndef GRAPHXTOOLS_H
 # define GRAPHXTOOLS_H
+#include <string>
 
-extern void SFDrawMode(int Mode);
-extern void SFDisplay(int X, int Y, char *chaine);
+extern void SFDisplay(int X, int Y, std::string chaine);
 extern void SFTextColor(int r, int g, int b);
 extern void SFDrawSingleRectangle(SFRect& rcRect,SFColor& color);
 extern void SFDrawDCRectangle(SFRect& rcRect,SFColor& color);
-extern void SFSelectFont(BYTE n);
-extern void SFGetDC();
-extern void SFReleaseDC();
 extern void SFDrawSurface(int x0,int y0, SFRect& rcRect);
-extern void SFFastDrawSurface(unsigned long x0,unsigned long y0, SFRect& rcRect);
 
 #endif

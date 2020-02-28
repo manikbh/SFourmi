@@ -15,7 +15,7 @@
 #include "GraphXproc.h"
 #include "GraphXtools.h"
 #include "../../images/All.xpm"
-#include "../../images/Icon1.xpm"
+//#include "../../images/Icon1.xpm" // Icon is not used
 
 
 bool GraphX_Init(void)
@@ -27,7 +27,7 @@ bool GraphX_Init(void)
   //Nettoyer SDL a la fin de l'execution
   atexit(SDL_Quit);
   //S'attacher a l'ecran en 800,600, le bpp du systeme (0), acceleration hardware et double buffer
-  if (!(screen = SDL_SetVideoMode(800,600,0,SDL_HWSURFACE|SDL_DOUBLEBUF))){ //TODO 2020 resolution should be a variable (but Map Image must be updated to reflect this)
+  if (!( screen = SDL_SetVideoMode(800,600,0,SDL_HWSURFACE|SDL_DOUBLEBUF))){ //TODO 2020 resolution should be a variable (but Map Image must be updated to reflect this)
     SDEBUG(W0, "Echec de l'initialisation du mode video !");
     exit(1);
   }
@@ -39,7 +39,7 @@ bool GraphX_Init(void)
   atexit(TTF_Quit);
 
   //  image = IMG_Load("/home/dodeskaden/Test/SFourmi/lib/Os/win/All.bmp");
-  image = IMG_ReadXPMFromArray (All_xpm);
+  image = IMG_ReadXPMFromArray (const_cast<char **>(All_xpm)); //FIXME if All_xpm is not const, warnings, if it is SDL does not like it -> ugly fix
   if(image == NULL){
     SDEBUG(W0, "Impossible de charger l'image !");
     if(!fopen("/home/dodeskaden/Test/SFourmi/lib/Os/win/All.bmp","r"))

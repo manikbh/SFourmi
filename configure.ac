@@ -18,7 +18,8 @@ AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
 
 # We want no optimization (too slow), and a lot of debugging, for both
 # C and C++.
-CFLAGS="-O3 -Wall -std=c++17"
+#CFLAGS="-O3 -Wall -std=c++17"
+CFLAGS="-ggdb -Wall -std=c++17 -fsanitize=address -fno-omit-frame-pointer"
 CXXFLAGS=$CFLAGS
 
 # Look for a C++ compiler.

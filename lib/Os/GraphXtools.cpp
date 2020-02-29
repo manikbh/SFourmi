@@ -55,15 +55,18 @@ void
 SFDrawSingleRectangle(SFRect& rcRect, SFColor& color)
   // Fait pour dessiner qu'un rectangle
 {
-   //Tracer les lignes point par point ou utiliser une lib comme SDL_gfx, non portable ?
+   //Tracer les lignes point par point ou utiliser une lib comme SDL_gfx, non portable ? //TODO 2020 cleaning memory leaks (toSDL_Rect create an object, never destroyed)
    static SDL_Surface *tracage = SDL_CreateRGBSurface(SDL_HWSURFACE|SDL_SRCCOLORKEY,800,600,24,0,0,0,0);
-   static SDL_Rect *tout = (new SFRect(0,0,800,600))->toSDL_Rect();
+   static SDL_Rect *tout = SFRect(0,0,800,600).toSDL_Rect();
+   SDL_Rect *sdlRcRect = rcRect.toSDL_Rect();
+   SDL_Rect * rcRectPetit = SFRect(rcRect.Left()+1,rcRect.Top()+1, rcRect.Right()-1, rcRect.Bottom()-1).toSDL_Rect();
    SDL_SetColorKey(tracage, SDL_SRCCOLORKEY|SDL_RLEACCEL,SDL_MapRGB(tracage->format,4,4,4));
    SDL_FillRect(tracage, tout , SDL_MapRGB(tracage->format,4,4,4));
-   SDL_FillRect(tracage, rcRect.toSDL_Rect() , SDL_MapRGB(tracage->format,255,255,0));
-   SFRect *rcRectPetit = new SFRect(rcRect.Left()+1,rcRect.Top()+1, rcRect.Right()-1, rcRect.Bottom()-1);
-   SDL_FillRect(tracage, rcRectPetit->toSDL_Rect() , SDL_MapRGB(tracage->format,4,4,4));
-	SDL_BlitSurface(tracage, rcRect.toSDL_Rect(), screen, rcRect.toSDL_Rect());
+   SDL_FillRect(tracage, sdlRcRect , SDL_MapRGB(tracage->format,255,255,0));
+   SDL_FillRect(tracage, rcRectPetit , SDL_MapRGB(tracage->format,4,4,4));
+   SDL_BlitSurface(tracage, sdlRcRect, screen, sdlRcRect);
+   delete rcRectPetit;
+   delete sdlRcRect;
 }
 
 
@@ -80,6 +83,8 @@ void SFDrawSurface(int x0, int y0, SFRect& rcRect)  // Ecriture différée
 {  //Copie un bout de l'image globale vers le buffer d'affichage
   SDL_Rect r;
   r.x=x0, r.y=y0;
-  SDL_BlitSurface(image, rcRect.toSDL_Rect(), screen, &r);
+  auto *sdlRect = rcRect.toSDL_Rect();
+  SDL_BlitSurface(image, sdlRect, screen, &r);
+  delete sdlRect;
 }
 

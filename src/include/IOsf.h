@@ -6,8 +6,8 @@
 
 #ifndef IOSF_H
 # define IOSF_H
-
-extern bool	Charg_terrain(char *file);
+#include <string>
+extern bool	Charg_terrain(std::string file);
 extern void	Sauv_terrain(void);
 class IOTablePointeur{
 	private:

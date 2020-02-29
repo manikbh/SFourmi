@@ -58,7 +58,7 @@ enum ordre Ouvrier::Action()
   if (Vie <= 0)
     return DEAD;
 
-  memset(Autour, 0, 48);
+  memset(Autour, 0, 48*sizeof(CAnimal*));
 
   // FUZZIFICATION DES VARIABLES : passage aux variables floues
 
@@ -66,7 +66,7 @@ enum ordre Ouvrier::Action()
   BYTE danger = 0;
   BYTE utile = 0;
   BYTE interet = 40;							  // Travaux d'intérêt commun
-  BYTE publique = 100;						  // Creuser et fortifier la demeure de la reine
+  //BYTE publique = 100;						  // Creuser et fortifier la demeure de la reine
 
   if (bCiterne() == false)
     interet = 100;				  // Chercher une citernes ou qqchose comme ça
@@ -125,6 +125,8 @@ enum ordre Ouvrier::Action()
 		  Nourriture += Autour[i]->Nourriture/5;
 		  static_cast<Fourmi *>(Autour[i])->Nourriture *= 4/5;
 		}
+		break;
+	      default:
 		break;
 	    }
 	    if (bOffre == true) break;

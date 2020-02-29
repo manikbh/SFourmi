@@ -32,23 +32,7 @@ int intense = 0;
 CAnimal* Autour[48];
 int const	CPheromone::Volutabily_meat = 2;
 int const	CPheromone::Volutabily_danger = 2;
-signed char const CAnimal::Deplacements[16] = {-1, -1, 
-  				0, -1,
-				1, -1,
-				1, 0,
-				1, 1,
-				0, 1,
-				-1, 1,
-				-1, 0};//Très utiles
 
-signed char Deplacement2[16]= { -1, -1,
-				-1, 0,
-				-1, 1,
-				0, -1,
-				0, 1,
-				1, -1,
-				1, 0,
-				1, 1};
 // Log for FILE //
 ofstream Log;
 

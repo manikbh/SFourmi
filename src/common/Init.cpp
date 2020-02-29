@@ -72,7 +72,18 @@ Process_va()
 	  break;
 	case LARVE:
 	  SDEBUG(W1,"#L#");
-	  fourmi->Action();
+	  {
+	    auto fStatus = fourmi->Action();
+	    if(fStatus==EVOLVE)
+	      delete fourmi; // It was already replaced in the clan's array by the new Fourmi...
+	    else if(fStatus==DEAD)
+	    {
+	      fourmi->Meurt();
+	      fourmi->setStatut(NIHIL);
+	      clan->Population--;
+	      clan->NbSentinelle--;
+	    }
+	  }
 	  break;
 	default:
 	  break;

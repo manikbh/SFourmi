@@ -183,20 +183,20 @@ CRoom::Serialize(FILE *sauveg,bool sauv, IOTablePointeur &table)
 		fwrite("Map",3,1,sauveg);
 		CCase ca; //Objet temporaire pour sauver
 		CDecor *cd;
-		for (k = 0; k < size.largeur; k++) //On parcourt le terrain
-		for (k2 = 0; k2 < size.hauteur; k2++){
+		for (int k = 0; k < size.largeur; k++) //On parcourt le terrain
+		for (int k2 = 0; k2 < size.hauteur; k2++){
 			ca=map[k][k2];
 			//SDEBUG(W2,"en "<<k<<","<<k2<<" ca, map "<<&ca<<", "<<&map[k][k2]);
 			fflush(sauveg);
 			if((i=table.Find((void *)(cd = ca.decor)))==-1){ //Si le décor n'est pas encore sauvé
-				ca.decor = (CDecor *) table.Add((void *)ca.decor);//TODO 2020 : int32 to pointer64 bug
+				ca.decor = reinterpret_cast<CDecor *>(table.Add((void *)ca.decor));
 				fwrite("i",sizeof(char),1,sauveg);//A sauver "I"ci
 				fwrite(cd, sizeof(CDecor),1, sauveg);//On sauve le décor
 			}else{
-				ca.decor =(CDecor *) i;
+				ca.decor = reinterpret_cast<CDecor *>(i);
 				fwrite("a",1,1,sauveg);//Ok, déjà sauvé "A"illeurs
 			}
-			ca.firstAnimal = (CAnimal *)table.FindOrAdd((void *)ca.firstAnimal);
+			ca.firstAnimal = reinterpret_cast<CAnimal *>(table.FindOrAdd((void *)ca.firstAnimal));
 			//Sauvegarde de la Case
 			fwrite(&ca.terrain, sizeof(char),1,sauveg); //Ne pas sauver les pointeurs phero ni le pointeur CDecor
 			fwrite(&ca.offsetX, sizeof(char),1,sauveg);
@@ -233,7 +233,7 @@ CRoom::Serialize(FILE *sauveg,bool sauv, IOTablePointeur &table)
 		//Variables vecteur
 		fread(&i,sizeof(int),1,sauveg);
 		Pipe.resize(i);
-		for (k = 0; k < i; k++)
+		for (int k = 0; k < i; k++)
 		{
 			fread(&Pipe[k],sizeof(int),1,sauveg);
 			fread(buff, 1, 1, sauveg);
@@ -250,7 +250,7 @@ CRoom::Serialize(FILE *sauveg,bool sauv, IOTablePointeur &table)
 		fread(&i,sizeof(int),1,sauveg);
 		Gate[0].resize(i);
 		Gate[1].resize(i);
-		for (k = 0; k < i; k++)
+		for (int k = 0; k < i; k++)
 		{
 			fread(&Gate[0][k],sizeof(int),1,sauveg);
 			fread(&Gate[1][k],sizeof(int),1,sauveg);
@@ -261,8 +261,8 @@ CRoom::Serialize(FILE *sauveg,bool sauv, IOTablePointeur &table)
 			SDEBUG(W2, "Carte introuvable !");
 		//Carte
 		Init(size.largeur, size.hauteur, VIDE_R); //CREE LES PHEROS et CDECOR : ne pas les recréer
-		for (k = 0; k < size.largeur; k++)
-		for (k2 = 0; k2 <size.hauteur; k2++)
+		for (int k = 0; k < size.largeur; k++)
+		for (int k2 = 0; k2 <size.hauteur; k2++)
 		{
 			fread(buff,sizeof(char),1,sauveg);
 			if(buff[0]=='i')
@@ -276,11 +276,11 @@ CRoom::Serialize(FILE *sauveg,bool sauv, IOTablePointeur &table)
 			fread(&map[k][k2].terrain, sizeof(char),1,sauveg); 
 			fread(&map[k][k2].offsetX, sizeof(char),1,sauveg);
 			fread(&map[k][k2].offsetY, sizeof(char),1,sauveg);
-			fread(&map[k][k2].firstAnimal, sizeof(int),1,sauveg);//TODO 2020: reading just 32 bits will give random values in a 64bits pointer type
+			fread(&map[k][k2].firstAnimal, sizeof(int),1,sauveg);
 			fread(&i, sizeof(int),1,sauveg);//Numero du pointeur vers décor dans la table
 			SDEBUG(W2, "map : "<<(int)map[k][k2].terrain<<", "<<(int)map[k][k2].offsetX<<", "<<(int)map[k][k2].offsetY<<", "<<map[k][k2].firstAnimal<<", "<<(int)i);
 			table.set(i, (void*)map[k][k2].decor);
-			map[k][k2].decor=(CDecor *)i;
+			map[k][k2].decor=reinterpret_cast<CDecor *>(i);
 			j=0;
 			fread(&j, sizeof(PHERO_SIZE),1,sauveg);//NON UTILISE !
 			SDEBUG(W2, "Taille de phéro (3 en principe) lue :" << j);
@@ -289,12 +289,12 @@ CRoom::Serialize(FILE *sauveg,bool sauv, IOTablePointeur &table)
 		}
 		delete[] buff;
 	}else{//Mise à jour des pointeurs
-		for (k = 0; k < size.largeur; k++)
-		for (k2 = 0; k2 <size.hauteur; k2++){
+		for (int k = 0; k < size.largeur; k++)
+		for (int k2 = 0; k2 <size.hauteur; k2++){
 			map[k][k2].firstAnimal=(CAnimal *)table.get(reinterpret_cast<int64_t>(map[k][k2].firstAnimal));
 			map[k][k2].decor=(CDecor *)table.get(reinterpret_cast<int64_t>(map[k][k2].decor));
 		}
-		for (k = 0; k < Pipe.size(); k++){
+		for (size_t k = 0; k < Pipe.size(); k++){
 			Pipe[k] = (CTunnel *) table.get(reinterpret_cast<int64_t>(Pipe[k]));
 			if (table.get(reinterpret_cast<int64_t>(Pipe[k]->In)) == this){
 				Pipe[k]->Serialize(NULL, sauv, table);

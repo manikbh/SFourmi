@@ -31,7 +31,6 @@ ordre Reine::Action()
   // OK		:c'est je peux encore pondre
 {
   bool		offre = false;
-  bool		accouche = false;
   int		resp, c, o, x, y;
   Fourmi*	fourmi;
 
@@ -47,7 +46,7 @@ ordre Reine::Action()
 
   if (Nourriture < 10000)
   {
-    memset(Autour, 0, 48);
+    memset(Autour, 0, 48*sizeof(CAnimal*));
     resp = RegardeAnimalAutour(2);
     for (o = 0; o < resp; o++)
     {
@@ -62,6 +61,8 @@ ordre Reine::Action()
 	    Nourriture += c;
 	    static_cast<Fourmi *>(Autour[o])->Nourriture -= c;
 	  }
+	  break;
+	default:
 	  break;
       }
       if (offre == true) break;
@@ -104,7 +105,7 @@ ordre Reine::Action()
 	  Clan->les_fourmis[o] = new Larve(x, y, Numero, o, this, this->Room);
 	  Nourriture -= 200;
 	  Clan->Population++;
-	  LastPonte = 0; accouche = true;
+	  LastPonte = 0;
 	  goto fin;
 	}
       }

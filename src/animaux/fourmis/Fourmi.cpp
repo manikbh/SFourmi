@@ -136,7 +136,7 @@ Fourmi::ChangeRoom(class CRoom *rm)
   for (i = 0; i < 20; i++)
   {
     dir = 2 * (rand() % 8);
-    x = Xc + Deplacements[dir % 16]; y = Yc + Deplacements[(dir % 16) + 1];
+    x = Xc + CAnimal::Deplacements[dir % 16]; y = Yc + CAnimal::Deplacements[(dir % 16) + 1];
     if (CASE_VIDE(x, y, rm))
       break;
   }
@@ -310,6 +310,8 @@ Fourmi::Lacher_Pheromone(categorie cat)
 	  Room->map[x][y].phero[cat]->Vex = 0;
 	  Room->map[x][y].phero[cat]->Vey = -1;
 	  break;
+	default:
+	  break;
       }
     }
 
@@ -322,7 +324,7 @@ Fourmi::Lacher_Pheromone(categorie cat)
 void
 Fourmi::Evolve()
 {
-  delete Clan->les_fourmis[Numero];
+  // delete Clan->les_fourmis[Numero];//TODO 2020 - this delete was called from the destroyed object...
   Clan->les_fourmis[Numero] = this;
 }
 

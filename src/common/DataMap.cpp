@@ -26,7 +26,7 @@
 #include "DataMap.h"
 #define MAX_DATA	13
 
-char	*mydata[MAX_DATA] = {"Length", "Height", "nWorkers", "nGuards", "nTanks",
+std::string	mydata[MAX_DATA] = {"Length", "Height", "nWorkers", "nGuards", "nTanks",
     "Meat_density", "Fps", "Max_meat", "nClan", "Max_ennemies", "Ants_reborn",
     "Ennemies_reborn","LoadFile"};
 
@@ -100,9 +100,7 @@ DataMap::CheckMapParameters(int var, char *cmdline)
     case 12:
       SDEBUG (W0, "Loading Map detected...");
       charger = strncmp ("none", cmdline, 4) == 0 ? false : true;
-      loadfile = new char[strlen (cmdline)];
-      strncpy (loadfile, cmdline + 1, strlen (cmdline) - 1);
-      loadfile[strlen (cmdline) - 1] = '\0';
+      loadfile = std::string(cmdline);
       break;
     default:
       std::cerr << "Parse error in initialization file" << std::endl;
@@ -141,15 +139,15 @@ DataMap::LoadData(std::string file)
     {
       cmdline[i] = '\0';
       i = -1;
-      if ((cmdline[0] != '#') && (isspace(cmdline[0]) != true) && (cmdline[0] != 0))
+      if ((cmdline[0] != '#') && !isspace(cmdline[0]) && (cmdline[0] != 0))
       {
-	bool	found = false;
+	bool found = false;
 
 	for (int j = 0; j < MAX_DATA; ++j)
-	  if (strncmp(mydata[j], cmdline, strlen(mydata[j])) == 0)
+	  if (std::string(cmdline).compare(0, mydata[j].length(), mydata[j]) == 0)
 	  {
 	    found = true;
-	    CheckMapParameters(j, cmdline + strlen(mydata[j]));
+	    CheckMapParameters(j, cmdline + mydata[j].length());
 	  }
 	  SDEBUG (W0, cmdline);
 	if (found == false)

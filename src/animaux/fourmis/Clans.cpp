@@ -279,8 +279,8 @@ bool CClan::Serialize(FILE *sauveg, bool sauv, IOTablePointeur &table)
       for (int kh = 0; kh <= NBMAX_ROOM; kh++)
 	la_fourme[kh]->Serialize(NULL,sauv, table);
       //Pipe
-      for (i = 0; i < Pipe.size(); i++)
-	Pipe[i]->Serialize(NULL, sauv, table);
+      for (size_t p = 0; p < Pipe.size(); p++)
+	Pipe[p]->Serialize(NULL, sauv, table);
       //Fourmis
       for (i = 0; i < MData.max_ants; i++)
 	les_fourmis[i]->Serialize(NULL,false,this,table);

@@ -51,12 +51,11 @@ void CPheromone::Serialize(FILE *fichier, bool sauv, IOTablePointeur &table)
 {
   if (sauv)
   {
-    char vx = Vex, vy = Vey, gen;
+    char vx = Vex, vy = Vey;
     fwrite(&vx,sizeof(char),1,fichier);
     fwrite(&vy,sizeof(char),1,fichier);
     Action();								  // Mise à jour
     fwrite(&Intensite,sizeof(int),1,fichier);
-    gen = Genre;							  // ATTENTION risque d'erreur si -127 < categ < 127
     fwrite(&Genre,sizeof(char),1,fichier);
   }
   else if (fichier !=NULL)

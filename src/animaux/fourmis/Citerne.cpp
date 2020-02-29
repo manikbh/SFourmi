@@ -34,7 +34,7 @@ Citerne::Action()
   if (Vie <= 0)
     return DEAD;
 
-  memset(Autour, 0, 48);
+  memset(Autour, 0, 48*sizeof(CAnimal*));
   Age++;
   Vie -= (Age/(VIEILLE + rand() % 15000));		  // Si elle est vieille
   if (bParle() == true)
@@ -71,7 +71,7 @@ Citerne::Action()
     BYTE utile = 0;
     BYTE interet = 40;						  // Travaux d'intérêt commun : recherche de la bouffe pour les ouvrières,
     // ou pour les citernes déplacements et siège,
-    BYTE publique = 100;  // creuser et fortifier la demeure de la reine.
+    //BYTE publique = 100;  // creuser et fortifier la demeure de la reine.
 
     if (Nourriture < 400)
       faim = 100;

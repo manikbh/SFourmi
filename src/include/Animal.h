@@ -70,7 +70,14 @@ virtual void Paf(int choc) = 0;
 	    return 224;
 	  return 0;
 	}
-	static signed char const     Deplacements[16];
+	static constexpr signed char const     Deplacements[16]={-1, -1, 
+  				0, -1,
+				1, -1,
+				1, 0,
+				1, 1,
+				0, 1,
+				-1, 1,
+				-1, 0};
 // Propriétés réelles
 
 	enum espece	Esp;
@@ -82,7 +89,7 @@ virtual void Paf(int choc) = 0;
 	class CRoom*	Room;
 	class CClan*	Clan;
 	int		Numero;
-	int		Xc, Yc; 
+	int		Xc=0, Yc=0; 
 	int		Oldpos[5][2];
 	int		Dest[2];
 	class CAnimal*	prev;

@@ -211,11 +211,11 @@ AUTOMAKE = automake-1.15
 AWK = gawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
-CFLAGS = -I${top_srcdir}/src/include -I. -O3 -Wall -std=c++17 -I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT
-CPPFLAGS = -I${top_srcdir}/src/include -I. -O3 -Wall -std=c++17 -I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT
+CFLAGS = -I${top_srcdir}/src/include -I. -ggdb -Wall -std=c++17 -fsanitize=address -fno-omit-frame-pointer -I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT
+CPPFLAGS = -I${top_srcdir}/src/include -I. -ggdb -Wall -std=c++17 -fsanitize=address -fno-omit-frame-pointer -I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT
 CXX = g++
 CXXDEPMODE = depmode=gcc3
-CXXFLAGS = -O3 -Wall -std=c++17
+CXXFLAGS = -ggdb -Wall -std=c++17 -fsanitize=address -fno-omit-frame-pointer
 CYGPATH_W = echo
 DEFS = -DHAVE_CONFIG_H
 DEPDIR = .deps

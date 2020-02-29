@@ -41,7 +41,7 @@ enum categorie {
 };
 // ON veut dire qu'on est sur une case pheromone
 
-enum ordre {DEAD, OK};
+enum ordre {DEAD, OK, EVOLVE};
 // Lorsque une chose a fait son action, elle est détruite si elle renvoie DEAD 
 
 enum comm {NICHTS, DEMANDE, OFFRE, HELP, VAZY};

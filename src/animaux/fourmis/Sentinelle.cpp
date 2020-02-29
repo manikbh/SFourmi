@@ -44,7 +44,7 @@ ordre Sentinelle::Action()
   if (Vie <= 0)
     return DEAD;
 
-  memset(Autour, 0, 48);
+  memset(Autour, 0, 48*sizeof(CAnimal*));
   if (bParle() == true || bDesti() == true)						  // Passe son tour car elle communique
   {
     if (bDesti() == true)

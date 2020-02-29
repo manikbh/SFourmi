@@ -98,6 +98,7 @@ ordre Larve::Action()
     pF->setLoquace(Loquace());
     pF->Nourriture= Nourriture;
     pF->Evolve();
+    return EVOLVE;
   }
   return Nourriture < 0 ? DEAD : OK;
 }

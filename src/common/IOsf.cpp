@@ -142,7 +142,7 @@ void Sauv_terrain()
 }
 ////////////////////////CHARGEMENT///////////////////////////////////////////////
 
-bool Charg_terrain(char *file)// A Besoin de MData et de ZSF, et l'existence des pointeurs les_clans les_ennemis et le pointeur vers le CRoom principal.
+bool Charg_terrain(std::string file)// A Besoin de MData et de ZSF, et l'existence des pointeurs les_clans les_ennemis et le pointeur vers le CRoom principal.
 {
 /*FIXME : ATTENTION : il faut créer la table des pointeurs et l'initialiser
 à NULL à partir de sa taille (sauvée dans le header)
@@ -152,10 +152,10 @@ table.resize(size_t taille, (void *) NULL);
 	/****************************PREMIERE PARTIE : LECTURE***************************/
   head_sauv head;
   FILE *fichier;
-  char *buffer = new char[10];
+  char buffer[10];
   int kh;
   SDEBUG (W2, "Chargement : lecture");
-  if (!(fichier=fopen(file,"r")))
+  if (!(fichier=fopen(file.c_str(),"r")))
     {
       SDEBUG (W2,"Echec de Open\n");
       std::cerr << "Cannot open file " << file << std::endl;
@@ -211,7 +211,6 @@ table.resize(size_t taille, (void *) NULL);
 	for(kh=MData.nb_ennemies; kh<MData.max_ennemies; kh++)
 		les_ennemis[kh]=NULL;
   fclose(fichier);
-  delete[] buffer;
    /*******************DEUXIEME PARTIE : MISE A JOUR DES POINTEURS************/
   SDEBUG(W2,"Lecture ok");
   //global

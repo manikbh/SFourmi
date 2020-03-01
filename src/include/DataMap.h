@@ -32,7 +32,7 @@ class	DataMap
 	int		max_ennemies;
 	int		nb_ennemies;
 	int		ennemies_reborn;
-	std::string	loadfile;//TODO 2020 std::string would avoid memory leaks
+	std::string	loadfile;
 	bool		charger;
 
 	void Serialize(FILE *f, bool sauv);

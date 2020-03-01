@@ -18,7 +18,10 @@ AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
 
 # We want no optimization (too slow), and a lot of debugging, for both
 # C and C++.
+
+# OPTIMIZED BUILD
 #CFLAGS="-O3 -Wall -std=c++17"
+#DEBUG BUILD
 CFLAGS="-ggdb -Wall -std=c++17 -fsanitize=address -fno-omit-frame-pointer"
 CXXFLAGS=$CFLAGS
 
@@ -30,12 +33,12 @@ AC_PROG_CXX
 AC_LANG_C
 AC_PROG_CC
 dnl Check for sdl
-SDL_VERSION=1.2.0
-AM_PATH_SDL($SDL_VERSION, :,AC_MSG_ERROR([*** SDL $SDL_VERSION not found ***]))
-AC_CHECK_LIB(SDL_image, IMG_Load, [AC_DEFINE(HAVE_LIBIMG, 1,
-				 [Define if you have the SDL_image library or equivalent. ]) LIBADD_SDL_IMAGE="-lSDL_image"])
-AC_CHECK_LIB(SDL_ttf, TTF_Init, [AC_DEFINE(HAVE_LIBTTF, 1,
-				 [Define if you have the SDL_ttf library or equivalent. ]) LIBADD_SDL_TTF="-lSDL_ttf"])
+SDL_VERSION=2.0.0
+AM_PATH_SDL2($SDL_VERSION, :,AC_MSG_ERROR([*** SDL $SDL_VERSION not found ***]))
+AC_CHECK_LIB(SDL2_image, IMG_Load, [AC_DEFINE(HAVE_LIBIMG, 1,
+				 [Define if you have the SDL_image library or equivalent. ]) LIBADD_SDL_IMAGE="-lSDL2_image"])
+AC_CHECK_LIB(SDL2_ttf, TTF_Init, [AC_DEFINE(HAVE_LIBTTF, 1,
+				 [Define if you have the SDL_ttf library or equivalent. ]) LIBADD_SDL_TTF="-lSDL2_ttf"])
 CFLAGS="-I\${top_srcdir}/src/include -I${srcdir} $CFLAGS $SDL_CFLAGS"
 CPPFLAGS="$CFLAGS"
 LIBS="$LIBS $SDL_LIBS $LIBADD_SDL_TTF $LIBADD_SDL_IMAGE"

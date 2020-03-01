@@ -26,11 +26,26 @@ bool GraphX_Init(void)
   }
   //Nettoyer SDL a la fin de l'execution
   atexit(SDL_Quit);
-  //S'attacher a l'ecran en 800,600, le bpp du systeme (0), acceleration hardware et double buffer
-  if (!( screen = SDL_SetVideoMode(800,600,0,SDL_HWSURFACE|SDL_DOUBLEBUF))){ //TODO 2020 resolution should be a variable (but Map Image must be updated to reflect this)
+  //Créer une fenêtre 800x600 
+  SDL_Window *sdlWindow = SDL_CreateWindow("SuperFourmi",
+                             SDL_WINDOWPOS_UNDEFINED,
+                             SDL_WINDOWPOS_UNDEFINED,
+                             800, 600,
+                             SDL_WINDOW_RESIZABLE/*SDL_WINDOW_FULLSCREEN_DESKTOP*/);
+  if(!sdlWindow){
     SDEBUG(W0, "Echec de l'initialisation du mode video !");
     exit(1);
   }
+  sdlRenderer = SDL_CreateRenderer(sdlWindow, -1, 0/*SDL_RENDERER_PRESENTVSYNC*/);
+  if(!sdlRenderer){
+    SDEBUG(W0, "Echec de l'initialisation du mode video !");
+    exit(1);
+  }
+  // Render 800x600, scale automatically with linear interpolation
+  SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");  
+  SDL_RenderSetLogicalSize(sdlRenderer, 800, 600);
+
+  
   //idem pour la librairie des polices
   if (TTF_Init()<0){
     SDEBUG(W0, "Echec de l'initialisation de TTF !");
@@ -39,7 +54,7 @@ bool GraphX_Init(void)
   atexit(TTF_Quit);
 
   //  image = IMG_Load("/home/dodeskaden/Test/SFourmi/lib/Os/win/All.bmp");
-  image = IMG_ReadXPMFromArray (const_cast<char **>(All_xpm)); //FIXME if All_xpm is not const, warnings, if it is SDL does not like it -> ugly fix
+  SDL_Surface *image = IMG_ReadXPMFromArray (const_cast<char **>(All_xpm)); //FIXME if All_xpm is not const, warnings, if it is SDL does not like it -> ugly fix
   if(image == NULL){
     SDEBUG(W0, "Impossible de charger l'image !");
     if(!fopen("/home/dodeskaden/Test/SFourmi/lib/Os/win/All.bmp","r"))
@@ -48,11 +63,11 @@ bool GraphX_Init(void)
     {SDEBUG(W0, "Image accessible !");}
     exit(1);
   }
-  SDL_SetColorKey(image, SDL_SRCCOLORKEY|SDL_RLEACCEL, SDL_MapRGB(image->format, 4, 4, 4));
-  if((image = SDL_DisplayFormat(image)) == NULL){
+  SDL_SetColorKey(image, SDL_TRUE, SDL_MapRGB(image->format, 4, 4, 4));
+  /*if((image = SDL_DisplayFormat(image)) == NULL){
      SDEBUG(W0, "Impossible de convertir l'image au format d'affichage !");
      exit(1);
-  }
+  }*/
   SFRect sfr(0,0,800,600);
   SFDrawSurface(0,0,sfr);
 
@@ -62,6 +77,13 @@ bool GraphX_Init(void)
     exit(1);
   }
   TTF_SetFontStyle(SFfont, TTF_STYLE_NORMAL);
+  /*SDL_Texture *sdlTexture = SDL_CreateTexture(sdlRenderer,
+                               SDL_PIXELFORMAT_ARGB8888,
+                               SDL_TEXTUREACCESS_STREAMING,
+                               800, 600);*/
+  //Set image as a Texture in GPU memory
+  sdlImageTexture = SDL_CreateTextureFromSurface(sdlRenderer, image);
+
   evenement = new SDL_Event;		
   return true;
 }

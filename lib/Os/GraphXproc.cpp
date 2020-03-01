@@ -103,6 +103,8 @@ void SmallMap()//TODO 2020 remove globals and pass a SFourmiWorld by reference
  */
 void Flips(void)
 {
-  SDL_Flip(screen); //Affiche reellement en echangeant les buffers hardware
+  //SDL_Flip(screen); //Affiche reellement en echangeant les buffers hardware
+  SDL_RenderPresent(sdlRenderer);
+
 }
 

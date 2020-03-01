@@ -18,15 +18,15 @@ class SFRect
     SFRect (int l, int t, int r, int b)
     {left = l; top = t; right = r; bottom = b;}
 
-	SDL_Rect *toSDL_Rect()
-	{
-		SDL_Rect *r= new SDL_Rect;
-		r->x = Left();
-		r->y = Top();
-		r->w = Right()-r->x;
-		r->h = Bottom()-r->y;
-		return r;
-	}
+    SDL_Rect toSDL_Rect ()
+    {
+	    SDL_Rect r;
+	    r.x = Left();
+	    r.y = Top();
+	    r.w = Right()-r.x;
+	    r.h = Bottom()-r.y;
+	    return r;
+    }
 
     ~SFRect () {};
     inline void	setSFRect(int l, int t, int r, int b)

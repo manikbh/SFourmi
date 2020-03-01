@@ -29,7 +29,7 @@ DisplayIcon(class DataMap& MData, class User& ZSF)
 
   if (ZSF.bInfo)	  //les infos ne portent que sur les fourmis
   {
-    switch (static_cast<Fourmi *> (ZSF.This_animal())->Statut())
+    switch (static_cast<Fourmi *> (ZSF.This_animal())->Statut()) // TODO 2020 CRASH if the selected larva evolves and the pointer is freed...
     {
       case REINE:
 	rc.setSFRect(0,8*32+600,32,8*32+632);
@@ -75,7 +75,7 @@ static void
 DisplayGeneralInfo(class DataMap& MData, class User& ZSF)
 {
   class SFRect	rc;
-  char		buffer[5];
+  char		buffer[30];
   class SFColor	colors;
 
   SFTextColor(255, 255, 255);
@@ -162,7 +162,7 @@ DisplayAntsInfo(class DataMap& MData, class User& ZSF)
   int		nourri;
   class SFColor	colors;
   std::string	szStatut;
-  char		buffer[9];
+  char		buffer[30];
 
   colors.setSFColor(0, 204, 0);
   rc.setSFRect(22+30,180+30-ZSF.This_animal()->Vie*32/200

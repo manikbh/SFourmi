@@ -211,8 +211,8 @@ AUTOMAKE = automake-1.15
 AWK = gawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
-CFLAGS = -I${top_srcdir}/src/include -I. -ggdb -Wall -std=c++17 -fsanitize=address -fno-omit-frame-pointer -I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT
-CPPFLAGS = -I${top_srcdir}/src/include -I. -ggdb -Wall -std=c++17 -fsanitize=address -fno-omit-frame-pointer -I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT
+CFLAGS = -I${top_srcdir}/src/include -I. -ggdb -Wall -std=c++17 -fsanitize=address -fno-omit-frame-pointer -D_REENTRANT -I/usr/include/SDL2
+CPPFLAGS = -I${top_srcdir}/src/include -I. -ggdb -Wall -std=c++17 -fsanitize=address -fno-omit-frame-pointer -D_REENTRANT -I/usr/include/SDL2
 CXX = g++
 CXXDEPMODE = depmode=gcc3
 CXXFLAGS = -ggdb -Wall -std=c++17 -fsanitize=address -fno-omit-frame-pointer
@@ -228,9 +228,9 @@ INSTALL_DATA = ${INSTALL} -m 644
 INSTALL_PROGRAM = ${INSTALL}
 INSTALL_SCRIPT = ${INSTALL}
 INSTALL_STRIP_PROGRAM = $(install_sh) -c -s
-LDFLAGS =  -L/usr/lib/x86_64-linux-gnu -lSDL -lSDL_ttf -lSDL_image
+LDFLAGS =  -lSDL2 -lSDL2_ttf -lSDL2_image
 LIBOBJS = 
-LIBS =  -L/usr/lib/x86_64-linux-gnu -lSDL -lSDL_ttf -lSDL_image
+LIBS =  -lSDL2 -lSDL2_ttf -lSDL2_image
 LTLIBOBJS = 
 MAKEINFO = makeinfo
 MKDIR_P = /bin/mkdir -p
@@ -243,10 +243,13 @@ PACKAGE_TARNAME = sfourmi
 PACKAGE_URL = 
 PACKAGE_VERSION = 0.42.4
 PATH_SEPARATOR = :
+PKG_CONFIG = /usr/bin/pkg-config
+PKG_CONFIG_LIBDIR = 
+PKG_CONFIG_PATH = 
 RANLIB = ranlib
-SDL_CFLAGS = -I/usr/include/SDL -D_GNU_SOURCE=1 -D_REENTRANT
-SDL_CONFIG = /usr/bin/sdl-config
-SDL_LIBS = -L/usr/lib/x86_64-linux-gnu -lSDL
+SDL2_CONFIG = pkg-config sdl2
+SDL_CFLAGS = -D_REENTRANT -I/usr/include/SDL2
+SDL_LIBS = -lSDL2
 SET_MAKE = 
 SHELL = /bin/bash
 STRIP = 

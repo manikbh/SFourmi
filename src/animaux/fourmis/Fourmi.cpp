@@ -324,7 +324,6 @@ Fourmi::Lacher_Pheromone(categorie cat)
 void
 Fourmi::Evolve()
 {
-  // delete Clan->les_fourmis[Numero];//TODO 2020 - this delete was called from the destroyed object...
   Clan->les_fourmis[Numero] = this;
 }
 

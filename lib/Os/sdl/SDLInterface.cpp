@@ -145,7 +145,7 @@ void AnalyseTouche(SDL_KeyboardEvent *key, bool up)				  //Up Return F1 a b....
  				ZSF.bInfo=!ZSF.bInfo;
  				break;
        case SDLK_f:
- 				SDL_WM_ToggleFullScreen(screen);
+ 				//SDL_WM_ToggleFullScreen(screen);
  				break;
        case SDLK_RETURN:
        	break;

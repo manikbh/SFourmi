@@ -20,9 +20,9 @@
 #include <iostream>
 
 //SDL
-#include <SDL/SDL.h>
-#include <SDL/SDL_ttf.h>
-#include <SDL/SDL_image.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_image.h>
 #include <stdlib.h>
 #include "SDLInterface.h"
 

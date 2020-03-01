@@ -10,8 +10,9 @@
 extern SDL_Event         *evenement;
 extern bool             GraphX_Init();
 extern TTF_Font          *SFfont;
-extern SDL_Color	fontColor;		
-extern SDL_Surface	*screen, *image;
+extern SDL_Color	fontColor;
+extern SDL_Renderer	*sdlRenderer;
+extern SDL_Texture	*sdlImageTexture;
 
 extern bool		bActive;        // Est-ce que l'application est active ?
 extern void		updateFrame(BYTE Frame);

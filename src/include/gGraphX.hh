@@ -16,7 +16,8 @@ SDL_Event *evenement;
 //donnees locales (graphique)
 TTF_Font *SFfont=0;
 SDL_Color fontColor;
-SDL_Surface *image, *screen;
+SDL_Renderer	*sdlRenderer;
+SDL_Texture	*sdlImageTexture;
 bool bActive=true;
 
 class SFColor SFC;

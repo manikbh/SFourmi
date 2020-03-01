@@ -88,8 +88,8 @@ void CTunnel::Serialize(FILE * fichier, bool sauv, IOTablePointeur &table)
 			//cout<<"Passage1 in, out :"<<in<<", "<<out<<"\n";
 		}else{
 			//cout<<"Passage2 in, out :"<<in<<", "<<out<<"\n";
-			this->In = (CRoom *) table.get(reinterpret_cast<int64_t>(this->In)); //TODO 2020: shady...
-			this->Out = (CRoom *) table.get(reinterpret_cast<int64_t>(this->Out));//TODO 2020: shady...
+			this->In = (CRoom *) table.get(reinterpret_cast<int64_t>(this->In)); 
+			this->Out = (CRoom *) table.get(reinterpret_cast<int64_t>(this->Out));
 			//SDEBUG(W2, "Tunnel " << (int)this<<": je charge in :"<<(int)in<<" d'adresse réelle "<<(int)this->In<<" et out :"<<(int)out<<" d'adresse réelle "<<(int)this->Out);
 		}
 	}

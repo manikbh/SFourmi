@@ -14,7 +14,7 @@
 #include "GraphXproc.h"
 #include "GraphXtools.h"
 
-SFRect rectangleTotal(0,0,800,600);//TODO 2020 resolution should be a variable but bitmap image is fixed
+SFRect rectangleTotal(0,0,800,600);// resolution should be a variable but bitmap image is fixed
 
 static void	DrawPheromon(int k, int j)
 {
@@ -201,7 +201,10 @@ static void	DrawOutset(int k, int j)
 void updateFrame(BYTE Frame)
 {
   class SFRect		rc;
-  SDL_FillRect(screen,0,0);
+  // Clear up the screen
+  SDL_SetRenderDrawColor(sdlRenderer, 0, 0, 0, 0);
+  SDL_RenderClear(sdlRenderer);
+  //SDL_FillRect(screen,0,0);
   SFDrawSurface(0,0,rectangleTotal);
 
 

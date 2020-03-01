@@ -46,7 +46,7 @@ CAnimal::AjouteAnimalXY(int x, int y)
 void
 CAnimal::SetPos(int x, int y)
 {
-  for (int i = 1; i <= 5; i++)
+  for (int i = 1; i < 5; i++)
     for (int j = 0; j < 2; j++)
       Oldpos[i][j] = Oldpos[i-1][j];
   Oldpos[0][0] = Xc;

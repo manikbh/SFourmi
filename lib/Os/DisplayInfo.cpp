@@ -103,7 +103,7 @@ DisplayGeneralInfo(class DataMap& MData, class User& ZSF)
 		    255 * (reinterpret_cast<int64_t>(ZSF.This_clan()) % 4) * 32);
 
   rc.setSFRect(483, 578, 499, 593);
-  SFDrawDCRectangle(rc, colors);
+  SFDrawSingleRectangle(rc, colors);
 }
 
 static void
@@ -167,7 +167,7 @@ DisplayAntsInfo(class DataMap& MData, class User& ZSF)
   colors.setSFColor(0, 204, 0);
   rc.setSFRect(22+30,180+30-ZSF.This_animal()->Vie*32/200
       ,22+32,180+30);
-  SFDrawDCRectangle(rc, colors);
+  SFDrawSingleRectangle(rc, colors);
   nourri = ZSF.This_animal()->Nourriture;
   sprintf(buffer,"%d",nourri);
   if(nourri > 100)

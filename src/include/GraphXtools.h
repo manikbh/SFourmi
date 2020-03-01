@@ -15,7 +15,6 @@
 extern void SFDisplay(int X, int Y, std::string chaine);
 extern void SFTextColor(int r, int g, int b);
 extern void SFDrawSingleRectangle(SFRect& rcRect,SFColor& color);
-extern void SFDrawDCRectangle(SFRect& rcRect,SFColor& color);
 extern void SFDrawSurface(int x0,int y0, SFRect& rcRect);
 
 #endif

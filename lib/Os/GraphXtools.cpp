@@ -61,15 +61,8 @@ SFDrawSingleRectangle(SFRect& rcRect, SFColor& color)
   // Fait pour dessiner qu'un rectangle
 {
    SDL_Rect rect = rcRect.toSDL_Rect();
+   SDL_SetRenderDrawColor(sdlRenderer, color.Red(), color.Green(), color.Blue(), 255);
    SDL_RenderDrawRect(sdlRenderer, &rect);
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-void
-SFDrawDCRectangle(SFRect& rcRect, SFColor& color)
-{
-  //TODO 2020 : empty...
 }
 
 

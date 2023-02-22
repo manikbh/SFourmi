@@ -8,9 +8,10 @@
 
 #define NAME "SFourmi"
 #define TITLE "Les Fourmis en action !"
+#define PACKAGE "SFourmi"
+#define VERSION __DATE__
 
 #include "SFourmis.h"
-#include "config.h"
 #include "Global.h"
 
 #include "Init.h"
@@ -85,7 +86,7 @@ int main (int argc, char *argv[])
     MData.loadfile = argv[1];
   }
 
-  ZSF.path = SFOURMI_DATADIR;
+  ZSF.path = "./";
 
   SDEBUG(W0,"Initialisation " GRAPH);
   GraphX_Init();

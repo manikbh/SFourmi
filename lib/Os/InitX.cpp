@@ -9,7 +9,6 @@
 //
 
 #include "SFourmis.h"
-#include "config.h"
 
 #include "GraphXstruct.h"
 #include "GraphXproc.h"
@@ -71,9 +70,9 @@ bool GraphX_Init(void)
   SFRect sfr(0,0,800,600);
   SFDrawSurface(0,0,sfr);
 
-  if(! (SFfont=TTF_OpenFont(SFOURMI_DATADIR "/images/font.ttf", 10))){//On charge la police taille 10pt
+  if(! (SFfont=TTF_OpenFont("images/font.ttf", 10))){//On charge la police taille 10pt
     SDEBUG(W0, "Impossible de charger la police !");
-    SDEBUG(W0, SFOURMI_DATADIR "/images/font.ttf");
+    SDEBUG(W0, "images/font.ttf");
     exit(1);
   }
   TTF_SetFontStyle(SFfont, TTF_STYLE_NORMAL);

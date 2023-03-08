@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////
 //
-// Cafard.cpp: implémentation de la classe Cafard
+// Cafard.cpp: implÃ©mentation de la classe Cafard
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -51,8 +51,8 @@ void Cafard::Fuite()
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 void Cafard::Paf(int choc)
-// Paramètres
-// choc	: intensité du coup
+// ParamÃ¨tres
+// choc	: intensitÃ© du coup
 {
 	Vie -= choc;
 	bDefense = true;
@@ -89,7 +89,7 @@ bool Cafard::Serialize(FILE *fichier, bool sauv, IOTablePointeur &table)
 	{
 		i=table.FindOrAdd((void *)this); //Sauve son numero dans la table
 		if(!fwrite(&i,sizeof(int),1,fichier)){
-			 SDEBUG(W4,"Erreur d'écriture");
+			 SDEBUG(W4,"Erreur d'Ã©criture");
 			return false;
 		}
 		fwrite(&Vie,1,sizeof(int),fichier);

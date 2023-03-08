@@ -94,7 +94,7 @@ DisplayGeneralInfo(class DataMap& MData, class User& ZSF)
   SFDisplay(0, 576, buffer);
 #endif
   
-  /* FIXME : numéro du clan ?
+  /* FIXME : numÃ©ro du clan ?
   sprintf(buffer,"%d", ZSF.This_clan()+1);			  //Clan
   SFDisplay(510, 580, "Clan");
   SFDisplay(545, 580, buffer);*/
@@ -126,7 +126,7 @@ DisplayEnnemiesInfo(class DataMap& MData, class User& ZSF)
   sprintf(buffer,"%d", static_cast<Cafard *>(ZSF.This_animal())->Bouclier);
   SFDisplay(28, 214, buffer);
   SFTextColor(248,11, 4);
-  SFDisplay(28, 228, "agressivité");
+  SFDisplay(28, 228, "agressivitÃ©");
 
   sprintf(buffer,"%d", static_cast<Cafard *>(ZSF.This_animal())->Agressif);
   SFTextColor(248,11,4);
@@ -142,7 +142,7 @@ DisplayEnnemiesInfo(class DataMap& MData, class User& ZSF)
   SFDisplay(78, 228+28, buffer);
 
   if (static_cast<Cafard *>(ZSF.this_animal)->bDefense == true)
-    SFDisplay(78, 228+28, "Défense");
+    SFDisplay(78, 228+28, "DÃ©fense");
 
   switch(ZSF.This_animal()->Esp)
   {
@@ -176,7 +176,7 @@ DisplayAntsInfo(class DataMap& MData, class User& ZSF)
     SFTextColor(248,11,4);				  //rouge
   SFDisplay(28, 214,buffer);
   SFTextColor(248,11,4);
-  SFDisplay(28, 228,"loquacité");
+  SFDisplay(28, 228,"loquacitÃ©");
 
   sprintf(buffer,"%d",static_cast<Fourmi *>(ZSF.This_animal())->Loquace());
   SFTextColor(248,11,4);
@@ -269,7 +269,7 @@ DisplayInfo(class DataMap &MData, class User &ZSF)
   if(ZSF.bStats)
   {
     SFTextColor(0,236,254);
-    SFDisplay(710,500, "Ouvrières");
+    SFDisplay(710,500, "OuvriÃ¨res");
     SFDisplay(710,514, "Sentinelles");
     SFDisplay(710,528, "Citernes");
     //	SFDisplay(730,542, "Cafards");

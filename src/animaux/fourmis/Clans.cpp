@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////
 //
-// Clans.cpp: implémentation de la classe CClan
+// Clans.cpp: implÃ©mentation de la classe CClan
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -44,10 +44,10 @@ bool CClan::Serialize(FILE *sauveg, bool sauv, IOTablePointeur &table)
     i = table.FindOrAdd((void *)this);
     fwrite(&i,sizeof(int),1,sauveg);
     //Variables simples
-    fwrite(&Citernes_under,sizeof(int),1,sauveg);	// Pas nécessaire mais accélère le chargement
+    fwrite(&Citernes_under,sizeof(int),1,sauveg);	// Pas nÃ©cessaire mais accÃ©lÃ¨re le chargement
     fwrite(&NeededCiternes,sizeof(int),1,sauveg);
     fwrite(&NBMAX_ROOM,sizeof(int),1,sauveg);
-    fwrite(&DistAuto,sizeof(int),1,sauveg);			// Perimètre de défense
+    fwrite(&DistAuto,sizeof(int),1,sauveg);			// PerimÃ¨tre de dÃ©fense
     fwrite(&POUVRIER,sizeof(int),1,sauveg);
     //fwrite(&NB_MAXIMUM,sizeof(int),1,sauveg);
     fwrite(&population,sizeof(int),1,sauveg);
@@ -131,7 +131,7 @@ bool CClan::Serialize(FILE *sauveg, bool sauv, IOTablePointeur &table)
       fread(&Citernes_under,sizeof(int),1,sauveg);
       fread(&NeededCiternes,sizeof(int),1,sauveg);
       fread(&NBMAX_ROOM,sizeof(int),1,sauveg);
-      fread(&DistAuto,sizeof(int),1,sauveg);			// Périmètre de défense
+      fread(&DistAuto,sizeof(int),1,sauveg);			// PÃ©rimÃ¨tre de dÃ©fense
       fread(&POUVRIER,sizeof(int),1,sauveg);
       //fread(&NB_MAXIMUM,sizeof(int),1,sauveg);
       fread(&population,sizeof(int),1,sauveg);
@@ -139,7 +139,7 @@ bool CClan::Serialize(FILE *sauveg, bool sauv, IOTablePointeur &table)
       fread(&NbSentinelle,sizeof(int),1,sauveg);
       fread(&NbCiterne,sizeof(int),1,sauveg);
       // FOURMILLIERE //
-      SDEBUG(W0,"Debut chargement fourmillière");
+      SDEBUG(W0,"Debut chargement fourmilliÃ¨re");
       char *buff = new char[15];
       la_fourme = new CRoom*[NBMAX_ROOM+1];
       for (int kh = 0; kh <= NBMAX_ROOM; kh++)
@@ -148,7 +148,7 @@ bool CClan::Serialize(FILE *sauveg, bool sauv, IOTablePointeur &table)
 	la_fourme[kh] = new CRoom(/*F_LARGEUR, F_HAUTEUR,SOUSSOL_R*/);
 	la_fourme[kh]->Serialize(sauveg,sauv, table);
       }
-      SDEBUG(W0,"Fin chargement fourmillière");
+      SDEBUG(W0,"Fin chargement fourmilliÃ¨re");
 
       // PIPE //
       fread(buff, 4,1, sauveg);
@@ -263,7 +263,7 @@ bool CClan::Serialize(FILE *sauveg, bool sauv, IOTablePointeur &table)
       }
       //Pointeur Reine
       fread(&ReineClan,sizeof(int),1,sauveg);
-      /*//Mise à jour des pointeurs PCiterne
+      /*//Mise Ã  jour des pointeurs PCiterne
 	for (i = 0; i < NB_MAXIMUM; i++)
 	{
 	if(les_fourmis[i]->Statut!=NIHIL)
@@ -272,10 +272,10 @@ bool CClan::Serialize(FILE *sauveg, bool sauv, IOTablePointeur &table)
 	}
 	Population = NbCiterne+NbSentinelle+NbOuvrier;*/
       return true;
-    }else{ //Fichier NULL : on met à jour les pointeurs.
+    }else{ //Fichier NULL : on met Ã  jour les pointeurs.
 
       ReineClan = (Fourmi *) table.get(reinterpret_cast<int64_t>(ReineClan));
-      //Fourmillière
+      //FourmilliÃ¨re
       for (int kh = 0; kh <= NBMAX_ROOM; kh++)
 	la_fourme[kh]->Serialize(NULL,sauv, table);
       //Pipe

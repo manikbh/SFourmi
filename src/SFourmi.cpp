@@ -90,7 +90,7 @@ int main (int argc, char *argv[])
 
   SDEBUG(W0,"Initialisation " GRAPH);
   GraphX_Init();
-  SDEBUG(W0,"SDL initialisé");
+  SDEBUG(W0,"SDL initialisÃ©");
 
   // Load map or create a new one
   if (MData.charger)

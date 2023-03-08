@@ -1,4 +1,4 @@
-//Fichier à maj
+//Fichier Ã  maj
 
 #include "../include/SFourmis.h"
 
@@ -32,7 +32,7 @@ IOTablePointeur::~IOTablePointeur(){
 	delete[] table;
 }
 int IOTablePointeur::Find(void *pointeur){
-	static int a;//Static pour ne pas recréer la var à chaque appel.
+	static int a;//Static pour ne pas recrÃ©er la var Ã  chaque appel.
 	for (a=0; a<taille; a++)
 		if (table[a]==pointeur)
 			return a;
@@ -43,7 +43,7 @@ int IOTablePointeur::FindOrAdd(void *pointeur){
 	int a;
 	//cout<<(int)pointeur<<"\n";
 	if( (a=this->Find(pointeur))!=-1){//Find
-		SDEBUG(W2,"Pointeur trouvé "<<pointeur<<" en "<<a);
+		SDEBUG(W2,"Pointeur trouvÃ© "<<pointeur<<" en "<<a);
 		return a;
 	}
 	SDEBUG(W2,"Ajout pointeur "<<pointeur<<" en "<<taille);
@@ -51,7 +51,7 @@ int IOTablePointeur::FindOrAdd(void *pointeur){
 		table.push_back(pointeur);
 	else*/{
 		table[taille]=pointeur;
-		//cout<<"Dépassement !";
+		//cout<<"DÃ©passement !";
 	}
 	taille ++;
 	return taille-1;
@@ -82,45 +82,45 @@ void IOTablePointeur::set(int a, void * pointeur){
 void Sauv_terrain()
 {
 	int kh;
-	cout<<"\nDébut de sauvegarde...";
+	cout<<"\nDÃ©but de sauvegarde...";
 
 	/*Table des pointeurs*/
 	IOTablePointeur table(MData.nb_clan * (MData.max_ants+50) + MData.max_ennemies+MData.length*MData.height*10 ,false);
 	SDEBUG(W2, "Taille de la table de pointeurs :"<<MData.nb_clan * (MData.max_ants+50) + MData.max_ennemies+MData.length*MData.height*10);
 	if(table.FindOrAdd((void *)NULL)!=0)
-		SDEBUG(W2, "Le pointeur Null n'est pas à l'emplacement 0 !") ;
+		SDEBUG(W2, "Le pointeur Null n'est pas Ã  l'emplacement 0 !") ;
 	if(table.FindOrAdd((void *)&MData)!=1)
-		SDEBUG(W2, "Le pointeur &MData n'est pas à l'emplacement 1 !") ;
+		SDEBUG(W2, "Le pointeur &MData n'est pas Ã  l'emplacement 1 !") ;
 	/*Header*/
 	head_sauv header; //SAUVER LES STATIC DE PHEROMONE
 	header.version=3;//Inclus les ennemis !(version 2) CClan:version3
-	//header.tot = CPheromone::tot;//FIXME Ca sert à quoi ? Et pourquoi le link ne marche pas avec ?
-  //On ne sauve pas le header ici, mais à la fin après un rewind(sauveg)
-  // : c'est nécessaire pour connaître la taille de la table des pointeurs
+	//header.tot = CPheromone::tot;//FIXME Ca sert Ã  quoi ? Et pourquoi le link ne marche pas avec ?
+  //On ne sauve pas le header ici, mais Ã  la fin aprÃ¨s un rewind(sauveg)
+  // : c'est nÃ©cessaire pour connaÃ®tre la taille de la table des pointeurs
 
 	FILE *sauveg;
-	//Pour adapter les étapes de la barre de sauvegarde
-	//NUMPHASE=MDate.nb_clan+6;//FIXME : rétablir le numphase global ?
+	//Pour adapter les Ã©tapes de la barre de sauvegarde
+	//NUMPHASE=MDate.nb_clan+6;//FIXME : rÃ©tablir le numphase global ?
 
   if (!(sauveg=fopen("Sfourmi.sf","w"))){
-    cout << "Impossible de créer la sauvegarde !\n" ;
-    return; //Si ça marche pas tant pis !
+    cout << "Impossible de crÃ©er la sauvegarde !\n" ;
+    return; //Si Ã§a marche pas tant pis !
   }
-	cout<<"\tFichier créé";
+	cout<<"\tFichier crÃ©Ã©";
   //Sauvegarde des structures globales
   MData.Serialize(sauveg, true);
   fwrite("ZSF",3,1,sauveg);
   ZSF.Serialize(sauveg, true, table);
-	cout<<"\tGlobal sauvé";
+	cout<<"\tGlobal sauvÃ©";
   //Sauvegarde du terrain:
 	terre->Serialize(sauveg, true, table);
-	cout<<"\tTerrain sauvé";
+	cout<<"\tTerrain sauvÃ©";
   //Sauvegarde des clans
   for(kh=0;kh<MData.nb_clan;kh++)
     {
       fwrite("BegClan",7,1,sauveg);
       les_clans[kh]->Serialize(sauveg,true,table);
-	cout<<"\tClan "<<kh<<" sauvé";
+	cout<<"\tClan "<<kh<<" sauvÃ©";
     }
 
   //Ennemis:
@@ -128,15 +128,15 @@ void Sauv_terrain()
   for(kh=0; kh<MData.max_ennemies; kh++)
     if(les_ennemis[kh]!=NULL)
       ((Cafard *)les_ennemis[kh])->Serialize(sauveg,true, table);
-  cout<<"\tEnnemis sauvés";
+  cout<<"\tEnnemis sauvÃ©s";
 
   //Header
    header.tablePointeurSize = table.size();
 	SDEBUG(W2,"Taille de la table IO :");
 	SDEBUG(W2,header.tablePointeurSize);
-      //rewind(sauveg); //Retour au début du fichier
+      //rewind(sauveg); //Retour au dÃ©but du fichier
    fwrite(&header, sizeof(head_sauv), 1, sauveg);
-   cout<<"\tSauvegarde achevée !\n";
+   cout<<"\tSauvegarde achevÃ©e !\n";
 
    fclose(sauveg);
 }
@@ -144,8 +144,8 @@ void Sauv_terrain()
 
 bool Charg_terrain(std::string file)// A Besoin de MData et de ZSF, et l'existence des pointeurs les_clans les_ennemis et le pointeur vers le CRoom principal.
 {
-/*FIXME : ATTENTION : il faut créer la table des pointeurs et l'initialiser
-à NULL à partir de sa taille (sauvée dans le header)
+/*FIXME : ATTENTION : il faut crÃ©er la table des pointeurs et l'initialiser
+Ã  NULL Ã  partir de sa taille (sauvÃ©e dans le header)
 table.resize(size_t taille, (void *) NULL);
 */
 

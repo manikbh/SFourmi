@@ -11,12 +11,12 @@
 
 enum WLEVEL {W0,W1,W2,W3,W4,W5,W6,W7,W8,W9,WALL};
 /*
- *WNONE : ce qui est forcément en sortie, pour une vitesse optimale
- *W1	: Déroulement normal pour tester, déboguer (surveillance de 1er niveau) 
- *W2	: Surveillance de niveau 2 ( 2 niveaux de paranthèses )
- *W3	: Un peu plus de surveillance aux endroits moins fréquentés (constructeurs, initialisations)
- *W4	: Anormalités prévisibles qui ne causent pas de plantages directs et peu fréquentes.
- *W5	: ... Après W5, sniffers aux endroits sensibles...
+ *WNONE : ce qui est forcÃ©ment en sortie, pour une vitesse optimale
+ *W1	: DÃ©roulement normal pour tester, dÃ©boguer (surveillance de 1er niveau) 
+ *W2	: Surveillance de niveau 2 ( 2 niveaux de paranthÃ¨ses )
+ *W3	: Un peu plus de surveillance aux endroits moins frÃ©quentÃ©s (constructeurs, initialisations)
+ *W4	: AnormalitÃ©s prÃ©visibles qui ne causent pas de plantages directs et peu frÃ©quentes.
+ *W5	: ... AprÃ¨s W5, sniffers aux endroits sensibles...
  *W6	: 
  *W7	: Pointeurs nuls
  *W8	: 

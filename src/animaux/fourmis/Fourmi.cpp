@@ -10,7 +10,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 //
-// Fourmi.cpp: implémentation de la classe Fourmi
+// Fourmi.cpp: implÃ©mentation de la classe Fourmi
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -18,13 +18,13 @@
 #include "SFourmis.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
-//	Procédures d'actions des fourmis
+//	ProcÃ©dures d'actions des fourmis
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 Fourmi::Fourmi(int x, int y, type social, int num, Fourmi *reine, CRoom *room) :
 CAnimal(x, y, FOURMI, num, room)
 {
-  // Caractéristiques physiques
+  // CaractÃ©ristiques physiques
 
   setStatut(social);
   Vie = 200;
@@ -36,7 +36,7 @@ CAnimal(x, y, FOURMI, num, room)
   Excitation = 0;
   Taille = rand() % 2;
   Age = 0;
-  // Caractéristiques informatiques
+  // CaractÃ©ristiques informatiques
 
   PCiterne = NULL;
 
@@ -62,14 +62,14 @@ Fourmi::~Fourmi() {}
 
 int
 Fourmi::RegardeAnimalAutour(int Peri, bool cl, enum espece esp)
-  // Paramètres:
-  // Peri   : périmètres de vision
-  // cl		: true = ce clan, sinon tous les autres, par défaut true
-  // esp	: espèce par défaut FOURMI
+  // ParamÃ¨tres:
+  // Peri   : pÃ©rimÃ¨tres de vision
+  // cl		: true = ce clan, sinon tous les autres, par dÃ©faut true
+  // esp	: espÃ¨ce par dÃ©faut FOURMI
 
   // Valeurs de retour:
   // >0	:nombre de fourmis autour d'elle
-  // dans Autour	:numéro des fourmis dans le périmètre de recherche
+  // dans Autour	:numÃ©ro des fourmis dans le pÃ©rimÃ¨tre de recherche
 {
   class CAnimal *ani;
   int		i = 0;
@@ -81,7 +81,7 @@ Fourmi::RegardeAnimalAutour(int Peri, bool cl, enum espece esp)
 	continue;
       if ((ani = TEST_ANIMAL(x, y, Room)) != NULL)
       {
-	if ((ani->Esp == esp) )
+	if (ani->Esp == esp)
 	{
 	  if((!cl && ani->Clan != Clan)||(cl && ani->Clan == this->Clan))
 	  {
@@ -91,7 +91,7 @@ Fourmi::RegardeAnimalAutour(int Peri, bool cl, enum espece esp)
 	}
       }
     }
-  return i; // Nombre d'éléments autour d'elle
+  return i; // Nombre d'Ã©lÃ©ments autour d'elle
 }
 
 
@@ -99,8 +99,8 @@ Fourmi::RegardeAnimalAutour(int Peri, bool cl, enum espece esp)
 
 int
 Fourmi::RegardeNourritureAutour(int Peri) const
-  // Paramètres:
-  // Peri   : périmètres de vision
+  // ParamÃ¨tres:
+  // Peri   : pÃ©rimÃ¨tres de vision
 
   // Valeurs de retour:
   //  0	:rien
@@ -125,12 +125,12 @@ Fourmi::RegardeNourritureAutour(int Peri) const
 
 int
 Fourmi::ChangeRoom(class CRoom *rm)
-  // Paramètres
-  // rm	: room où l'on va
+  // ParamÃ¨tres
+  // rm	: room oÃ¹ l'on va
 
   // Valeurs de sortie
-  // 0	: pas de déplacement possible (obstruction à la sortie)
-  // 1	: sortie sans problème
+  // 0	: pas de dÃ©placement possible (obstruction Ã  la sortie)
+  // 1	: sortie sans problÃ¨me
 {
   int x, y, i, dir;
   for (i = 0; i < 20; i++)
@@ -154,12 +154,12 @@ Fourmi::ChangeRoom(class CRoom *rm)
 
 class Fourmi*
 Fourmi::Plus_Proche(enum type defourmi) const
-  // Paramètres
-  // deFourmi	: catégorie de fourmi à rechercher
+  // ParamÃ¨tres
+  // deFourmi	: catÃ©gorie de fourmi Ã  rechercher
 
   // Valeurs de sortie
-  // Pointeur vers la fourmi trouvée,
-  // ou NULL si aucune trouvée.
+  // Pointeur vers la fourmi trouvÃ©e,
+  // ou NULL si aucune trouvÃ©e.
 {
   Fourmi *fourmi = NULL, *fourmi_tmp;
 
@@ -181,12 +181,12 @@ Fourmi::Plus_Proche(enum type defourmi) const
 
 enum categorie
 Fourmi::DoPhero(enum categorie categ)
-  // Cette fonction fait avancer la fourmi vers le phéromone categ
-  // Paramètres
-  // Categ	:catégorie de phéromone à rechercher
+  // Cette fonction fait avancer la fourmi vers le phÃ©romone categ
+  // ParamÃ¨tres
+  // Categ	:catÃ©gorie de phÃ©romone Ã  rechercher
 
   // Valeurs de sortie
-  // ON		:la fourmi est sur le type de phéromone décrit par categ et peut avancer
+  // ON		:la fourmi est sur le type de phÃ©romone dÃ©crit par categ et peut avancer
   //		 dans la bonne direction
   // NUL	:sinon
 {
@@ -218,15 +218,15 @@ Fourmi::DoPhero(enum categorie categ)
 
 enum categorie
 Fourmi::Phero_autour(enum categorie categ)
-  // Cette fonction fait une recherche de phéromone Categ
-  // Paramètres
-  // Categ		:categorie de phéromone à rechercher
+  // Cette fonction fait une recherche de phÃ©romone Categ
+  // ParamÃ¨tres
+  // Categ		:categorie de phÃ©romone Ã  rechercher
 
   // Valeurs de sortie
-  // ON			:la fourmi est sur le type de phéromone décrit par Categ
-  // Categ		:si ce type de phéromone est autour d'elle
+  // ON			:la fourmi est sur le type de phÃ©romone dÃ©crit par Categ
+  // Categ		:si ce type de phÃ©romone est autour d'elle
   // NUL		:sinon
-  // dans Dest	:la position de ces phéromones
+  // dans Dest	:la position de ces phÃ©romones
 {
   int xn = Xc, yn = Yc;
 
@@ -251,7 +251,7 @@ Fourmi::Phero_autour(enum categorie categ)
   if (xn != Xc || yn != Yc)
   {
     SetDest(xn, yn);
-    return categ;  // Avance dans la direction des phéromones les plus intenses
+    return categ;  // Avance dans la direction des phÃ©romones les plus intenses
   }
   else
     return NUL;
@@ -262,8 +262,8 @@ Fourmi::Phero_autour(enum categorie categ)
 
 int
 Fourmi::Lacher_Pheromone(categorie cat)
-  // Paramètres
-  // Machin	:catégorie des phéromones à lâcher
+  // ParamÃ¨tres
+  // Machin	:catÃ©gorie des phÃ©romones Ã  lÃ¢cher
 
   // Valeurs de sortie
   // 1		:OK
@@ -332,8 +332,8 @@ Fourmi::Evolve()
 
 void
 Fourmi::Paf(int choc)
-  // Paramètres
-  // choc	: intensité du coup
+  // ParamÃ¨tres
+  // choc	: intensitÃ© du coup
 {
   Vie -= choc;
   setbDefense(true);
@@ -344,8 +344,8 @@ Fourmi::Paf(int choc)
 
 void
 Fourmi::Attaque(CAnimal *ani, int force) const
-  // Paramètres
-  // ani	: pointeur vers l'ennemi à frapper
+  // ParamÃ¨tres
+  // ani	: pointeur vers l'ennemi Ã  frapper
   // force	: force du coup
 {
   if (ani == NULL)
@@ -359,7 +359,7 @@ Fourmi::Attaque(CAnimal *ani, int force) const
 int
 Fourmi::GoNearestCiterne()
   // Valeurs de sortie
-  // Retourne valeur renvoyée par Avancer_vers_under,
+  // Retourne valeur renvoyÃ©e par Avancer_vers_under,
   // dans Dest position de la citerne
   // Et dans PCiterne.
 {
@@ -374,7 +374,7 @@ Fourmi::GoNearestCiterne()
       PCiterne = cit;
     }
     if (Distance(Clan->Gate[0][0], Clan->Gate[1][0]) < DistancePtr(cit))
-    {										  // si la citerne est + loin que la fourmiliere préfère la fourmilière
+    {										  // si la citerne est + loin que la fourmiliere prÃ©fÃ¨re la fourmiliÃ¨re
       SetDest(Clan->Gate[0][0], Clan->Gate[1][0]);
     }
     return Avancer_vers(Dest[0], Dest[1], 1);
@@ -409,12 +409,12 @@ Fourmi::GoNearestCiterne()
 int
 Fourmi::EnterTunnel(const class CTunnel *Tunnel)
   // Entre dans un tunnel
-  // Paramètres
-  // tunnel :pointeur sur le tunnel à traverser
+  // ParamÃ¨tres
+  // tunnel :pointeur sur le tunnel Ã  traverser
 
   // Valeur de sortie
   // 1	:en marche
-  // bTunnel armé
+  // bTunnel armÃ©
 {
   int		x = -1, y = -1;
   CRoom*	in;
@@ -446,7 +446,7 @@ Fourmi::EnterTunnel(const class CTunnel *Tunnel)
 
 bool
 Fourmi::Serialize(FILE * fichier, bool sauv, CClan *clan, IOTablePointeur &table)
-  // Paramètres
+  // ParamÃ¨tres
   // fichier	: ptr du fichier de sauvegarde/chargement
   // sauv		: si true sauve, si false charge
 {
@@ -457,118 +457,118 @@ Fourmi::Serialize(FILE * fichier, bool sauv, CClan *clan, IOTablePointeur &table
 	/*Pointeurs*/
 	i=table.FindOrAdd((void *)this); //Sauve son numero dans la table
     if(!fwrite(&i,sizeof(int),1,fichier)){
-      SDEBUG(W4,"Erreur d'écriture");
+      SDEBUG(W4,"Erreur d'Ã©criture");
       return false;
     }
 	i=table.FindOrAdd((void *)this->Room);//Sauve le numero de room dans la table
     if(!fwrite(&i,sizeof(int),1,fichier)){
-      SDEBUG(W4,"Erreur d'écriture");
+      SDEBUG(W4,"Erreur d'Ã©criture");
       return false;
     }
 	i=table.FindOrAdd((void*)this->Clan);
     if(!fwrite(&i,sizeof(int),1,fichier)){//Sauve le numero de clan dans la table
-      SDEBUG(W4,"Erreur d'écriture");
+      SDEBUG(W4,"Erreur d'Ã©criture");
       return false;
     }
 	i=table.FindOrAdd((void*)this->PCiterne);
     if(!fwrite(&i,sizeof(int),1,fichier)){//Sauve le numero de pCiterne dans la table
-      SDEBUG(W4,"Erreur d'écriture");
+      SDEBUG(W4,"Erreur d'Ã©criture");
       return false;
     }
 	i=table.FindOrAdd((void*)this->prev);
     if(!fwrite(&i,sizeof(int),1,fichier)){//Sauve le numero de prev dans la table
-      SDEBUG(W4,"Erreur d'écriture");
+      SDEBUG(W4,"Erreur d'Ã©criture");
       return false;
     }
 	i=table.FindOrAdd((void*)this->next);
     if(!fwrite(&i,sizeof(int),1,fichier)){//Sauve le numero de next dans la table
-      SDEBUG(W4,"Erreur d'écriture");
+      SDEBUG(W4,"Erreur d'Ã©criture");
       return false;
     }
 	/*Variables simples(classes Animal et Fourmi)*/
 
     if(!fwrite(&Esp, sizeof(enum espece),1,fichier)){
-	 SDEBUG(W4,"Erreur d'écriture");
+	 SDEBUG(W4,"Erreur d'Ã©criture");
 	 return false;
     }
     i=this->Statut();
     if(!fwrite(&i, sizeof(enum type),1,fichier)){
-	 SDEBUG(W4,"Erreur d'écriture");
+	 SDEBUG(W4,"Erreur d'Ã©criture");
 	 return false;
     }
     if(!fwrite(&Numero,sizeof(int),1,fichier)){
-      SDEBUG(W4,"Erreur d'écriture");
+      SDEBUG(W4,"Erreur d'Ã©criture");
       return false;
     }
     if(!fwrite(&Xc,sizeof(int),1,fichier)){
-      SDEBUG(W4,"Erreur d'écriture");
+      SDEBUG(W4,"Erreur d'Ã©criture");
       return false;
     }
     if(!fwrite(&Yc,sizeof(int),1,fichier)){
-      SDEBUG(W4,"Erreur d'écriture");
+      SDEBUG(W4,"Erreur d'Ã©criture");
       return false;
     }
     if(!fwrite(&Vie,sizeof(int),1,fichier)){
-      SDEBUG(W4,"Erreur d'écriture");
+      SDEBUG(W4,"Erreur d'Ã©criture");
       return false;
     }
     if(!fwrite(&Nourriture,sizeof(int),1,fichier)){
-      SDEBUG(W4,"Erreur d'écriture");
+      SDEBUG(W4,"Erreur d'Ã©criture");
       return false;
     }
     if(!fwrite(&Nourriture_dos,sizeof(int),1,fichier)){
-      SDEBUG(W4,"Erreur d'écriture");
+      SDEBUG(W4,"Erreur d'Ã©criture");
       return false;
     }
     if(!fwrite(&Taille_mandibule,sizeof(int),1,fichier)){
-      SDEBUG(W4,"Erreur d'écriture");
+      SDEBUG(W4,"Erreur d'Ã©criture");
       return false;
     }
     if(!fwrite(&Depot,sizeof(int),1,fichier)){
-      SDEBUG(W4,"Erreur d'écriture");
+      SDEBUG(W4,"Erreur d'Ã©criture");
       return false;
     }
     if(!fwrite(&Excitation,sizeof(int),1,fichier)){
-      SDEBUG(W4,"Erreur d'écriture");
+      SDEBUG(W4,"Erreur d'Ã©criture");
       return false;
     }
     if(!fwrite(&LastPonte,sizeof(int),1,fichier)){
-      SDEBUG(W4,"Erreur d'écriture");
+      SDEBUG(W4,"Erreur d'Ã©criture");
       return false;
     }
     if(!fwrite(&Taille,sizeof(int),1,fichier)){
-      SDEBUG(W4,"Erreur d'écriture");
+      SDEBUG(W4,"Erreur d'Ã©criture");
       return false;
     }
     i=this->Loquace();
     if(!fwrite(&i,sizeof(int),1,fichier)){
-      SDEBUG(W4,"Erreur d'écriture");
+      SDEBUG(W4,"Erreur d'Ã©criture");
       return false;
     }
     if(!fwrite(&Age,sizeof(int),1,fichier)){
-      SDEBUG(W4,"Erreur d'écriture");
+      SDEBUG(W4,"Erreur d'Ã©criture");
       return false;
     }
     if(!fwrite(&Wait,sizeof(int),1,fichier)){
-      SDEBUG(W4,"Erreur d'écriture");
+      SDEBUG(W4,"Erreur d'Ã©criture");
       return false;
     }
 
-    //Variables sauvées par boucles
+    //Variables sauvÃ©es par boucles
     for (int g = 0; g < 5; g++)
       for (int h = 0; h < 2; h++)
 	if(!fwrite(&Oldpos[g][h],sizeof(int),1,fichier)){
-	  SDEBUG(W4,"Erreur d'écriture");
+	  SDEBUG(W4,"Erreur d'Ã©criture");
 	  return false;
 	}
 
     for (int bo = 0; bo < 2; bo++)
       if(!fwrite(&Dest[bo],sizeof(int),1,fichier)){
-	SDEBUG(W4,"Erreur d'écriture");
+	SDEBUG(W4,"Erreur d'Ã©criture");
 	return false;
       }
 
-    //Variables booléennes
+    //Variables boolÃ©ennes
     BYTE octet = bUnder();
     octet |= bParle() << 1;
     octet |= bPorteObj() << 2;
@@ -578,7 +578,7 @@ Fourmi::Serialize(FILE * fichier, bool sauv, CClan *clan, IOTablePointeur &table
     octet |= bStop() <<6;
     octet |= bDefense() <<7;
     if(!fwrite(&octet,sizeof(BYTE),1,fichier)){
-      SDEBUG(W4,"Erreur d'écriture");
+      SDEBUG(W4,"Erreur d'Ã©criture");
       return false;
     }
 
@@ -586,7 +586,7 @@ Fourmi::Serialize(FILE * fichier, bool sauv, CClan *clan, IOTablePointeur &table
     //Signal de fin de fourmi
     BYTE endFourmi='f';
     if(!fwrite(&endFourmi,sizeof(BYTE),1,fichier)){
-      SDEBUG(W4,"Erreur d'écriture");
+      SDEBUG(W4,"Erreur d'Ã©criture");
       return false;
     }
 
@@ -595,14 +595,14 @@ Fourmi::Serialize(FILE * fichier, bool sauv, CClan *clan, IOTablePointeur &table
 
   else	//Chargement
   {
-  	if(fichier!=NULL){//Lecture du fichier, pas de mise à jour des pointeurs
+  	if(fichier!=NULL){//Lecture du fichier, pas de mise Ã  jour des pointeurs
 		if(!fread(&i,sizeof(int),1,fichier)){	//MISE A JOUR DE LA table
 			SDEBUG(W4,"Erreur de lecture");
 			return false;
 		}
 		SDEBUG(W2,"APPEL de SET (fourmi) avec index="<<i<<" valeur "<<this);
 		table.set(i, (void *)this);
-		/*Lecture des numéros de pointeurs et stockage dans les variables statiques*/
+		/*Lecture des numÃ©ros de pointeurs et stockage dans les variables statiques*/
 		if(!fread(&this->Room,sizeof(int),1,fichier)){ //room, clan, pCiterne, prev, next ->i,j,k,l,m
 			SDEBUG(W4,"Erreur de lecture");
 			return false;
@@ -625,11 +625,11 @@ Fourmi::Serialize(FILE * fichier, bool sauv, CClan *clan, IOTablePointeur &table
 		}
 		/*Variables simples*/
 		if(!fread(&Esp, sizeof(enum espece),1,fichier)){
-			SDEBUG(W4,"Erreur d'écriture");
+			SDEBUG(W4,"Erreur d'Ã©criture");
 			return false;
 		}
 		if(!fread(&statut, sizeof(enum type),1,fichier)){
-			 SDEBUG(W4,"Erreur d'écriture");
+			 SDEBUG(W4,"Erreur d'Ã©criture");
 			return false;
 		}
 		if(!fread(&Numero,sizeof(int),1,fichier)){
@@ -688,7 +688,7 @@ Fourmi::Serialize(FILE * fichier, bool sauv, CClan *clan, IOTablePointeur &table
 			SDEBUG(W4,"Erreur de lecture");
 			return false;
 		}
-		//Variables sauvées par boucles
+		//Variables sauvÃ©es par boucles
 		for (int g = 0; g < 5; g++)
 		for (int h = 0; h < 2; h++)
 			if(!fread(&Oldpos[g][h],sizeof(int),1,fichier)){
@@ -701,7 +701,7 @@ Fourmi::Serialize(FILE * fichier, bool sauv, CClan *clan, IOTablePointeur &table
 				return false;
 			}
 
-		//Variables booléennes
+		//Variables boolÃ©ennes
 		BYTE octet = 0;
 		if(!fread(&octet,sizeof(BYTE),1,fichier)){
 			SDEBUG(W4,"Erreur de lecture");
@@ -716,7 +716,7 @@ Fourmi::Serialize(FILE * fichier, bool sauv, CClan *clan, IOTablePointeur &table
 		setbStop((octet&64) >> 6);
 		setbDefense((octet&128) >> 7);
 
-		//Vérification de fin de Fourmi
+		//VÃ©rification de fin de Fourmi
 		BYTE endFourmi;
 		if(!fread(&endFourmi, sizeof(BYTE),1,fichier)){
 			SDEBUG(W4,"Erreur de lecture");
@@ -726,7 +726,7 @@ Fourmi::Serialize(FILE * fichier, bool sauv, CClan *clan, IOTablePointeur &table
 			SDEBUG(W4,"Fin de fourmi invalide");
 			return false;
 		}
-	}else{//Mise à jour des pointeurs
+	}else{//Mise Ã  jour des pointeurs
 		this->Room = (CRoom *)table.get(reinterpret_cast<int64_t>(this->Room));
 		this->Clan = (CClan *)table.get(reinterpret_cast<int64_t>(this->Clan));
 		this->PCiterne = (Fourmi *)table.get(reinterpret_cast<int64_t>(this->PCiterne));

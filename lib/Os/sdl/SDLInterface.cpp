@@ -270,7 +270,7 @@ void LButtonUp(int X ,int Y)
 
 	  if(ZSF.ButtonMeat)
 	  {
-	    if((ZSF.This_room()->map[PosX][PosY].decor->genre == ERIEN))
+	    if(ZSF.This_room()->map[PosX][PosY].decor->genre == ERIEN)
 	    {
 	      ZSF.This_room()->map[PosX][PosY].decor->genre = VIANDE;
 	      ZSF.This_room()->map[PosX][PosY].decor->etat = MData.max_meat;
@@ -328,7 +328,8 @@ plusloineheh:;
     case SFINTERFACE:
       if ((X>195)&&(Y>76)&&(X<418)&&(Y<114))
 	MData.setScreen (SFGAME);
-      if ((X>195)&&(Y>206)&&(X<418)&&(Y<242));
+      if ((X>195)&&(Y>206)&&(X<418)&&(Y<242))
+	      ;
       //PostQuitMessage(0);
 
       break;

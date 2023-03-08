@@ -33,10 +33,10 @@ CRoom::~CRoom()
 
 void
 CRoom::Init(int largeur, int hauteur, typeRoom tR)
-  // Paramètres
+  // ParamÃ¨tres
   // Largeur	:largeur de la Room
   // Longeur	:longueur
-  // tR		:permet de générer une map cohérente selon le type de room (extérieur, intérieur, forêt, désert ...
+  // tR		:permet de gÃ©nÃ©rer une map cohÃ©rente selon le type de room (extÃ©rieur, intÃ©rieur, forÃªt, dÃ©sert ...
 {
   int i, j ,k ;
   size.largeur = largeur;
@@ -59,7 +59,7 @@ CRoom::Init(int largeur, int hauteur, typeRoom tR)
   }
   switch (tR)
   {
-    case NORMAL_R:							  //Génère des montagnes
+    case NORMAL_R:							  //GÃ©nÃ¨re des montagnes
       for (i = 0; i < largeur; i++)
 	for (j = 0; j < hauteur; j++)
 	{
@@ -94,12 +94,12 @@ CRoom::Init(int largeur, int hauteur, typeRoom tR)
 
 class CTunnel*
 CRoom::GetTunnel(int x, int y) const
-// Paramètres
-// x		:coordonnée x dont on veut savoir le numéro de tunnel (dans la room this)
+// ParamÃ¨tres
+// x		:coordonnÃ©e x dont on veut savoir le numÃ©ro de tunnel (dans la room this)
 // y		:idem pour y
 //
 // Valeurs de sortie
-// NULL		:erreur pas de tunnel à cet endroit
+// NULL		:erreur pas de tunnel Ã  cet endroit
 // CTunnel*	:pointeur de tunnel directement exploitable dans CClan Pipeline
 {
   SDEBUG(W3,Pipe.size());
@@ -115,10 +115,10 @@ CRoom::GetTunnel(int x, int y) const
 
 void
 CRoom::SetEntrees(int x, int y, int num)
-  // Paramètres
-  // x		:Entrée x
-  // y		:Entrée y
-  // num	:numéro de l'entrée à modifier
+  // ParamÃ¨tres
+  // x		:EntrÃ©e x
+  // y		:EntrÃ©e y
+  // num	:numÃ©ro de l'entrÃ©e Ã  modifier
 {
   Gate[0][num] = x;
   Gate[1][num] = y;
@@ -188,13 +188,13 @@ CRoom::Serialize(FILE *sauveg,bool sauv, IOTablePointeur &table)
 			ca=map[k][k2];
 			//SDEBUG(W2,"en "<<k<<","<<k2<<" ca, map "<<&ca<<", "<<&map[k][k2]);
 			fflush(sauveg);
-			if((i=table.Find((void *)(cd = ca.decor)))==-1){ //Si le décor n'est pas encore sauvé
+			if((i=table.Find((void *)(cd = ca.decor)))==-1){ //Si le dÃ©cor n'est pas encore sauvÃ©
 				ca.decor = reinterpret_cast<CDecor *>(table.Add((void *)ca.decor));
 				fwrite("i",sizeof(char),1,sauveg);//A sauver "I"ci
-				fwrite(cd, sizeof(CDecor),1, sauveg);//On sauve le décor
+				fwrite(cd, sizeof(CDecor),1, sauveg);//On sauve le dÃ©cor
 			}else{
 				ca.decor = reinterpret_cast<CDecor *>(i);
-				fwrite("a",1,1,sauveg);//Ok, déjà sauvé "A"illeurs
+				fwrite("a",1,1,sauveg);//Ok, dÃ©jÃ  sauvÃ© "A"illeurs
 			}
 			ca.firstAnimal = reinterpret_cast<CAnimal *>(table.FindOrAdd((void *)ca.firstAnimal));
 			//Sauvegarde de la Case
@@ -205,7 +205,7 @@ CRoom::Serialize(FILE *sauveg,bool sauv, IOTablePointeur &table)
 			fwrite(&ca.decor, sizeof(int),1,sauveg);
 			fwrite(&PHERO_SIZE, sizeof(PHERO_SIZE),1,sauveg);
 			SDEBUG(W2," ca : "<<(int)ca.terrain<<", "<<(int)ca.offsetX<<", "<<(int)ca.offsetY<<", "<<ca.firstAnimal<<", "<<ca.decor<<" PheroSize = "<<(int)PHERO_SIZE);
-			//Sauvegarde des phéromones
+			//Sauvegarde des phÃ©romones
 			for(i=0; i<PHERO_SIZE; i++)
 				ca.phero[i]->Serialize(sauveg, sauv, table);
 			//fwrite("o",1,1, sauveg);//DEBUG
@@ -223,12 +223,12 @@ CRoom::Serialize(FILE *sauveg,bool sauv, IOTablePointeur &table)
 		fread(&resistance,sizeof(int),1,sauveg);
 		fread(&size.largeur,sizeof(int),1,sauveg);
 		fread(&size.hauteur,sizeof(int),1,sauveg);
-		//Test d'intégrité
+		//Test d'intÃ©gritÃ©
 		char *buff = new char [15];
 		if (buff == NULL) return false;
 		fread(buff,7,1,sauveg);
 		if (strncmp(buff,"DebEntr",7) != 0)
-			SDEBUG(W2, "Gros Problème de chargement de terrain !");
+			SDEBUG(W2, "Gros ProblÃ¨me de chargement de terrain !");
 
 		//Variables vecteur
 		fread(&i,sizeof(int),1,sauveg);
@@ -243,7 +243,7 @@ CRoom::Serialize(FILE *sauveg,bool sauv, IOTablePointeur &table)
 			}else if(buff[0]=='a'){
 				SDEBUG(W2, "Erreur de chargement de tunnel : il est ailleurs");
 			}else{
-				SDEBUG(W2, "Erreur de chargement de tunnel : marqueur trouvé :"<<buff[0]);
+				SDEBUG(W2, "Erreur de chargement de tunnel : marqueur trouvÃ© :"<<buff[0]);
 			}
 		}
 
@@ -255,12 +255,12 @@ CRoom::Serialize(FILE *sauveg,bool sauv, IOTablePointeur &table)
 			fread(&Gate[0][k],sizeof(int),1,sauveg);
 			fread(&Gate[1][k],sizeof(int),1,sauveg);
 		}
-		//Test d'intégrité
+		//Test d'intÃ©gritÃ©
 		fread(buff,3,1,sauveg);
 		if (strncmp(buff,"Map",3) != 0)
 			SDEBUG(W2, "Carte introuvable !");
 		//Carte
-		Init(size.largeur, size.hauteur, VIDE_R); //CREE LES PHEROS et CDECOR : ne pas les recréer
+		Init(size.largeur, size.hauteur, VIDE_R); //CREE LES PHEROS et CDECOR : ne pas les recrÃ©er
 		for (int k = 0; k < size.largeur; k++)
 		for (int k2 = 0; k2 <size.hauteur; k2++)
 		{
@@ -269,26 +269,26 @@ CRoom::Serialize(FILE *sauveg,bool sauv, IOTablePointeur &table)
 				fread(map[k][k2].decor, sizeof(CDecor),1, sauveg);
 			else if(buff[0]=='a'){ //NON FONCTIONNEL, NON UTILISE
 				fread(&map[k][k2].decor, sizeof(int),1, sauveg);
-				SDEBUG(W2, "C'est bizarre... un décor non présent...");
+				SDEBUG(W2, "C'est bizarre... un dÃ©cor non prÃ©sent...");
 			}else{
-				SDEBUG(W2, "Erreur de chargement de décor !");
+				SDEBUG(W2, "Erreur de chargement de dÃ©cor !");
 			}
 			fread(&map[k][k2].terrain, sizeof(char),1,sauveg); 
 			fread(&map[k][k2].offsetX, sizeof(char),1,sauveg);
 			fread(&map[k][k2].offsetY, sizeof(char),1,sauveg);
 			fread(&map[k][k2].firstAnimal, sizeof(int),1,sauveg);
-			fread(&i, sizeof(int),1,sauveg);//Numero du pointeur vers décor dans la table
+			fread(&i, sizeof(int),1,sauveg);//Numero du pointeur vers dÃ©cor dans la table
 			SDEBUG(W2, "map : "<<(int)map[k][k2].terrain<<", "<<(int)map[k][k2].offsetX<<", "<<(int)map[k][k2].offsetY<<", "<<map[k][k2].firstAnimal<<", "<<(int)i);
 			table.set(i, (void*)map[k][k2].decor);
 			map[k][k2].decor=reinterpret_cast<CDecor *>(i);
 			j=0;
 			fread(&j, sizeof(PHERO_SIZE),1,sauveg);//NON UTILISE !
-			SDEBUG(W2, "Taille de phéro (3 en principe) lue :" << j);
-			for(i=0; i<j; i++)//Chargement des phéromones
+			SDEBUG(W2, "Taille de phÃ©ro (3 en principe) lue :" << j);
+			for(i=0; i<j; i++)//Chargement des phÃ©romones
 				map[k][k2].phero[i]->Serialize(sauveg, sauv, table);
 		}
 		delete[] buff;
-	}else{//Mise à jour des pointeurs
+	}else{//Mise Ã  jour des pointeurs
 		for (int k = 0; k < size.largeur; k++)
 		for (int k2 = 0; k2 <size.hauteur; k2++){
 			map[k][k2].firstAnimal=(CAnimal *)table.get(reinterpret_cast<int64_t>(map[k][k2].firstAnimal));

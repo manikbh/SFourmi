@@ -50,7 +50,19 @@ cd src
 
 ```
 
-Some work is in progress to compile SFourmi with emscripten so that it will be compiled to web assembly and run directly in the browser.
+Some work is in progress to compile SFourmi with emscripten so that it will be compiled to web assembly and run directly in the browser. 
+To try it you need to python3 and an installation of emscripten:
+```
+source "MYEMSCRIPTENINSTALL/emsdk/emsdk_env.sh"
+mkdir buildweb
+cd buildweb
+emcmake cmake ..
+emmake make
+cd src
+python -m http.server
+
+```
+You can then open the page http://0.0.0.0:8000/ in your browser. But it does NOT work yet.
 
 ##				   5. INSTALL
 

@@ -25,6 +25,11 @@
 
 #define TMPPATH "/tmp/FourmiLog.txt"
 
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#include <emscripten/html5.h>
+#endif
+
 // Global variables
 DataMap MData;
 User ZSF;
@@ -68,6 +73,87 @@ void NewMap ()
   ZSF.setThis_room(terre);
 }
 
+#ifdef __EMSCRIPTEN__
+// Our "main loop" function. This callback receives the current time as
+// reported by the browser, and the user data we provide in the call to
+// emscripten_request_animation_frame_loop().
+void one_iter() {
+//EM_BOOL one_iter(double time, void* userData) {
+  // Can render to the screen here, etc.
+  if (SDL_PollEvent(evenement))
+      AnalyseEvent(evenement);
+    else if((bActive) && (!ZSF.bPause))
+    {
+      switch (MData.Screen())
+      {
+        case SFINTERFACE:
+          StartInterface();
+          break;
+        case SFGAME:
+          Process_va();
+          ZSF.MoveRoom ();
+          updateFrame(MData.fps);
+          ZSF.IncCounter();
+          GarbageLog(1000);
+          break;
+      }
+    }
+    else
+    {
+      SDL_WaitEvent(evenement); //Patiente 100 ms
+      AnalyseEvent(evenement);
+      ZSF.MoveRoom();
+      updateFrame(1);
+    }
+  // Return true to keep the loop running.
+  //return EM_TRUE;
+}
+
+
+int main(int argc, char *argv[]) {
+  emscripten_set_main_loop(one_iter, 0, true);
+        Log.open (TMPPATH);
+  Log << "Version :" << VERSION << endl;
+  Log << "Date de compilation:" << __DATE__<<endl;
+  Log << "Heure de compilation:" << __TIME__<<endl;
+  cerr << PACKAGE << " (" << VERSION << ") " << "by SF team" << endl;
+  cerr << "EMSCRIPTEN version for the web" << endl;
+  // Load config file
+  MData.LoadData("sfourmi.ini");
+  if (argc <= 1)
+    std::cerr << "use: SFourmi [map]" << std::endl;
+  else
+  {
+    MData.charger = true;
+    MData.loadfile = argv[1];
+  }
+
+  ZSF.path = "./";
+
+  SDEBUG(W0,"Initialisation " GRAPH);
+  GraphX_Init();
+  SDEBUG(W0,"SDL initialisé");
+
+  // Load map or create a new one
+  if (MData.charger)
+  {
+    if (!Charg_terrain(MData.loadfile))
+    {
+      std::cerr << "Error when loading map : " << MData.charger << std::endl;
+      NewMap ();
+    }
+    else
+      std::cerr << "Loading of " << MData.loadfile << " : OK" << std::endl;
+  }
+  else
+    NewMap ();
+
+  bActive = true;
+	// Receives a function to call and some user data to provide it.
+		//emscripten_request_animation_frame_loop(one_iter, 0);
+}
+
+#else
 
 int main (int argc, char *argv[])
 {
@@ -140,3 +226,5 @@ int main (int argc, char *argv[])
 
   return(0);
 }
+#endif
+

@@ -29,6 +29,10 @@ Process_va()
     for (int k = 0; k < MData.max_ants; k++)
     {
       Fourmi *fourmi = clan->les_fourmis[k];
+	  if (fourmi == ZSF.This_animal() && (fourmi->Action() == DEAD || fourmi->Action() == EVOLVE)){ // fourmi will be deleted
+	  	ZSF.setThis_animal(nullptr);
+	  }
+
       switch (fourmi->Statut())
       {
 	case NIHIL:
@@ -100,8 +104,10 @@ Process_va()
     if (les_ennemis[k] != NULL)
       if (les_ennemis[k]->Action() == DEAD)
       {
-	if (ZSF.bInfo_enn && (les_ennemis[k] == ZSF.This_animal()))
+	if (ZSF.bInfo_enn && (les_ennemis[k] == ZSF.This_animal())){
 	  ZSF.bInfo_enn=FALSE;
+	  ZSF.setThis_animal(nullptr);
+	}
 	les_ennemis[k]->Meurt();
 	//	  delete les_ennemis[k];
 	les_ennemis[k]=NULL;

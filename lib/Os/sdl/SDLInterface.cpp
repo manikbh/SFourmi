@@ -62,7 +62,7 @@ void AnalyseTouche(SDL_KeyboardEvent *key, bool up)				  //Up Return F1 a b....
        ZSF.line = 0;
  			break;
 
- 		case SDLK_F3:				  //CENTRER sur la fourmilière
+ 		case SDLK_F3:				  //CENTRER sur la fourmiliÃ¨re
        ZSF.column = max(0,ZSF.This_clan()->Gate[0][0]-10);
        ZSF.line = max(0,ZSF.This_clan()->Gate[1][0]-9);
        ZSF.column = min(ZSF.column, ZSF.This_room()->size.largeur-20);
@@ -73,7 +73,7 @@ void AnalyseTouche(SDL_KeyboardEvent *key, bool up)				  //Up Return F1 a b....
        ZSF.bSmall_map = !ZSF.bSmall_map;
  			break;
 
- 		case SDLK_F5:				  //Centre sur la fourmi sélectionnée
+ 		case SDLK_F5:				  //Centre sur la fourmi sÃ©lectionnÃ©e
        if(ZSF.bInfo)
        {
  				ZSF.column = max(0,ZSF.This_animal()->Xc-10);
@@ -129,10 +129,10 @@ void AnalyseTouche(SDL_KeyboardEvent *key, bool up)				  //Up Return F1 a b....
        case SDLK_s:				  //STATISTIQUES
  				ZSF.bStats = !ZSF.bStats;
  				break;
-       case SDLK_t:				  //Active ou désactive l'affichage principal
+       case SDLK_t:				  //Active ou dÃ©sactive l'affichage principal
  				ZSF.bScreen = !ZSF.bScreen;
  				break;
-   //case SDLK_PLUS:			  //Changement d'étage en sous-sol
+   //case SDLK_PLUS:			  //Changement d'Ã©tage en sous-sol
    //cave_selec=min(les_clans[ZSF.This_clan()]->NBMAX_ROOM,cave_selec++);
  	//break;
    //case SDLK_MINUS:
@@ -177,7 +177,7 @@ void AnalyseEvent(SDL_Event *evenement)
       AnalyseTouche(&(evenement->key), false);
       break;     
 
-    case SDL_QUIT:						  //Message de  fermeture de la fenêtre
+    case SDL_QUIT:						  //Message de  fermeture de la fenÃªtre
       exit(0); break;
 
     case SDL_MOUSEBUTTONDOWN :
@@ -328,8 +328,8 @@ plusloineheh:;
     case SFINTERFACE:
       if ((X>195)&&(Y>76)&&(X<418)&&(Y<114))
 	MData.setScreen (SFGAME);
-      if ((X>195)&&(Y>206)&&(X<418)&&(Y<242))
-	      ;
+      /*if ((X>195)&&(Y>206)&&(X<418)&&(Y<242))
+	      ;*/
       //PostQuitMessage(0);
 
       break;

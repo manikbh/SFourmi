@@ -27,9 +27,15 @@ DisplayIcon(class DataMap& MData, class User& ZSF)
 {
   class SFRect		rc;
 
+  if(!ZSF.This_animal())
+    return;
+
   if (ZSF.bInfo)	  //les infos ne portent que sur les fourmis
   {
-    switch (static_cast<Fourmi *> (ZSF.This_animal())->Statut()) // TODO 2020 CRASH if the selected larva evolves and the pointer is freed...
+    Fourmi * f = dynamic_cast<Fourmi *> (ZSF.This_animal());
+    if (!f)
+      return;
+    switch (f->Statut())
     {
       case REINE:
 	rc.setSFRect(0,8*32+600,32,8*32+632);
@@ -114,6 +120,9 @@ DisplayEnnemiesInfo(class DataMap& MData, class User& ZSF)
   class SFColor	colors;
   char		buffer[9];
 
+  if(!ZSF.This_animal())
+    return;
+
   rc.setSFRect(22+30,
       	       180+30-ZSF.This_animal()->Vie*32/200,
 	       22+32,
@@ -164,6 +173,8 @@ DisplayAntsInfo(class DataMap& MData, class User& ZSF)
   std::string	szStatut;
   char		buffer[30];
 
+  if (!ZSF.This_animal() || !dynamic_cast<Fourmi*>(ZSF.This_animal()))
+    return;
   colors.setSFColor(0, 204, 0);
   rc.setSFRect(22+30,180+30-ZSF.This_animal()->Vie*32/200
       ,22+32,180+30);
@@ -245,6 +256,8 @@ DisplayAntsInfo(class DataMap& MData, class User& ZSF)
 static void
 DisplayIndividualInfo(class DataMap& MData, class User& ZSF)
 {
+  if (!ZSF.This_animal())
+    return;
   if (ZSF.bInfo)
     DisplayAntsInfo(MData, ZSF);
   else

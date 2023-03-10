@@ -91,7 +91,7 @@ CAnimal::Avancer_hasard()
   int vx = Oldpos[0][0]-Xc, vy = Oldpos[0][1]-Yc;
 
   if (vx == 0 && vy == 0)
-    dir = 2 * rand() % 8;
+    dir = 2 * (rand() % 8);
   else
     for (dir = 0; dir < 16; dir += 2)
       if (Deplacements[dir] == vx && Deplacements[dir + 1] == vy)

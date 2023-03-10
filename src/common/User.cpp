@@ -135,7 +135,7 @@ User::Init_Clan(class DataMap &MData)
     les_clans[k]->la_fourme = new CRoom*[1];	  //1 salle d'abord
     les_clans[k]->la_fourme[0] = new CRoom(F_LARGEUR, F_HAUTEUR, SOUSSOL_R);
     tmpRoom = les_clans[k]->la_fourme[0];
-    les_clans[k]->NBMAX_ROOM = 0;	  // 1 seul niveau au début
+    les_clans[k]->NBMAX_ROOM = 0;	  // 1 seul niveau au dÃ©but
     for(i = 0, j = 0;;)
     {
       i = rand() % MData.length;
@@ -254,7 +254,7 @@ User::Init_Tanks(class DataMap &MData)
       }
     }
 
-    //On complète tous les emplacements qui ne sont inutilisés
+    //On complÃ¨te tous les emplacements qui ne sont inutilisÃ©s
     for (int k = 1 + les_clans[clan]->Population; k < MData.max_ants; ++k)
     {
       les_clans[clan]->les_fourmis[k] =
@@ -269,12 +269,12 @@ User::Init_Tanks(class DataMap &MData)
 
 void
 User::Serialize(FILE * fichier, bool sauv, class IOTablePointeur &table){
-	//static int i, j, k; //static pour conserver le numéro du pointeur à charger
+	//static int i, j, k; //static pour conserver le numÃ©ro du pointeur Ã  charger
 	int i;
 	unsigned short c=0;
 	if(sauv){//sauvegarde
 		if(fichier==NULL) //Dans ce cas, remplir la table de pointeurs
-			return; //rien à faire ici : pas d'objet spécifique à User
+			return; //rien Ã  faire ici : pas d'objet spÃ©cifique Ã  User
 		else{
 			c =bInfo;
 			c |=bInfo_enn<<1;
@@ -315,7 +315,7 @@ User::Serialize(FILE * fichier, bool sauv, class IOTablePointeur &table){
 				SDEBUG(W2,"Chargement : le pointeur sur le Clan courant est NULL !");*/
 			
 		}
-		else{//Chargement première étape : les pointeurs restent vides.
+		else{//Chargement premiÃ¨re Ã©tape : les pointeurs restent vides.
 			fread(&c,sizeof(unsigned short),1,fichier);
 			bInfo=(c&1);
 			bInfo_enn=((c&2) >> 1);
@@ -330,7 +330,7 @@ User::Serialize(FILE * fichier, bool sauv, class IOTablePointeur &table){
 			fread(&column,sizeof(int),1,fichier);
 			fread(&line,sizeof(int),1,fichier);
 			fread(&counter,sizeof(counter),1,fichier);
-			//Numéros des pointeurs dans la table !!! -> TODO 2020 : pointers are 64 bits now, cannot just read 32 bits...
+			//NumÃ©ros des pointeurs dans la table !!! -> TODO 2020 : pointers are 64 bits now, cannot just read 32 bits...
 			fread(&this_animal,sizeof(this_animal),1,fichier);
 			fread(&this_room,sizeof(this_room),1,fichier);
 			fread(&this_clan,sizeof(this_clan),1,fichier);

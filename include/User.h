@@ -39,7 +39,7 @@ class	User
 	bool 		bInfo_enn;
 	bool 		bPause;
 	bool 		ButtonMeat;
-	bool 		bDown;			// armé si le bouton gauche activé
+	bool 		bDown;			// armÃ© si le bouton gauche activÃ©
 	bool 		bMove;			
 	bool 		bSmall_map;		// F4 mini carte
 	bool 		bStats;		// 'S' Statistiques
@@ -52,8 +52,8 @@ class	User
 	bool 		bGoDown;
 	int		column;
 	int		line;
-	class CAnimal	*this_animal;
-
+	class CAnimal	*this_animal=nullptr;
+	
   private:
     	void      	CheckWall(class DataMap &MData);
 	void		Init_Clan(class DataMap &MData);
@@ -66,8 +66,9 @@ class	User
 	void   		Init_Ennemies(class DataMap &MData);
 	void 		Init_Landscape(class DataMap &MData);
 	uint64_t	counter;
-    	class CClan * this_clan;
-	class CRoom	*this_room;
+    class CClan * this_clan = nullptr;
+	class CRoom	*this_room = nullptr;
+	
 };
 
 #endif

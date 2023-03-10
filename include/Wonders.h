@@ -1,25 +1,28 @@
 //////////////////////////////////////////////////////////////////////
 //
-// Wonders.h: déclarations des types
+// Wonders.h: dÃ©clarations des types
 //
 //////////////////////////////////////////////////////////////////////
 
 #ifndef WONDERS_H
-# define WONDERS_H
+#define WONDERS_H
 
-enum e_screen {
+enum e_screen
+{
   SFINTERFACE,
   SFGAME
 };
 
-enum espece {
+enum espece
+{
   TOUT,
   FOURMI,
   PUNAISE,
   CAFARD
 };
 
-enum type {
+enum type
+{
   NIHIL,
   OUVRIER,
   SENTINELLE,
@@ -28,10 +31,10 @@ enum type {
   BERGER,
   LARVE,
   REINE
-}; 
+};
 
-
-enum categorie {
+enum categorie
+{
   NOURRITURE,
   PCITERNE,
   DANGER,
@@ -41,31 +44,57 @@ enum categorie {
 };
 // ON veut dire qu'on est sur une case pheromone
 
-enum ordre {DEAD, OK, EVOLVE};
-// Lorsque une chose a fait son action, elle est détruite si elle renvoie DEAD 
+enum ordre
+{
+  DEAD,
+  OK,
+  EVOLVE
+};
+// Lorsque une chose a fait son action, elle est dÃ©truite si elle renvoie DEAD
 
-enum comm {NICHTS, DEMANDE, OFFRE, HELP, VAZY};
-// Type de communication : demande de bouffe, offre de bouffe, 
-// demande à être suivie, donne une destination
+enum comm
+{
+  NICHTS,
+  DEMANDE,
+  OFFRE,
+  HELP,
+  VAZY
+};
+// Type de communication : demande de bouffe, offre de bouffe,
+// demande Ã  Ãªtre suivie, donne une destination
 
-enum nature {ERIEN, VIANDE, CADAVRE, MUR, CAILLOU};
-// Type de décor déplaçable ou bouffable
+enum nature
+{
+  ERIEN,
+  VIANDE,
+  CADAVRE,
+  MUR,
+  CAILLOU
+};
+// Type de dÃ©cor dÃ©plaÃ§able ou bouffable
 
-enum typeRoom {NORMAL_R, SOUSSOL_R, DESERT_R, FORET_R,VIDE_R};
+enum typeRoom
+{
+  NORMAL_R,
+  SOUSSOL_R,
+  DESERT_R,
+  FORET_R,
+  VIDE_R
+};
 
 struct CDecor
 {
-	nature genre;					// Bouffe, caillou, cadavre...
-	int	 etat;						// Dépend du genre (quantité pour la bouffe par ex)
+  nature genre; // Bouffe, caillou, cadavre...
+  int etat;     // DÃ©pend du genre (quantitÃ© pour la bouffe par ex)
 };
 
 struct CCase
 {
-	char terrain;					// Image de fond
-	char offsetX, offsetY;			// Dans le cas où il prend plusieurs cases, coordonnées de l'image à afficher
-	class CAnimal *firstAnimal;		// Liste chaînée des animaux
-	class CPheromone *phero[3];		// Faire liste chaînée pour mettre plus de phéromones
-	CDecor *decor;					// Décor déplaçable ou bouffable, peut prendre plusieurs cases
+  char terrain;               // Image de fond
+  char offsetX, offsetY;      // Dans le cas oÃ¹ il prend plusieurs cases, coordonnÃ©es de l'image Ã  afficher
+  class CAnimal *firstAnimal; // Liste chaÃ®nÃ©e des animaux
+  class CPheromone *phero[3]; // Faire liste chaÃ®nÃ©e pour mettre plus de phÃ©romones
+  CDecor *decor;              // DÃ©cor dÃ©plaÃ§able ou bouffable, peut prendre plusieurs cases
 };
 
 #endif

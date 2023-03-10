@@ -2,14 +2,14 @@
 //
 // Tunnel.h: interface pour la classe CTunnel
 //
-// Cette classe permet de relier les différents salles
-// Mais n'est pas représentée rééllement: elle est caractérisée par un integer
-//  - d'entrée vers CRoom
+// Cette classe permet de relier les diffÃ©rents salles
+// Mais n'est pas reprÃ©sentÃ©e rÃ©ellement: elle est caractÃ©risÃ©e par un integer
+//  - d'entrÃ©e vers CRoom
 //  - de sortie vers CRoom
-// et par une "distance", solidité, "diamètre" (pour le nbre max de fourmis), nbre de fourmis dedans.
-// Les CEtage sont en définitive des "sortes" de "salles" qui sont connectées entre elles par des
+// et par une "distance", soliditÃ©, "diamÃ¨tre" (pour le nbre max de fourmis), nbre de fourmis dedans.
+// Les CEtage sont en dÃ©finitive des "sortes" de "salles" qui sont connectÃ©es entre elles par des
 // tunnels. (des pipes comme sous Unix)
-// 
+//
 // GiTs mars 2001
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -25,19 +25,19 @@ class IOTablePointeur;
 class CTunnel
 {
 public:
-	CTunnel(CRoom *from,int x,int y, CClan *clan = NULL);
+	CTunnel(CRoom *from, int x, int y, CClan *clan = NULL);
 	CTunnel();
 	~CTunnel();
 
-	void ConnectTo(CRoom *to,int x,int y, CClan *clan = NULL);
-	void Serialize(FILE * fichier, bool sauv, IOTablePointeur &table);
+	void ConnectTo(CRoom *to, int x, int y, CClan *clan = NULL);
+	void Serialize(FILE *fichier, bool sauv, IOTablePointeur &table);
 
 	CRoom *In;
 	CRoom *Out;
 	int Longueur;
 	int Resistance;
 	int NbFourmi;
-//	int MaxFourmi;	// Pas une priorité
+	//	int MaxFourmi;	// Pas une prioritÃ©
 };
 
 #endif

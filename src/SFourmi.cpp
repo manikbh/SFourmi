@@ -34,7 +34,6 @@
 DataMap MData;
 User ZSF;
 
-
 /**
  * Empty the log if the counter reaches tr
  */
@@ -55,16 +54,19 @@ BYTE Max(BYTE c[4])
 {
   int res = 0;
 
-  if (c[1] > c[0]) res = 1;
-  if (c[2] > c[res]) res = 2;
-  if (c[3] > c[res]) res = 3;
+  if (c[1] > c[0])
+    res = 1;
+  if (c[2] > c[res])
+    res = 2;
+  if (c[3] > c[res])
+    res = 3;
   return res;
 }
 
 /**
  * Create a new map
  */
-void NewMap ()
+void NewMap()
 {
   std::cerr << "New Map created ..." << std::endl;
   SDEBUG(W2, "Initialisation normale");
@@ -77,46 +79,48 @@ void NewMap ()
 // Our "main loop" function. This callback receives the current time as
 // reported by the browser, and the user data we provide in the call to
 // emscripten_request_animation_frame_loop().
-void one_iter() {
-//EM_BOOL one_iter(double time, void* userData) {
-  // Can render to the screen here, etc.
+void one_iter()
+{
+  // EM_BOOL one_iter(double time, void* userData) {
+  //  Can render to the screen here, etc.
   if (SDL_PollEvent(evenement))
-      AnalyseEvent(evenement);
-    else if((bActive) && (!ZSF.bPause))
+    AnalyseEvent(evenement);
+  else if ((bActive) && (!ZSF.bPause))
+  {
+    switch (MData.Screen())
     {
-      switch (MData.Screen())
-      {
-        case SFINTERFACE:
-          StartInterface();
-          break;
-        case SFGAME:
-          Process_va();
-          ZSF.MoveRoom ();
-          updateFrame(MData.fps);
-          ZSF.IncCounter();
-          GarbageLog(1000);
-          break;
-      }
-    }
-    else
-    {
-      SDL_WaitEvent(evenement); //Patiente 100 ms
-      AnalyseEvent(evenement);
+    case SFINTERFACE:
+      StartInterface();
+      break;
+    case SFGAME:
+      Process_va();
       ZSF.MoveRoom();
-      updateFrame(1);
+      updateFrame(MData.fps);
+      ZSF.IncCounter();
+      GarbageLog(1000);
+      break;
     }
+  }
+  else
+  {
+    SDL_WaitEvent(evenement); // Patiente 100 ms
+    AnalyseEvent(evenement);
+    ZSF.MoveRoom();
+    updateFrame(1);
+  }
   // Return true to keep the loop running.
-  //return EM_TRUE;
+  // return EM_TRUE;
 }
 
-
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   emscripten_set_main_loop(one_iter, 0, true);
-        Log.open (TMPPATH);
+  Log.open(TMPPATH);
   Log << "Version :" << VERSION << endl;
-  Log << "Date de compilation:" << __DATE__<<endl;
-  Log << "Heure de compilation:" << __TIME__<<endl;
-  cerr << PACKAGE << " (" << VERSION << ") " << "by SF team" << endl;
+  Log << "Date de compilation:" << __DATE__ << endl;
+  Log << "Heure de compilation:" << __TIME__ << endl;
+  cerr << PACKAGE << " (" << VERSION << ") "
+       << "by SF team" << endl;
   cerr << "EMSCRIPTEN version for the web" << endl;
   // Load config file
   MData.LoadData("sfourmi.ini");
@@ -130,9 +134,9 @@ int main(int argc, char *argv[]) {
 
   ZSF.path = "./";
 
-  SDEBUG(W0,"Initialisation " GRAPH);
+  SDEBUG(W0, "Initialisation " GRAPH);
   GraphX_Init();
-  SDEBUG(W0,"SDL initialisé");
+  SDEBUG(W0, "SDL initialisé");
 
   // Load map or create a new one
   if (MData.charger)
@@ -140,28 +144,29 @@ int main(int argc, char *argv[]) {
     if (!Charg_terrain(MData.loadfile))
     {
       std::cerr << "Error when loading map : " << MData.charger << std::endl;
-      NewMap ();
+      NewMap();
     }
     else
       std::cerr << "Loading of " << MData.loadfile << " : OK" << std::endl;
   }
   else
-    NewMap ();
+    NewMap();
 
   bActive = true;
-	// Receives a function to call and some user data to provide it.
-		//emscripten_request_animation_frame_loop(one_iter, 0);
+  // Receives a function to call and some user data to provide it.
+  // emscripten_request_animation_frame_loop(one_iter, 0);
 }
 
 #else
 
-int main (int argc, char *argv[])
+int main(int argc, char *argv[])
 {
-  Log.open (TMPPATH);
+  Log.open(TMPPATH);
   Log << "Version :" << VERSION << endl;
-  Log << "Date de compilation:" << __DATE__<<endl;
-  Log << "Heure de compilation:" << __TIME__<<endl;
-  cerr << PACKAGE << " (" << VERSION << ") " << "by SF team" << endl;
+  Log << "Date de compilation:" << __DATE__ << endl;
+  Log << "Heure de compilation:" << __TIME__ << endl;
+  cerr << PACKAGE << " (" << VERSION << ") "
+       << "by SF team" << endl;
   // Load config file
   MData.LoadData("sfourmi.ini");
   if (argc <= 1)
@@ -174,9 +179,9 @@ int main (int argc, char *argv[])
 
   ZSF.path = "./";
 
-  SDEBUG(W0,"Initialisation " GRAPH);
+  SDEBUG(W0, "Initialisation " GRAPH);
   GraphX_Init();
-  SDEBUG(W0,"SDL initialisé");
+  SDEBUG(W0, "SDL initialisé");
 
   // Load map or create a new one
   if (MData.charger)
@@ -184,47 +189,46 @@ int main (int argc, char *argv[])
     if (!Charg_terrain(MData.loadfile))
     {
       std::cerr << "Error when loading map : " << MData.charger << std::endl;
-      NewMap ();
+      NewMap();
     }
     else
       std::cerr << "Loading of " << MData.loadfile << " : OK" << std::endl;
   }
   else
-    NewMap ();
+    NewMap();
 
   bActive = true;
-    
+
   while (true)
   {
 
     if (SDL_PollEvent(evenement))
       AnalyseEvent(evenement);
-    else if((bActive) && (!ZSF.bPause))
+    else if ((bActive) && (!ZSF.bPause))
     {
       switch (MData.Screen())
       {
-	case SFINTERFACE:
-	  StartInterface();
-	  break;
-	case SFGAME:
-	  Process_va();
-	  ZSF.MoveRoom ();
-	  updateFrame(MData.fps);
-	  ZSF.IncCounter();
-	  GarbageLog(1000);
-	  break;
+      case SFINTERFACE:
+        StartInterface();
+        break;
+      case SFGAME:
+        Process_va();
+        ZSF.MoveRoom();
+        updateFrame(MData.fps);
+        ZSF.IncCounter();
+        GarbageLog(1000);
+        break;
       }
     }
     else
     {
-      SDL_WaitEvent(evenement); //Patiente 100 ms
+      SDL_WaitEvent(evenement); // Patiente 100 ms
       AnalyseEvent(evenement);
       ZSF.MoveRoom();
       updateFrame(1);
     }
   }
 
-  return(0);
+  return (0);
 }
 #endif
-

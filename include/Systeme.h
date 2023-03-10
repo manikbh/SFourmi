@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 //
-//	Systeme.h: Définition de constantes dépendantes du système
+//	Systeme.h: DÃ©finition de constantes dÃ©pendantes du systÃ©me
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -8,9 +8,9 @@
 #define SYSTEM_H
 
 // Release define
-//# define RELEASE
+// # define RELEASE
 
-#define	SF_SDL "SDL"
+#define SF_SDL "SDL"
 #define GRAPH "SDL"
 
 #endif

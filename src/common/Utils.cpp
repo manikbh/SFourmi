@@ -10,5 +10,5 @@
 
 bool testUnder(CRoom *rm)
 {
-	return( rm == terre ? false : true);
+	return (rm == terre ? false : true);
 }

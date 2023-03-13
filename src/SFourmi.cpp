@@ -41,8 +41,7 @@ int GarbageLog(int tr)
 {
   if ((ZSF.Counter() % tr) == 0)
   {
-    Log.close();
-    Log.open(TMPPATH);
+#warning "LOG is now std::cerr, cannot be emptied"
   }
   return 0;
 }
@@ -114,8 +113,8 @@ void one_iter()
 
 int main(int argc, char *argv[])
 {
-  emscripten_set_main_loop(one_iter, 0, true);
-  Log.open(TMPPATH);
+  //Log.open(TMPPATH);
+  //Log = std::cerr;
   Log << "Version :" << VERSION << endl;
   Log << "Date de compilation:" << __DATE__ << endl;
   Log << "Heure de compilation:" << __TIME__ << endl;
@@ -155,13 +154,14 @@ int main(int argc, char *argv[])
   bActive = true;
   // Receives a function to call and some user data to provide it.
   // emscripten_request_animation_frame_loop(one_iter, 0);
+  emscripten_set_main_loop(one_iter, 0, true);
 }
 
 #else
 
 int main(int argc, char *argv[])
 {
-  Log.open(TMPPATH);
+  // Log.open(TMPPATH); // Now std::cerr, not a file
   Log << "Version :" << VERSION << endl;
   Log << "Date de compilation:" << __DATE__ << endl;
   Log << "Heure de compilation:" << __TIME__ << endl;

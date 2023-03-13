@@ -67,5 +67,5 @@ extern int PheroMax;
 extern int population;
 extern CAnimal *Autour[48];
 // LOG pour FILE //
-extern ofstream Log;
+extern ostream &Log;
 #endif

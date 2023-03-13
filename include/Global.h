@@ -10,6 +10,7 @@
 
 #ifndef GLOBAL_H
 #define GLOBAL_H
+#include<iostream> 
 
 // TODO 2020 : clean up this mess - terre is allocated in User but used externally...
 // CCase **map;
@@ -34,7 +35,7 @@ int const CPheromone::Volutabily_meat = 2;
 int const CPheromone::Volutabily_danger = 2;
 
 // Log for FILE //
-ofstream Log;
+ostream &Log = std::cerr;
 
 char file[18];
 

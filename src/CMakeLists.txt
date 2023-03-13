@@ -4,7 +4,7 @@ project(SFourmi)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${SFourmi_SOURCE_DIR}/cmake")
 
 if( ${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
-    set(USE_FLAGS "-s USE_SDL=2 -s  USE_SDL_IMAGE=2  -s USE_SDL_TTF=2")
+    set(USE_FLAGS "-s USE_SDL=2 -s  USE_SDL_IMAGE=2  -s USE_SDL_TTF=2  -s SDL2_IMAGE_FORMATS='[\"xpm\"]' -sALLOW_MEMORY_GROWTH --embed-file ../images")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${USE_FLAGS}")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${USE_FLAGS}")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${USE_FLAGS}")
